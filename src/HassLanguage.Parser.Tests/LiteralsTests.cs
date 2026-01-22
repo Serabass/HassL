@@ -53,6 +53,11 @@ public class LiteralsTests
   [InlineData("\"with spaces\"", "with spaces")]
   [InlineData("\"test123\"", "test123")]
   [InlineData("\"Hello, World!\"", "Hello, World!")]
+  [InlineData("''", "")]
+  [InlineData("'simple'", "simple")]
+  [InlineData("'with spaces'", "with spaces")]
+  [InlineData("'test123'", "test123")]
+  [InlineData("'Hello, World!'", "Hello, World!")]
   public void ParseStringLiteral_ShouldParseCorrectly(string input, string expected)
   {
     // Act

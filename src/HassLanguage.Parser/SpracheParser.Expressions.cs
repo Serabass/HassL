@@ -19,8 +19,8 @@ public static partial class SpracheParser
       .Contained(Sprache.Parse.Char('('), Sprache.Parse.Char(')'))
       .Select(e => new ParenExpression { Inner = e } as Expression)
       .Or(FunctionCall.Select(f => new FunctionCallExpression { FunctionCall = f } as Expression))
-      .Or(Reference.Select(r => new ReferenceExpression { Reference = r } as Expression))
-      .Or(Literal.Select(l => new LiteralExpression { Literal = l } as Expression));
+      .Or(Literal.Select(l => new LiteralExpression { Literal = l } as Expression))
+      .Or(Reference.Select(r => new ReferenceExpression { Reference = r } as Expression));
 
   private static Parser<Expression> ComparisonExpression =>
     PrimaryExpression.Then(left =>

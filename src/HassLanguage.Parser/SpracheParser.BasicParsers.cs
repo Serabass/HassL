@@ -40,6 +40,7 @@ public static partial class SpracheParser
   );
 
   private static readonly Parser<string> StringLiteral = Token(
+    // Double quotes
     Sprache
       .Parse.Char('"')
       .Then(_ =>
@@ -48,6 +49,18 @@ public static partial class SpracheParser
           .Many()
           .Text()
           .Then(content => Sprache.Parse.Char('"').Return(content))
+      )
+      // Single quotes
+      .Or(
+        Sprache
+          .Parse.Char('\'')
+          .Then(_ =>
+            Sprache
+              .Parse.CharExcept('\'')
+              .Many()
+              .Text()
+              .Then(content => Sprache.Parse.Char('\'').Return(content))
+          )
       )
   );
 
