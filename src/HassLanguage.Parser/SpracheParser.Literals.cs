@@ -10,6 +10,9 @@ public static partial class SpracheParser
   private static readonly Parser<ObjectLiteral> ObjectLiteral = Sprache.Parse.Ref(() =>
     ObjectLiteralImpl
   );
+  private static readonly Parser<ArrayLiteral> ArrayLiteral = Sprache.Parse.Ref(() =>
+    ArrayLiteralImpl
+  );
 
   // Literals
   // Order matters: more specific patterns (TimeOfDay, Duration, DateTime) must come before less specific ones (IntLiteral)
@@ -22,6 +25,7 @@ public static partial class SpracheParser
       .Or(Duration.Select(d => new DurationLiteral { Value = d } as Literal))
       .Or(FloatLiteral.Select(f => new NumericLiteral { Value = f, IsFloat = true } as Literal))
       .Or(IntLiteral.Select(i => new NumericLiteral { Value = i, IsFloat = false } as Literal))
+      .Or(ArrayLiteral)
       .Or(ObjectLiteral);
 
   private static Parser<ObjectLiteral> ObjectLiteralImpl =>
@@ -49,4 +53,19 @@ public static partial class SpracheParser
 
   private static Parser<(string Key, Expression Value)> ObjectProperty =>
     Identifier.Then(key => Token(":").Then(_ => Expression.Select(value => (key, value))));
+
+  private static Parser<ArrayLiteral> ArrayLiteralImpl =>
+    Token("[")
+      .Then(_ =>
+        (
+          Expression
+            .DelimitedBy(Token(","))
+            .Contained(SkipWhitespace, SkipWhitespace)
+            .Select(elements => elements.ToList())
+        )
+        .Or(SkipWhitespace.Return(new List<Expression>()))
+        .Then(elements =>
+          Token("]").Return(new ArrayLiteral { Elements = elements })
+        )
+      );
 }

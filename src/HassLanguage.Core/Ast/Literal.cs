@@ -37,3 +37,8 @@ public class ObjectLiteral : Literal
 {
   public Dictionary<string, Expression> Properties { get; set; } = new();
 }
+
+public class ArrayLiteral : Literal
+{
+  public List<Expression> Elements { get; set; } = new();
+}
