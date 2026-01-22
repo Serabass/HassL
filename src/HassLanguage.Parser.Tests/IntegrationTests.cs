@@ -1,4 +1,5 @@
 using FluentAssertions;
+using HassLanguage.Core.Ast;
 using HassLanguage.Parser;
 using Xunit;
 

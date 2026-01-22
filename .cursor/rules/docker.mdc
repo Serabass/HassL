@@ -1,0 +1,8 @@
+---
+name: docker
+description: This is a new rule
+---
+
+# Overview
+
+Старайся запускать всё через docker-compose, если есть такая возможность.
