@@ -15,8 +15,7 @@ public static partial class SpracheParser
   private static Parser<Reference> ReferenceImpl =>
     Identifier.Then(first =>
       (
-        Sprache
-          .Parse.Char('.')
+        Token(".")
           .Then(_ => Identifier)
           .Many()
           .Select(rest =>
@@ -26,13 +25,13 @@ public static partial class SpracheParser
             return new Reference { Parts = parts };
           })
       )
+      .Or(Sprache.Parse.Return(new Reference { Parts = new List<string> { first } }))
     );
 
   // Function calls
   private static Parser<FunctionCall> FunctionCallWithTarget =>
     Identifier.Then(target =>
-      Sprache
-        .Parse.Char('.')
+      Token(".")
         .Then(_ =>
           Identifier.Then(name =>
             ParseArguments()
@@ -52,13 +51,12 @@ public static partial class SpracheParser
     );
 
   private static Parser<List<Expression>> ParseArguments() =>
-    Sprache
-      .Parse.Char('(')
+    Token("(")
       .Then(_ =>
         Expression
-          .DelimitedBy(Sprache.Parse.Char(',').Contained(SkipWhitespace, SkipWhitespace))
+          .DelimitedBy(Token(","))
           .Contained(SkipWhitespace, SkipWhitespace)
-          .Then(args => Sprache.Parse.Char(')').Return(args.ToList()))
+          .Then(args => Token(")").Return(args.ToList()))
       );
 
   private static Parser<FunctionCall> FunctionCallImpl =>

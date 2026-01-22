@@ -111,4 +111,10 @@ public static partial class SpracheParser
             )
         )
       );
+
+  // Public parser for testing - parse expression from string
+  public static Expression ParseExpression(string input)
+  {
+    return Expression.Parse(input);
+  }
 }

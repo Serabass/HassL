@@ -1,3 +1,4 @@
+using System.Globalization;
 using Sprache;
 
 namespace HassLanguage.Parser;
@@ -41,8 +42,13 @@ public static partial class SpracheParser
   private static readonly Parser<string> StringLiteral = Token(
     Sprache
       .Parse.Char('"')
-      .Then(_ => Sprache.Parse.CharExcept('"').Many().Text())
-      .Contained(Sprache.Parse.Char('"'), Sprache.Parse.Char('"'))
+      .Then(_ =>
+        Sprache
+          .Parse.CharExcept('"')
+          .Many()
+          .Text()
+          .Then(content => Sprache.Parse.Char('"').Return(content))
+      )
   );
 
   private static readonly Parser<int> IntLiteral = Token(Sprache.Parse.Number.Select(int.Parse));
@@ -51,7 +57,7 @@ public static partial class SpracheParser
       .Parse.Number.Then(n =>
         Sprache.Parse.Char('.').Then(_ => Sprache.Parse.Number).Select(d => n + "." + d)
       )
-      .Select(double.Parse)
+      .Select(s => double.Parse(s, CultureInfo.InvariantCulture))
   );
 
   private static readonly Parser<bool> BooleanLiteral = Token(

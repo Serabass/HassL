@@ -12,15 +12,16 @@ public static partial class SpracheParser
   );
 
   // Literals
+  // Order matters: more specific patterns (TimeOfDay, Duration, DateTime) must come before less specific ones (IntLiteral)
   private static Parser<Literal> LiteralImpl =>
     BooleanLiteral
       .Select(b => new BooleanLiteral { Value = b } as Literal)
+      .Or(StringLiteral.Select(s => new StringLiteral { Value = s } as Literal))
+      .Or(DateTimeLiteral.Select(dt => new DateTimeLiteral { Value = dt } as Literal))
+      .Or(TimeOfDay.Select(t => new TimeOfDayLiteral { Value = t } as Literal))
+      .Or(Duration.Select(d => new DurationLiteral { Value = d } as Literal))
       .Or(FloatLiteral.Select(f => new NumericLiteral { Value = f, IsFloat = true } as Literal))
       .Or(IntLiteral.Select(i => new NumericLiteral { Value = i, IsFloat = false } as Literal))
-      .Or(StringLiteral.Select(s => new StringLiteral { Value = s } as Literal))
-      .Or(Duration.Select(d => new DurationLiteral { Value = d } as Literal))
-      .Or(TimeOfDay.Select(t => new TimeOfDayLiteral { Value = t } as Literal))
-      .Or(DateTimeLiteral.Select(dt => new DateTimeLiteral { Value = dt } as Literal))
       .Or(ObjectLiteral);
 
   private static Parser<ObjectLiteral> ObjectLiteralImpl =>
