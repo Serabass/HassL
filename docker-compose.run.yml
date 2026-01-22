@@ -11,3 +11,9 @@ services:
     command: [ "dotnet", "HassLanguage.dll", "examples/simple-example.hass" ]
     environment:
       - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+      # RabbitMQ connection settings (NodePort 31672 from k8s namespace smarthome)
+      - AMQP_URL=amqp://1:1@192.168.88.13:31672/
+      # Publisher role: never|always|leader|explicit
+      - PUBLISHER_ROLE=never
+      # Publisher enabled flag (for explicit role)
+      - PUBLISHER_ENABLED=false

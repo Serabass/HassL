@@ -82,12 +82,14 @@ public static partial class SpracheParser
                 StringLiteral.Then(displayName =>
                     Identifier.Then(alias =>
                         Token("{").Then(_ =>
-                            RoomDeclaration.Many().Then(rooms =>
-                                Token("}").Return(new HomeDeclaration 
-                                { 
-                                    DisplayName = displayName, 
-                                    Alias = alias, 
-                                    Decorators = decorators.IsDefined ? decorators.Get() : new List<Decorator>(),
-                                    Rooms = rooms.ToList()
-                                })))))));
+                            Settings.Optional().Then(settings =>
+                                RoomDeclaration.Many().Then(rooms =>
+                                    Token("}").Return(new HomeDeclaration 
+                                    { 
+                                        DisplayName = displayName, 
+                                        Alias = alias, 
+                                        Decorators = decorators.IsDefined ? decorators.Get() : new List<Decorator>(),
+                                        Settings = settings.IsDefined ? settings.Get() : null,
+                                        Rooms = rooms.ToList()
+                                    }))))))));
 }
