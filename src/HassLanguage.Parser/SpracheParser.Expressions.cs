@@ -117,4 +117,10 @@ public static partial class SpracheParser
   {
     return Expression.Parse(input);
   }
+
+  // Public parser for testing - parse range expression from string
+  public static RangeExpression ParseRangeExpression(string input)
+  {
+    return RangeExpression.Parse(input);
+  }
 }
