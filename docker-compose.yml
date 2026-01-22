@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: tail -f /dev/null
+    environment:
+      - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
+  run:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./examples:/app/examples:ro
+    working_dir: /app
+    command: ["dotnet", "HassLanguage.dll"]
+    environment:
+      - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1

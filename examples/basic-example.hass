@@ -1,0 +1,17 @@
+// Минимальный пример для начала работы
+
+home "TestHome" {
+  room "TestRoom" test {
+    device "TestDevice" test {
+      entities: [
+        binary_sensor test_sensor { id: "binary_sensor.test"; }
+      ];
+    }
+  }
+}
+
+automation "Simple test" {
+  when test.test.test_sensor == "on" {
+    do notify.telegram("Sensor activated!");
+  }
+}

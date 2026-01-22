@@ -1,0 +1,71 @@
+// Простой пример автоматизации умного дома
+
+home "MyFlat" {
+  room "Kitchen" kitchen {
+    device "Light" light {
+      entities: [
+        light ceiling { id: "light.kitchen_ceiling"; },
+        light counter { id: "light.kitchen_counter"; }
+      ];
+    }
+
+    device "Sensors" sensors {
+      entities: [
+        binary_sensor motion { id: "binary_sensor.kitchen_motion"; },
+        sensor temp { id: "sensor.kitchen_temperature"; unit: "°C"; }
+      ];
+    }
+  }
+
+  room "Living Room" living {
+    device "Climate" climate {
+      entities: [
+        climate ac { id: "climate.living_ac"; }
+      ];
+    }
+
+    device "Sensors" sensors {
+      entities: [
+        sensor temp { id: "sensor.living_temperature"; unit: "°C"; },
+        sensor humidity { id: "sensor.living_humidity"; unit: "%"; }
+      ];
+    }
+  }
+}
+
+// Автоматизация: включение света при движении
+automation "Kitchen motion light" {
+  when sensors.motion == "on" {
+    do light.turn_on(light.ceiling, { brightness: 70 });
+    wait sensors.motion == "off" for 40s timeout 10m;
+    do light.turn_off(light.ceiling);
+  }
+}
+
+// Автоматизация: кондиционер при высокой температуре
+automation "AC auto cool" {
+  when living.climate.temp > 25.0 for 30m {
+    do climate.set_mode(living.climate.ac, "cool");
+  }
+}
+
+// Автоматизация: уведомление при экстремальных значениях
+automation "Extreme conditions alert" {
+  when any {
+    living.sensors.temp > 28.0;
+    living.sensors.humidity > 70;
+  } {
+    do notify.telegram("Проветри! Температура или влажность слишком высокие");
+  }
+}
+
+// Автоматизация с декораторами
+@mode(restart)
+@cooldown(10s)
+automation "Bathroom light" {
+  @edge(rising)
+  @debounce(2s)
+  when bathroom.sensors.motion == "on" {
+    do light.turn_on(bathroom.light.main, { brightness: 100 });
+  }
+}
