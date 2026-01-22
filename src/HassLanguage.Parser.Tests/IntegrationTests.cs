@@ -7,11 +7,12 @@ namespace HassLanguage.Parser.Tests;
 
 public class IntegrationTests
 {
-    [Fact]
-    public void Parse_ShouldParseBasicExample()
-    {
-        // Arrange
-        var input = @"
+  [Fact]
+  public void Parse_ShouldParseBasicExample()
+  {
+    // Arrange
+    var input =
+      @"
 home ""TestHome"" {
   settings { }
 
@@ -30,24 +31,25 @@ automation ""Simple test"" {
   }
 }";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Homes.Should().HaveCount(1);
-        result.Homes[0].DisplayName.Should().Be("TestHome");
-        result.Homes[0].Rooms.Should().HaveCount(1);
-        result.Homes[0].Rooms[0].Devices.Should().HaveCount(1);
-        result.Homes[0].Rooms[0].Devices[0].Entities.Should().HaveCount(1);
-        result.Automations.Should().HaveCount(1);
-        result.Automations[0].DisplayName.Should().Be("Simple test");
-    }
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].DisplayName.Should().Be("TestHome");
+    result.Homes[0].Rooms.Should().HaveCount(1);
+    result.Homes[0].Rooms[0].Devices.Should().HaveCount(1);
+    result.Homes[0].Rooms[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Automations.Should().HaveCount(1);
+    result.Automations[0].DisplayName.Should().Be("Simple test");
+  }
 
-    [Fact]
-    public void Parse_ShouldParseComplexExample()
-    {
-        // Arrange
-        var input = @"
+  [Fact]
+  public void Parse_ShouldParseComplexExample()
+  {
+    // Arrange
+    var input =
+      @"
 home ""MyFlat"" {
   room ""Kitchen"" kitchen {
     device ""Light"" light {
@@ -104,42 +106,43 @@ automation ""Extreme conditions alert"" {
   }
 }";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Homes.Should().HaveCount(1);
-        result.Homes[0].Rooms.Should().HaveCount(2);
-        result.Automations.Should().HaveCount(3);
-        
-        // Check first automation
-        var firstAutomation = result.Automations[0];
-        firstAutomation.DisplayName.Should().Be("Kitchen motion light");
-        firstAutomation.WhenClauses.Should().HaveCount(1);
-        firstAutomation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
-        
-        // Check second automation
-        var secondAutomation = result.Automations[1];
-        secondAutomation.DisplayName.Should().Be("AC auto cool");
-        var condition = secondAutomation.WhenClauses[0].Condition as SingleCondition;
-        condition.Should().NotBeNull();
-        condition!.ForDuration.Should().NotBeNull();
-        condition.ForDuration!.Value.Should().Be(30);
-        condition.ForDuration.Unit.Should().Be(Core.Ast.DurationUnit.Minutes);
-        
-        // Check third automation
-        var thirdAutomation = result.Automations[2];
-        thirdAutomation.DisplayName.Should().Be("Extreme conditions alert");
-        var anyCondition = thirdAutomation.WhenClauses[0].Condition as Core.Ast.AnyCondition;
-        anyCondition.Should().NotBeNull();
-        anyCondition!.Conditions.Should().HaveCount(2);
-    }
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].Rooms.Should().HaveCount(2);
+    result.Automations.Should().HaveCount(3);
 
-    [Fact]
-    public void Parse_ShouldParseWithDecorators()
-    {
-        // Arrange
-        var input = @"
+    // Check first automation
+    var firstAutomation = result.Automations[0];
+    firstAutomation.DisplayName.Should().Be("Kitchen motion light");
+    firstAutomation.WhenClauses.Should().HaveCount(1);
+    firstAutomation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
+
+    // Check second automation
+    var secondAutomation = result.Automations[1];
+    secondAutomation.DisplayName.Should().Be("AC auto cool");
+    var condition = secondAutomation.WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    condition!.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(30);
+    condition.ForDuration.Unit.Should().Be(Core.Ast.DurationUnit.Minutes);
+
+    // Check third automation
+    var thirdAutomation = result.Automations[2];
+    thirdAutomation.DisplayName.Should().Be("Extreme conditions alert");
+    var anyCondition = thirdAutomation.WhenClauses[0].Condition as Core.Ast.AnyCondition;
+    anyCondition.Should().NotBeNull();
+    anyCondition!.Conditions.Should().HaveCount(2);
+  }
+
+  [Fact]
+  public void Parse_ShouldParseWithDecorators()
+  {
+    // Arrange
+    var input =
+      @"
 @mode(restart)
 @cooldown(10s)
 automation ""Bathroom light"" {
@@ -150,38 +153,40 @@ automation ""Bathroom light"" {
   }
 }";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Automations.Should().HaveCount(1);
-        result.Automations[0].Decorators.Should().HaveCount(2);
-        result.Automations[0].WhenClauses[0].Decorators.Should().HaveCount(2);
-    }
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    result.Automations[0].Decorators.Should().HaveCount(2);
+    result.Automations[0].WhenClauses[0].Decorators.Should().HaveCount(2);
+  }
 
-    [Fact]
-    public void Parse_ShouldParseMultipleHomes()
-    {
-        // Arrange
-        var input = @"
+  [Fact]
+  public void Parse_ShouldParseMultipleHomes()
+  {
+    // Arrange
+    var input =
+      @"
 home ""Home1"" home1 { }
 home ""Home2"" home2 { }
 ";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Homes.Should().HaveCount(2);
-        result.Homes[0].Alias.Should().Be("home1");
-        result.Homes[1].Alias.Should().Be("home2");
-    }
+    // Assert
+    result.Homes.Should().HaveCount(2);
+    result.Homes[0].Alias.Should().Be("home1");
+    result.Homes[1].Alias.Should().Be("home2");
+  }
 
-    [Fact]
-    public void Parse_ShouldParseMultipleAutomations()
-    {
-        // Arrange
-        var input = @"
+  [Fact]
+  public void Parse_ShouldParseMultipleAutomations()
+  {
+    // Arrange
+    var input =
+      @"
 automation ""Auto1"" {
   when test.value == 1 { do test1(); }
 }
@@ -195,43 +200,44 @@ automation ""Auto3"" {
 }
 ";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Automations.Should().HaveCount(3);
-        result.Automations[0].DisplayName.Should().Be("Auto1");
-        result.Automations[1].DisplayName.Should().Be("Auto2");
-        result.Automations[2].DisplayName.Should().Be("Auto3");
-    }
+    // Assert
+    result.Automations.Should().HaveCount(3);
+    result.Automations[0].DisplayName.Should().Be("Auto1");
+    result.Automations[1].DisplayName.Should().Be("Auto2");
+    result.Automations[2].DisplayName.Should().Be("Auto3");
+  }
 
-    [Fact]
-    public void Parse_ShouldHandleEmptyProgram()
-    {
-        // Act
-        var result = HassLanguageParser.Parse("");
+  [Fact]
+  public void Parse_ShouldHandleEmptyProgram()
+  {
+    // Act
+    var result = HassLanguageParser.Parse("");
 
-        // Assert
-        result.Homes.Should().BeEmpty();
-        result.Automations.Should().BeEmpty();
-    }
+    // Assert
+    result.Homes.Should().BeEmpty();
+    result.Automations.Should().BeEmpty();
+  }
 
-    [Fact]
-    public void Parse_ShouldThrowOnInvalidSyntax()
-    {
-        // Arrange
-        var input = "home \"Test\" test { invalid syntax }";
+  [Fact]
+  public void Parse_ShouldThrowOnInvalidSyntax()
+  {
+    // Arrange
+    var input = "home \"Test\" test { invalid syntax }";
 
-        // Act & Assert
-        var act = () => HassLanguageParser.Parse(input);
-        act.Should().Throw<ParseException>();
-    }
+    // Act & Assert
+    var act = () => HassLanguageParser.Parse(input);
+    act.Should().Throw<ParseException>();
+  }
 
-    [Fact]
-    public void Parse_ShouldParseComplexNestedStructures()
-    {
-        // Arrange
-        var input = @"
+  [Fact]
+  public void Parse_ShouldParseComplexNestedStructures()
+  {
+    // Arrange
+    var input =
+      @"
 home ""Complex"" complex {
   room ""Room1"" room1 {
     device ""Device1"" device1 {
@@ -262,18 +268,18 @@ automation ""Complex Auto"" {
   }
 }";
 
-        // Act
-        var result = HassLanguageParser.Parse(input);
+    // Act
+    var result = HassLanguageParser.Parse(input);
 
-        // Assert
-        result.Homes.Should().HaveCount(1);
-        result.Homes[0].Rooms.Should().HaveCount(2);
-        result.Automations.Should().HaveCount(1);
-        var automation = result.Automations[0];
-        automation.WhenClauses.Should().HaveCount(1);
-        var allCondition = automation.WhenClauses[0].Condition as Core.Ast.AllCondition;
-        allCondition.Should().NotBeNull();
-        allCondition!.Conditions.Should().HaveCount(2);
-        automation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
-    }
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].Rooms.Should().HaveCount(2);
+    result.Automations.Should().HaveCount(1);
+    var automation = result.Automations[0];
+    automation.WhenClauses.Should().HaveCount(1);
+    var allCondition = automation.WhenClauses[0].Condition as Core.Ast.AllCondition;
+    allCondition.Should().NotBeNull();
+    allCondition!.Conditions.Should().HaveCount(2);
+    automation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
+  }
 }

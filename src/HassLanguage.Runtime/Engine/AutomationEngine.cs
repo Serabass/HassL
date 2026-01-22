@@ -5,175 +5,175 @@ namespace HassLanguage.Runtime.Engine;
 
 public class AutomationEngine
 {
-    private readonly List<RegisteredAutomation> _automations = new();
-    private readonly Dictionary<string, ConditionState> _conditionStates = new();
+  private readonly List<RegisteredAutomation> _automations = new();
+  private readonly Dictionary<string, ConditionState> _conditionStates = new();
 
-    public void RegisterAutomation(AutomationDeclaration automation)
+  public void RegisterAutomation(AutomationDeclaration automation)
+  {
+    var registered = new RegisteredAutomation
     {
-        var registered = new RegisteredAutomation
-        {
-            Declaration = automation,
-            State = AutomationState.Idle
-        };
-        _automations.Add(registered);
+      Declaration = automation,
+      State = AutomationState.Idle,
+    };
+    _automations.Add(registered);
+  }
+
+  public void ProcessEvent(object eventData)
+  {
+    // TODO: Normalize event to StateChangedEvent, CommandEvent, or ScheduleEvent
+    // For now, just process all automations
+
+    foreach (var automation in _automations)
+    {
+      ProcessAutomation(automation, eventData);
+    }
+  }
+
+  private void ProcessAutomation(RegisteredAutomation automation, object eventData)
+  {
+    foreach (var when in automation.Declaration.WhenClauses)
+    {
+      ProcessWhenClause(automation, when, eventData);
+    }
+  }
+
+  private void ProcessWhenClause(RegisteredAutomation automation, WhenClause when, object eventData)
+  {
+    var conditionKey = GetConditionKey(automation, when);
+
+    if (!_conditionStates.TryGetValue(conditionKey, out var state))
+    {
+      state = new ConditionState
+      {
+        Condition = when.Condition,
+        IsActive = false,
+        StartTime = null,
+      };
+      _conditionStates[conditionKey] = state;
     }
 
-    public void ProcessEvent(object eventData)
+    var isSatisfied = EvaluateCondition(when.Condition, eventData);
+
+    if (isSatisfied)
     {
-        // TODO: Normalize event to StateChangedEvent, CommandEvent, or ScheduleEvent
-        // For now, just process all automations
-        
-        foreach (var automation in _automations)
+      if (!state.IsActive)
+      {
+        state.IsActive = true;
+        state.StartTime = DateTime.UtcNow;
+      }
+
+      // Check if condition held for required duration
+      if (when.Condition is SingleCondition single && single.ForDuration != null)
+      {
+        if (state.StartTime.HasValue)
         {
-            ProcessAutomation(automation, eventData);
+          var elapsed = DateTime.UtcNow - state.StartTime.Value;
+          if (elapsed >= single.ForDuration.ToTimeSpan())
+          {
+            // Condition held long enough, trigger action
+            ExecuteActions(when.Actions);
+            state.IsActive = false;
+            state.StartTime = null;
+          }
         }
-    }
-
-    private void ProcessAutomation(RegisteredAutomation automation, object eventData)
-    {
-        foreach (var when in automation.Declaration.WhenClauses)
+      }
+      else if (when.Condition is AllCondition all && all.ForDuration != null)
+      {
+        if (state.StartTime.HasValue)
         {
-            ProcessWhenClause(automation, when, eventData);
+          var elapsed = DateTime.UtcNow - state.StartTime.Value;
+          if (elapsed >= all.ForDuration.ToTimeSpan())
+          {
+            ExecuteActions(when.Actions);
+            state.IsActive = false;
+            state.StartTime = null;
+          }
         }
-    }
-
-    private void ProcessWhenClause(RegisteredAutomation automation, WhenClause when, object eventData)
-    {
-        var conditionKey = GetConditionKey(automation, when);
-        
-        if (!_conditionStates.TryGetValue(conditionKey, out var state))
+      }
+      else if (when.Condition is AnyCondition any && any.ForDuration != null)
+      {
+        if (state.StartTime.HasValue)
         {
-            state = new ConditionState
-            {
-                Condition = when.Condition,
-                IsActive = false,
-                StartTime = null
-            };
-            _conditionStates[conditionKey] = state;
+          var elapsed = DateTime.UtcNow - state.StartTime.Value;
+          if (elapsed >= any.ForDuration.ToTimeSpan())
+          {
+            ExecuteActions(when.Actions);
+            state.IsActive = false;
+            state.StartTime = null;
+          }
         }
-
-        var isSatisfied = EvaluateCondition(when.Condition, eventData);
-
-        if (isSatisfied)
-        {
-            if (!state.IsActive)
-            {
-                state.IsActive = true;
-                state.StartTime = DateTime.UtcNow;
-            }
-
-            // Check if condition held for required duration
-            if (when.Condition is SingleCondition single && single.ForDuration != null)
-            {
-                if (state.StartTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - state.StartTime.Value;
-                    if (elapsed >= single.ForDuration.ToTimeSpan())
-                    {
-                        // Condition held long enough, trigger action
-                        ExecuteActions(when.Actions);
-                        state.IsActive = false;
-                        state.StartTime = null;
-                    }
-                }
-            }
-            else if (when.Condition is AllCondition all && all.ForDuration != null)
-            {
-                if (state.StartTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - state.StartTime.Value;
-                    if (elapsed >= all.ForDuration.ToTimeSpan())
-                    {
-                        ExecuteActions(when.Actions);
-                        state.IsActive = false;
-                        state.StartTime = null;
-                    }
-                }
-            }
-            else if (when.Condition is AnyCondition any && any.ForDuration != null)
-            {
-                if (state.StartTime.HasValue)
-                {
-                    var elapsed = DateTime.UtcNow - state.StartTime.Value;
-                    if (elapsed >= any.ForDuration.ToTimeSpan())
-                    {
-                        ExecuteActions(when.Actions);
-                        state.IsActive = false;
-                        state.StartTime = null;
-                    }
-                }
-            }
-            else
-            {
-                // No duration requirement, trigger immediately
-                ExecuteActions(when.Actions);
-            }
-        }
-        else
-        {
-            // Condition not satisfied, reset state
-            if (state.IsActive)
-            {
-                state.IsActive = false;
-                state.StartTime = null;
-            }
-        }
+      }
+      else
+      {
+        // No duration requirement, trigger immediately
+        ExecuteActions(when.Actions);
+      }
     }
-
-    private bool EvaluateCondition(ConditionExpression condition, object eventData)
+    else
     {
-        return condition switch
-        {
-            SingleCondition single => EvaluateExpression(single.Expression, eventData),
-            AllCondition all => all.Conditions.All(c => EvaluateExpression(c, eventData)),
-            AnyCondition any => any.Conditions.Any(c => EvaluateExpression(c, eventData)),
-            _ => false
-        };
+      // Condition not satisfied, reset state
+      if (state.IsActive)
+      {
+        state.IsActive = false;
+        state.StartTime = null;
+      }
     }
+  }
 
-    private bool EvaluateExpression(Expression expression, object eventData)
+  private bool EvaluateCondition(ConditionExpression condition, object eventData)
+  {
+    return condition switch
     {
-        // TODO: Implement proper expression evaluation
-        // For now, return false as placeholder
-        return false;
-    }
+      SingleCondition single => EvaluateExpression(single.Expression, eventData),
+      AllCondition all => all.Conditions.All(c => EvaluateExpression(c, eventData)),
+      AnyCondition any => any.Conditions.Any(c => EvaluateExpression(c, eventData)),
+      _ => false,
+    };
+  }
 
-    private void ExecuteActions(ActionBlock actions)
-    {
-        foreach (var action in actions.Statements)
-        {
-            ExecuteAction(action);
-        }
-    }
+  private bool EvaluateExpression(Expression expression, object eventData)
+  {
+    // TODO: Implement proper expression evaluation
+    // For now, return false as placeholder
+    return false;
+  }
 
-    private void ExecuteAction(ActionStatement action)
+  private void ExecuteActions(ActionBlock actions)
+  {
+    foreach (var action in actions.Statements)
     {
-        switch (action)
-        {
-            case DoAction doAction:
-                ExecuteFunctionCall(doAction.FunctionCall);
-                break;
-            case WaitAction waitAction:
-                // TODO: Register wait condition (non-blocking)
-                RegisterWaitCondition(waitAction);
-                break;
-        }
+      ExecuteAction(action);
     }
+  }
 
-    private void ExecuteFunctionCall(FunctionCall call)
+  private void ExecuteAction(ActionStatement action)
+  {
+    switch (action)
     {
-        // TODO: Implement function call execution
-        // This will connect to Home Assistant API, HTTP clients, etc.
+      case DoAction doAction:
+        ExecuteFunctionCall(doAction.FunctionCall);
+        break;
+      case WaitAction waitAction:
+        // TODO: Register wait condition (non-blocking)
+        RegisterWaitCondition(waitAction);
+        break;
     }
+  }
 
-    private void RegisterWaitCondition(WaitAction waitAction)
-    {
-        // TODO: Register wait condition with timeout
-        // This should be non-blocking and use state machine
-    }
+  private void ExecuteFunctionCall(FunctionCall call)
+  {
+    // TODO: Implement function call execution
+    // This will connect to Home Assistant API, HTTP clients, etc.
+  }
 
-    private string GetConditionKey(RegisteredAutomation automation, WhenClause when)
-    {
-        return $"{automation.Declaration.DisplayName}_{when.GetHashCode()}";
-    }
+  private void RegisterWaitCondition(WaitAction waitAction)
+  {
+    // TODO: Register wait condition with timeout
+    // This should be non-blocking and use state machine
+  }
+
+  private string GetConditionKey(RegisteredAutomation automation, WhenClause when)
+  {
+    return $"{automation.Declaration.DisplayName}_{when.GetHashCode()}";
+  }
 }

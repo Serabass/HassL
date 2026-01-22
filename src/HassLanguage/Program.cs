@@ -1,5 +1,5 @@
-using HassLanguage.Runtime;
 using System.Text;
+using HassLanguage.Runtime;
 
 var runtime = new HassLanguageRuntime();
 
@@ -8,13 +8,14 @@ string exampleCode;
 
 if (args.Length > 0 && File.Exists(args[0]))
 {
-    exampleCode = File.ReadAllText(args[0], Encoding.UTF8);
-    Console.WriteLine($"Loading from file: {args[0]}");
+  exampleCode = File.ReadAllText(args[0], Encoding.UTF8);
+  Console.WriteLine($"Loading from file: {args[0]}");
 }
 else
 {
-    // Встроенный пример
-    exampleCode = @"
+  // Встроенный пример
+  exampleCode =
+    @"
 home ""MyFlat"" {
   room ""Kitchen"" kitchen {
     device ""Light"" light {
@@ -51,21 +52,21 @@ automation ""AC auto cool"" {
 
 try
 {
-    Console.WriteLine("Parsing DSL code...");
-    runtime.LoadProgram(exampleCode);
-    Console.WriteLine("✓ Program parsed and validated successfully!");
-    Console.WriteLine("\nAutomations registered:");
-    // TODO: Add method to list registered automations
-    Console.WriteLine("  - Ready to process events");
+  Console.WriteLine("Parsing DSL code...");
+  runtime.LoadProgram(exampleCode);
+  Console.WriteLine("✓ Program parsed and validated successfully!");
+  Console.WriteLine("\nAutomations registered:");
+  // TODO: Add method to list registered automations
+  Console.WriteLine("  - Ready to process events");
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"✗ Error: {ex.Message}");
-    if (ex.InnerException != null)
-    {
-        Console.WriteLine($"  Inner: {ex.InnerException.Message}");
-    }
-    Console.WriteLine("\nStack trace:");
-    Console.WriteLine(ex.StackTrace);
-    Environment.Exit(1);
+  Console.WriteLine($"✗ Error: {ex.Message}");
+  if (ex.InnerException != null)
+  {
+    Console.WriteLine($"  Inner: {ex.InnerException.Message}");
+  }
+  Console.WriteLine("\nStack trace:");
+  Console.WriteLine(ex.StackTrace);
+  Environment.Exit(1);
 }

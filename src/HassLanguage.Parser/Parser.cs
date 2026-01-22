@@ -17,6 +17,5 @@ public class HassLanguageParser
   }
 }
 
-public class ParseException(string message, Exception? innerException = null) : Exception(message, innerException)
-{
-}
+public class ParseException(string message, Exception? innerException = null)
+  : Exception(message, innerException) { }

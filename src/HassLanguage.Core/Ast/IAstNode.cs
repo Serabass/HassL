@@ -1,5 +1,3 @@
 namespace HassLanguage.Core.Ast;
 
-public interface IAstNode
-{
-}
+public interface IAstNode { }
