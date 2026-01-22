@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using HassLanguage.Core.Ast;
 using HassLanguage.Parser;
@@ -141,5 +142,243 @@ public class LiteralsTests
     dateTimeLiteral.Value.Hour.Should().Be(expectedHour);
     dateTimeLiteral.Value.Minute.Should().Be(expectedMinute);
     dateTimeLiteral.Value.Second.Should().Be(expectedSecond);
+  }
+
+  [Fact]
+  public void ParseBooleanLiteral_ShouldParseTrue()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression("true");
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<BooleanLiteral>();
+    var boolLiteral = (BooleanLiteral)literalExpr.Literal;
+    boolLiteral.Value.Should().BeTrue();
+  }
+
+  [Fact]
+  public void ParseBooleanLiteral_ShouldParseFalse()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression("false");
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<BooleanLiteral>();
+    var boolLiteral = (BooleanLiteral)literalExpr.Literal;
+    boolLiteral.Value.Should().BeFalse();
+  }
+
+  [Fact]
+  public void ParseObjectLiteral_ShouldParseWithMultiplePrimitives()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression(
+      "{ brightness: 70, enabled: true, name: \"test\", timeout: 30s }"
+    );
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<ObjectLiteral>();
+    var objLiteral = (ObjectLiteral)literalExpr.Literal;
+    objLiteral.Properties.Should().HaveCount(4);
+  }
+
+  [Fact]
+  public void ParseObjectLiteral_ShouldParseNestedObjectLiterals()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression(
+      "{ config: { brightness: 70, color: \"red\" }, enabled: true }"
+    );
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<ObjectLiteral>();
+    var objLiteral = (ObjectLiteral)literalExpr.Literal;
+    objLiteral.Properties.Should().HaveCount(2);
+  }
+
+  [Fact]
+  public void ParsePrimitivesInBinaryExpression_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation \"Test\" { when 42 > 10 && 3.14 < 5.0 && \"test\" == \"test\" { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var binExpr = condition!.Expression as BinaryExpression;
+    binExpr.Should().NotBeNull();
+    binExpr!.Operator.Should().Be(BinaryOperator.And);
+  }
+
+  [Fact]
+  public void ParsePrimitivesInFunctionArguments_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation \"Test\" { when test.value == 5 { do test.func(42, 3.14, \"string\", true, 30s); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var action = actionBlock.Statements[0] as DoAction;
+    action.Should().NotBeNull();
+    action!.FunctionCall.Arguments.Should().HaveCount(5);
+
+    // Check int
+    var intExpr = action.FunctionCall.Arguments[0] as LiteralExpression;
+    intExpr.Should().NotBeNull();
+    var intLiteral = intExpr!.Literal as NumericLiteral;
+    intLiteral.Should().NotBeNull();
+    intLiteral!.Value.Should().Be(42);
+    intLiteral.IsFloat.Should().BeFalse();
+
+    // Check float
+    var floatExpr = action.FunctionCall.Arguments[1] as LiteralExpression;
+    floatExpr.Should().NotBeNull();
+    var floatLiteral = floatExpr!.Literal as NumericLiteral;
+    floatLiteral.Should().NotBeNull();
+    floatLiteral!.Value.Should().Be(3.14);
+    floatLiteral.IsFloat.Should().BeTrue();
+
+    // Check string
+    var strExpr = action.FunctionCall.Arguments[2] as LiteralExpression;
+    strExpr.Should().NotBeNull();
+    var strLiteral = strExpr!.Literal as StringLiteral;
+    strLiteral.Should().NotBeNull();
+    strLiteral!.Value.Should().Be("string");
+
+    // Check boolean
+    var boolExpr = action.FunctionCall.Arguments[3] as LiteralExpression;
+    boolExpr.Should().NotBeNull();
+    var boolLiteral = boolExpr!.Literal as BooleanLiteral;
+    boolLiteral.Should().NotBeNull();
+    boolLiteral!.Value.Should().BeTrue();
+
+    // Check duration
+    var durExpr = action.FunctionCall.Arguments[4] as LiteralExpression;
+    durExpr.Should().NotBeNull();
+    var durLiteral = durExpr!.Literal as DurationLiteral;
+    durLiteral.Should().NotBeNull();
+    durLiteral!.Value.Value.Should().Be(30);
+    durLiteral.Value.Unit.Should().Be(DurationUnit.Seconds);
+  }
+
+  [Fact]
+  public void ParseStringLiteral_ShouldHandleSpecialCharacters()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression("\"Hello, World! Test: 123\"");
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<StringLiteral>();
+    var stringLiteral = (StringLiteral)literalExpr.Literal;
+    stringLiteral.Value.Should().Contain("Hello");
+    stringLiteral.Value.Should().Contain("World");
+    stringLiteral.Value.Should().Contain("123");
+  }
+
+  [Fact]
+  public void ParseNumericLiteral_ShouldHandleLargeNumbers()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression("999999");
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<NumericLiteral>();
+    var numericLiteral = (NumericLiteral)literalExpr.Literal;
+    numericLiteral.Value.Should().Be(999999);
+    numericLiteral.IsFloat.Should().BeFalse();
+  }
+
+  [Fact]
+  public void ParseFloatLiteral_ShouldHandlePrecision()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression("123.456789");
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<NumericLiteral>();
+    var numericLiteral = (NumericLiteral)literalExpr.Literal;
+    numericLiteral.IsFloat.Should().BeTrue();
+    // Check that value is approximately correct (allowing for floating point precision)
+    var value = Convert.ToDouble(numericLiteral.Value);
+    var diff = Math.Abs(value - 123.456789);
+    diff.Should().BeLessThan(0.000001);
+  }
+
+  [Fact]
+  public void ParseObjectLiteral_ShouldParseWithAllPrimitiveTypes()
+  {
+    // Act
+    var result = SpracheParser.ParseExpression(
+      "{ intVal: 42, floatVal: 3.14, stringVal: \"test\", boolVal: true, durationVal: 30s, timeVal: 12:30 }"
+    );
+
+    // Assert
+    result.Should().BeOfType<LiteralExpression>();
+    var literalExpr = (LiteralExpression)result;
+    literalExpr.Literal.Should().BeOfType<ObjectLiteral>();
+    var objLiteral = (ObjectLiteral)literalExpr.Literal;
+    objLiteral.Properties.Should().HaveCount(6);
+  }
+
+  [Fact]
+  public void ParsePrimitivesInRangeExpression_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation \"Test\" { when 15 in 10..20 { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var inRangeExpr = condition!.Expression as InRangeExpression;
+    inRangeExpr.Should().NotBeNull();
+    var leftExpr = inRangeExpr!.Left as LiteralExpression;
+    leftExpr.Should().NotBeNull();
+    var numericLiteral = leftExpr!.Literal as NumericLiteral;
+    numericLiteral.Should().NotBeNull();
+    numericLiteral!.Value.Should().Be(15);
+  }
+
+  [Fact]
+  public void ParseComplexExpressionWithPrimitives_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation \"Test\" { when 42 > 10 || 3.14 < 10.0 { do test.func({ value: 100, enabled: true }, \"test\", 5m); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var binExpr = condition!.Expression as BinaryExpression;
+    binExpr.Should().NotBeNull();
+    binExpr!.Operator.Should().Be(BinaryOperator.Or);
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var action = actionBlock.Statements[0] as DoAction;
+    action.Should().NotBeNull();
+    action!.FunctionCall.Arguments.Should().HaveCount(3);
   }
 }

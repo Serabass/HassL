@@ -282,4 +282,88 @@ automation ""Complex Auto"" {
     allCondition!.Conditions.Should().HaveCount(2);
     automation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
   }
+
+  [Fact]
+  public void Parse_ShouldParseVoiceCommandToRainbowChandelier()
+  {
+    // Arrange
+    var input =
+      @"
+home ""MyHome"" {
+  room ""Living Room"" living {
+    device ""Light"" light {
+      entities: [
+        light chandelier { id: ""light.living_chandelier""; }
+      ];
+    }
+
+    device ""Voice"" voice {
+      entities: [
+        sensor command { id: ""sensor.voice_command""; }
+      ];
+    }
+  }
+}
+
+automation ""Update light to rainbow"" {
+  when voice.command == ""обнови свет"" {
+    do light.turn_on(light.chandelier, { brightness: 100, effect: ""rainbow"" });
+  }
+}";
+
+    // Act
+    var result = HassLanguageParser.Parse(input);
+
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].Rooms.Should().HaveCount(1);
+    var room = result.Homes[0].Rooms[0];
+    room.Devices.Should().HaveCount(2);
+    
+    // Check light device
+    var lightDevice = room.Devices.First(d => d.Alias == "light");
+    lightDevice.Entities.Should().HaveCount(1);
+    lightDevice.Entities[0].Alias.Should().Be("chandelier");
+    
+    // Check voice device
+    var voiceDevice = room.Devices.First(d => d.Alias == "voice");
+    voiceDevice.Entities.Should().HaveCount(1);
+    voiceDevice.Entities[0].Alias.Should().Be("command");
+    
+    // Check automation
+    result.Automations.Should().HaveCount(1);
+    var automation = result.Automations[0];
+    automation.DisplayName.Should().Be("Update light to rainbow");
+    automation.WhenClauses.Should().HaveCount(1);
+    
+    // Check condition
+    var condition = automation.WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Equals);
+    
+    // Check action
+    automation.WhenClauses[0].Actions.Statements.Should().HaveCount(1);
+    var action = automation.WhenClauses[0].Actions.Statements[0] as DoAction;
+    action.Should().NotBeNull();
+    action!.FunctionCall.Target.Should().Be("light");
+    action.FunctionCall.Name.Should().Be("turn_on");
+    action.FunctionCall.Arguments.Should().HaveCount(2);
+    
+    // Check that second argument is object literal with rainbow effect
+    var secondArg = action.FunctionCall.Arguments[1] as LiteralExpression;
+    secondArg.Should().NotBeNull();
+    var objLiteral = secondArg!.Literal as ObjectLiteral;
+    objLiteral.Should().NotBeNull();
+    objLiteral!.Properties.Should().ContainKey("brightness");
+    objLiteral.Properties.Should().ContainKey("effect");
+    
+    // Check effect value is "rainbow"
+    var effectExpr = objLiteral.Properties["effect"] as LiteralExpression;
+    effectExpr.Should().NotBeNull();
+    var effectLiteral = effectExpr!.Literal as StringLiteral;
+    effectLiteral.Should().NotBeNull();
+    effectLiteral!.Value.Should().Be("rainbow");
+  }
 }
