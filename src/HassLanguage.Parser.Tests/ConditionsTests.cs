@@ -28,7 +28,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 for 30m { do test(); } }"
+      "automation 'Test' { when test.value == 5 for 30m { do test(); } }"
     );
 
     // Assert
@@ -45,7 +45,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when all { test.value > 5; test.value < 10; } { do test(); } }"
+      "automation 'Test' { when all { test.value > 5; test.value < 10; } { do test(); } }"
     );
 
     // Assert
@@ -60,7 +60,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when all for 5m { test.value > 5; } { do test(); } }"
+      "automation 'Test' { when all for 5m { test.value > 5; } { do test(); } }"
     );
 
     // Assert
@@ -77,7 +77,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when any { test.value > 5; test.value < 0; } { do test(); } }"
+      "automation 'Test' { when any { test.value > 5; test.value < 0; } { do test(); } }"
     );
 
     // Assert
@@ -92,7 +92,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when any for 10s { test.value > 5; } { do test(); } }"
+      "automation 'Test' { when any for 10s { test.value > 5; } { do test(); } }"
     );
 
     // Assert
@@ -109,7 +109,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when for 1h { test.value > 5; test.value < 10; } { do test(); } }"
+      "automation 'Test' { when for 1h { test.value > 5; test.value < 10; } { do test(); } }"
     );
 
     // Assert
@@ -229,7 +229,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when sensor.temperature > 25 for 5m { do test(); } }"
+      "automation 'Test' { when sensor.temperature > 25 for 5m { do test(); } }"
     );
 
     // Assert
@@ -247,7 +247,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when all for 10s { temp > 20; humidity < 80; pressure > 1000; } { do test(); } }"
+      "automation 'Test' { when all for 10s { temp > 20; humidity < 80; pressure > 1000; } { do test(); } }"
     );
 
     // Assert
@@ -265,7 +265,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when any for 1h { door.open == true; window.open == true; } { do test(); } }"
+      "automation 'Test' { when any for 1h { door.open == true; window.open == true; } { do test(); } }"
     );
 
     // Assert
@@ -298,7 +298,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when all { test.value > 5; } { do test(); } }"
+      "automation 'Test' { when all { test.value > 5; } { do test(); } }"
     );
 
     // Assert
@@ -313,7 +313,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when any { test.value > 5; } { do test(); } }"
+      "automation 'Test' { when any { test.value > 5; } { do test(); } }"
     );
 
     // Assert
