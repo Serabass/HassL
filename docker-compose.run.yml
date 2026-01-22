@@ -8,7 +8,7 @@ services:
     volumes:
       - ./examples:/app/examples:ro
     working_dir: /app
-    command: [ "dotnet", "HassLanguage.dll", "examples/simple-example.hass" ]
+    command: [ "dotnet", "HassLanguage.dll", "examples/basic-example.hass" ]
     environment:
       - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
       # RabbitMQ connection settings (NodePort 31672 from k8s namespace smarthome)

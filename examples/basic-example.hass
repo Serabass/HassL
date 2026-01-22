@@ -7,12 +7,9 @@ home "TestHome" {
 
       rabbitmq {
         url: env("AMQP_URL"); // amqp://user:pass@host:5672/vhost
-        exchange: "ha.events";
-        queue_prefix: "rules";
+        exchange: "homeassistant";
+        queue_prefix: "ha_events";
         routing_key: "ha.state_changed";
-
-        // мост WS -> RMQ: у тебя уже написан, осталось управлять включением
-        publish_from_websocket: true;
 
         // кто имеет право публиковать в RMQ (чтобы в multi-replica не было дублей)
         publisher_role: env("PUBLISHER_ROLE", "never"); // never|always|leader|explicit
