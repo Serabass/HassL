@@ -12,7 +12,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(); } }"
     );
 
     // Assert
@@ -30,7 +30,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do notify(); } }"
+      "automation 'Test' { when test.value == 5 { do notify(); } }"
     );
 
     // Assert
@@ -47,7 +47,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(1, \"test\", true); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(1, 'test', true); } }"
     );
 
     // Assert
@@ -63,7 +63,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { wait test.value == 0 for 10s; } }"
+      "automation 'Test' { when test.value == 5 { wait test.value == 0 for 10s; } }"
     );
 
     // Assert
@@ -83,7 +83,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { wait test.value == 0 for 10s timeout 5m; } }"
+      "automation 'Test' { when test.value == 5 { wait test.value == 0 for 10s timeout 5m; } }"
     );
 
     // Assert
@@ -101,7 +101,7 @@ public class ActionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func1(); do test.func2(); wait test.value == 0 for 10s; } }"
+      "automation 'Test' { when test.value == 5 { do test.func1(); do test.func2(); wait test.value == 0 for 10s; } }"
     );
 
     // Assert

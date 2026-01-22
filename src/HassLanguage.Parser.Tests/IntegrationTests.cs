@@ -13,21 +13,21 @@ public class IntegrationTests
     // Arrange
     var input =
       @"
-home ""TestHome"" {
+home 'TestHome' {
   settings { }
 
-  room ""TestRoom"" test {
-    device ""TestDevice"" test {
+  room 'TestRoom' test {
+    device 'TestDevice' test {
       entities: [
-        binary_sensor test_sensor { id: ""binary_sensor.test""; }
+        binary_sensor test_sensor { id: 'binary_sensor.test'; }
       ];
     }
   }
 }
 
-automation ""Simple test"" {
-  when test.test.test_sensor == ""on"" {
-    do notify.telegram(""Sensor activated!"");
+automation 'Simple test' {
+  when test.test.test_sensor == 'on' {
+    do notify.telegram('Sensor activated!');
   }
 }";
 
@@ -50,59 +50,59 @@ automation ""Simple test"" {
     // Arrange
     var input =
       @"
-home ""MyFlat"" {
-  room ""Kitchen"" kitchen {
-    device ""Light"" light {
+home 'MyFlat' {
+  room 'Kitchen' kitchen {
+    device 'Light' light {
       entities: [
-        light ceiling { id: ""light.kitchen_ceiling""; },
-        light counter { id: ""light.kitchen_counter""; }
+        light ceiling { id: 'light.kitchen_ceiling'; },
+        light counter { id: 'light.kitchen_counter'; }
       ];
     }
 
-    device ""Sensors"" sensors {
+    device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: ""binary_sensor.kitchen_motion""; },
-        sensor temp { id: ""sensor.kitchen_temperature""; unit: ""°C""; }
+        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
+        sensor temp { id: 'sensor.kitchen_temperature'; unit: '°C'; }
       ];
     }
   }
 
-  room ""Living Room"" living {
-    device ""Climate"" climate {
+  room 'Living Room' living {
+    device 'Climate' climate {
       entities: [
-        climate ac { id: ""climate.living_ac""; }
+        climate ac { id: 'climate.living_ac'; }
       ];
     }
 
-    device ""Sensors"" sensors {
+    device 'Sensors' sensors {
       entities: [
-        sensor temp { id: ""sensor.living_temperature""; unit: ""°C""; },
-        sensor humidity { id: ""sensor.living_humidity""; unit: ""%""; }
+        sensor temp { id: 'sensor.living_temperature'; unit: '°C'; },
+        sensor humidity { id: 'sensor.living_humidity'; unit: '%'; }
       ];
     }
   }
 }
 
-automation ""Kitchen motion light"" {
-  when sensors.motion == ""on"" {
+automation 'Kitchen motion light' {
+  when sensors.motion == 'on' {
     do light.turn_on(light.ceiling, { brightness: 70 });
-    wait sensors.motion == ""off"" for 40s timeout 10m;
+    wait sensors.motion == 'off' for 40s timeout 10m;
     do light.turn_off(light.ceiling);
   }
 }
 
-automation ""AC auto cool"" {
+automation 'AC auto cool' {
   when living.climate.temp > 25.0 for 30m {
-    do climate.set_mode(living.climate.ac, ""cool"");
+    do climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
-automation ""Extreme conditions alert"" {
+automation 'Extreme conditions alert' {
   when any {
     living.sensors.temp > 28.0;
     living.sensors.humidity > 70;
   } {
-    do notify.telegram(""Alert!"");
+    do notify.telegram('Alert!');
   }
 }";
 
@@ -145,10 +145,10 @@ automation ""Extreme conditions alert"" {
       @"
 @mode(restart)
 @cooldown(10s)
-automation ""Bathroom light"" {
+automation 'Bathroom light' {
   @edge(rising)
   @debounce(2s)
-  when bathroom.sensors.motion == ""on"" {
+  when bathroom.sensors.motion == 'on' {
     do light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }";
@@ -168,8 +168,8 @@ automation ""Bathroom light"" {
     // Arrange
     var input =
       @"
-home ""Home1"" home1 { }
-home ""Home2"" home2 { }
+home 'Home1' home1 { }
+home 'Home2' home2 { }
 ";
 
     // Act
@@ -187,15 +187,15 @@ home ""Home2"" home2 { }
     // Arrange
     var input =
       @"
-automation ""Auto1"" {
+automation 'Auto1' {
   when test.value == 1 { do test1(); }
 }
 
-automation ""Auto2"" {
+automation 'Auto2' {
   when test.value == 2 { do test2(); }
 }
 
-automation ""Auto3"" {
+automation 'Auto3' {
   when test.value == 3 { do test3(); }
 }
 ";
@@ -225,7 +225,7 @@ automation ""Auto3"" {
   public void Parse_ShouldThrowOnInvalidSyntax()
   {
     // Arrange
-    var input = "home \"Test\" test { invalid syntax }";
+    var input = "home 'Test' test { invalid syntax }";
 
     // Act & Assert
     var act = () => HassLanguageParser.Parse(input);
@@ -238,33 +238,33 @@ automation ""Auto3"" {
     // Arrange
     var input =
       @"
-home ""Complex"" complex {
-  room ""Room1"" room1 {
-    device ""Device1"" device1 {
+home 'Complex' complex {
+  room 'Room1' room1 {
+    device 'Device1' device1 {
       entities: [
-        light main { id: ""light.main""; },
-        sensor temp { id: ""sensor.temp""; unit: ""°C""; }
+        light main { id: 'light.main'; },
+        sensor temp { id: 'sensor.temp'; unit: '°C'; }
       ];
     }
   }
   
-  room ""Room2"" room2 {
-    device ""Device2"" device2 {
+  room 'Room2' room2 {
+    device 'Device2' device2 {
       entities: [
-        switch sw { id: ""switch.sw""; }
+        switch sw { id: 'switch.sw'; }
       ];
     }
   }
 }
 
-automation ""Complex Auto"" {
+automation 'Complex Auto' {
   when all {
     room1.device1.temp > 25.0;
-    room2.device2.sw == ""on"";
+    room2.device2.sw == 'on';
   } for 5m {
-    do notify.telegram(""Complex condition met"");
+    do notify.telegram('Complex condition met');
     wait room1.device1.temp < 20.0 for 10m timeout 1h;
-    do notify.telegram(""Temperature dropped"");
+    do notify.telegram('Temperature dropped');
   }
 }";
 
@@ -289,25 +289,25 @@ automation ""Complex Auto"" {
     // Arrange
     var input =
       @"
-home ""MyHome"" {
-  room ""Living Room"" living {
-    device ""Light"" light {
+home 'MyHome' {
+  room 'Living Room' living {
+    device 'Light' light {
       entities: [
-        light chandelier { id: ""light.living_chandelier""; }
+        light chandelier { id: 'light.living_chandelier'; }
       ];
     }
 
-    device ""Voice"" voice {
+    device 'Voice' voice {
       entities: [
-        sensor command { id: ""sensor.voice_command""; }
+        sensor command { id: 'sensor.voice_command'; }
       ];
     }
   }
 }
 
-automation ""Update light to rainbow"" {
-  when voice.command == ""обнови свет"" {
-    do light.turn_on(light.chandelier, { brightness: 100, effect: ""rainbow"" });
+automation 'Update light to rainbow' {
+  when voice.command == 'обнови свет' {
+    do light.turn_on(light.chandelier, { brightness: 100, effect: 'rainbow' });
   }
 }";
 

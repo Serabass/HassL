@@ -182,7 +182,7 @@ public class LiteralsTests
   {
     // Act
     var result = SpracheParser.ParseExpression(
-      "{ brightness: 70, enabled: true, name: \"test\", timeout: 30s }"
+      "{ brightness: 70, enabled: true, name: 'test', timeout: 30s }"
     );
 
     // Assert
@@ -198,7 +198,7 @@ public class LiteralsTests
   {
     // Act
     var result = SpracheParser.ParseExpression(
-      "{ config: { brightness: 70, color: \"red\" }, enabled: true }"
+      "{ config: { brightness: 70, color: 'red' }, enabled: true }"
     );
 
     // Assert
@@ -214,7 +214,7 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when 42 > 10 && 3.14 < 5.0 && \"test\" == \"test\" { do test(); } }"
+      "automation 'Test' { when 42 > 10 && 3.14 < 5.0 && 'test' == 'test' { do test(); } }"
     );
 
     // Assert
@@ -231,7 +231,7 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(42, 3.14, \"string\", true, 30s); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(42, 3.14, 'string', true, 30s); } }"
     );
 
     // Assert
@@ -284,7 +284,7 @@ public class LiteralsTests
   public void ParseStringLiteral_ShouldHandleSpecialCharacters()
   {
     // Act
-    var result = SpracheParser.ParseExpression("\"Hello, World! Test: 123\"");
+    var result = SpracheParser.ParseExpression("'Hello, World! Test: 123'");
 
     // Assert
     result.Should().BeOfType<LiteralExpression>();
@@ -334,7 +334,7 @@ public class LiteralsTests
   {
     // Act
     var result = SpracheParser.ParseExpression(
-      "{ intVal: 42, floatVal: 3.14, stringVal: \"test\", boolVal: true, durationVal: 30s, timeVal: 12:30 }"
+      "{ intVal: 42, floatVal: 3.14, stringVal: 'test', boolVal: true, durationVal: 30s, timeVal: 12:30 }"
     );
 
     // Assert
@@ -349,9 +349,7 @@ public class LiteralsTests
   public void ParsePrimitivesInRangeExpression_ShouldParseCorrectly()
   {
     // Act
-    var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when 15 in 10..20 { do test(); } }"
-    );
+    var result = HassLanguageParser.Parse("automation 'Test' { when 15 in 10..20 { do test(); } }");
 
     // Assert
     result.Automations.Should().HaveCount(1);
@@ -371,7 +369,7 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when 42 > 10 || 3.14 < 10.0 { do test.func({ value: 100, enabled: true }, \"test\", 5m); } }"
+      "automation 'Test' { when 42 > 10 || 3.14 < 10.0 { do test.func({ value: 100, enabled: true }, 'test', 5m); } }"
     );
 
     // Assert
@@ -425,7 +423,7 @@ public class LiteralsTests
   public void ParseArrayLiteral_ShouldParseStringArray()
   {
     // Act
-    var result = SpracheParser.ParseExpression("[\"red\", \"green\", \"blue\"]");
+    var result = SpracheParser.ParseExpression("['red', 'green', 'blue']");
 
     // Assert
     result.Should().BeOfType<LiteralExpression>();
@@ -453,7 +451,7 @@ public class LiteralsTests
   public void ParseArrayLiteral_ShouldParseMixedArray()
   {
     // Act
-    var result = SpracheParser.ParseExpression("[1, \"test\", true, 3.14]");
+    var result = SpracheParser.ParseExpression("[1, 'test', true, 3.14]");
 
     // Assert
     result.Should().BeOfType<LiteralExpression>();
@@ -533,7 +531,7 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 }); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 }); } }"
     );
 
     // Assert

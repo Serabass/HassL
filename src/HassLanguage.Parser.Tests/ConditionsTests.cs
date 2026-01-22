@@ -12,7 +12,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test(); } }"
+      "automation 'Test' { when test.value == 5 { do test(); } }"
     );
 
     // Assert
@@ -136,7 +136,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when test.value == 5 for {duration} {{ do test(); }} }}"
+      $"automation 'Test' {{ when test.value == 5 for {duration} {{ do test(); }} }}"
     );
 
     // Assert
@@ -161,7 +161,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when all for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $"automation 'Test' {{ when all for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
     );
 
     // Assert
@@ -186,7 +186,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when any for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $"automation 'Test' {{ when any for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
     );
 
     // Assert
@@ -211,7 +211,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $"automation 'Test' {{ when for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
     );
 
     // Assert
@@ -283,7 +283,7 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test(); } }"
+      "automation 'Test' { when test.value == 5 { do test(); } }"
     );
 
     // Assert

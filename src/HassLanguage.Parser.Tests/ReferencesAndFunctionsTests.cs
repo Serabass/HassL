@@ -11,7 +11,7 @@ public class ReferencesAndFunctionsTests
   public void ParseReference_ShouldParseSinglePart()
   {
     // Act
-    var result = HassLanguageParser.Parse("automation \"Test\" { when test { do test(); } }");
+    var result = HassLanguageParser.Parse("automation 'Test' { when test { do test(); } }");
 
     // Assert
     result.Automations.Should().HaveCount(1);
@@ -27,7 +27,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when home.room.device.entity { do test(); } }"
+      "automation 'Test' { when home.room.device.entity { do test(); } }"
     );
 
     // Assert
@@ -44,7 +44,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do notify(); } }"
+      "automation 'Test' { when test.value == 5 { do notify(); } }"
     );
 
     // Assert
@@ -62,7 +62,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on(); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on(); } }"
     );
 
     // Assert
@@ -79,7 +79,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do notify(\"message\"); } }"
+      "automation 'Test' { when test.value == 5 { do notify('message'); } }"
     );
 
     // Assert
@@ -95,7 +95,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(1, \"test\", true, 3.14); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(1, 'test', true, 3.14); } }"
     );
 
     // Assert
@@ -111,7 +111,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on(home.room.device.entity); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on(home.room.device.entity); } }"
     );
 
     // Assert
@@ -130,7 +130,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(test.other(1)); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(test.other(1)); } }"
     );
 
     // Assert
@@ -148,7 +148,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on({ brightness: 70 }); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on({ brightness: 70 }); } }"
     );
 
     // Assert
@@ -168,7 +168,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.func(1) == 5 { do test(); } }"
+      "automation 'Test' { when test.func(1) == 5 { do test(); } }"
     );
 
     // Assert
@@ -189,7 +189,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.func(1) in 10..20 { do test(); } }"
+      "automation 'Test' { when test.func(1) in 10..20 { do test(); } }"
     );
 
     // Assert
@@ -210,7 +210,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func(sensor.temp); } }"
+      "automation 'Test' { when test.value == 5 { do test.func(sensor.temp); } }"
     );
 
     // Assert
@@ -231,7 +231,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on(home.room.device.entity, { brightness: 70 }, true); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on(home.room.device.entity, { brightness: 70 }, true); } }"
     );
 
     // Assert
@@ -267,7 +267,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do http.telegram.post(format(\"/bot{0}/sendMessage\", secret(\"TG_BOT_TOKEN\")), json({ chat_id: secret(\"TG_CHAT_ID\"), text: \"Hello\" })); } }"
+      "automation 'Test' { when test.value == 5 { do http.telegram.post(format('/bot{0}/sendMessage', secret('TG_BOT_TOKEN')), json({ chat_id: secret('TG_CHAT_ID'), text: 'Hello' })); } }"
     );
 
     // Assert
@@ -305,7 +305,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when all { test.func1(1) in 10..20; test.func2(sensor.temp) > 25.0; } { do test(); } }"
+      "automation 'Test' { when all { test.func1(1) in 10..20; test.func2(sensor.temp) > 25.0; } { do test(); } }"
     );
 
     // Assert
@@ -338,7 +338,7 @@ public class ReferencesAndFunctionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do light.turn_on(light.ceiling, { brightness: 70 }); do notify.telegram(\"Light on\"); do climate.set_mode(living.climate.ac, \"cool\"); } }"
+      "automation 'Test' { when test.value == 5 { do light.turn_on(light.ceiling, { brightness: 70 }); do notify.telegram('Light on'); do climate.set_mode(living.climate.ac, 'cool'); } }"
     );
 
     // Assert

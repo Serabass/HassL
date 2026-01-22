@@ -21,7 +21,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when test.value == 5 for {input} {{ do test(); }} }}"
+      $"automation 'Test' {{ when test.value == 5 for {input} {{ do test(); }} }}"
     );
 
     // Assert
@@ -46,7 +46,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when time in {input}..18:00 {{ do test(); }} }}"
+      $"automation 'Test' {{ when time in {input}..18:00 {{ do test(); }} }}"
     );
 
     // Assert
@@ -66,7 +66,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when 2024-01-15T10:30:45 == 2024-01-15T10:30:45 { do test(); } }"
+      "automation 'Test' { when 2024-01-15T10:30:45 == 2024-01-15T10:30:45 { do test(); } }"
     );
 
     // Assert
@@ -81,7 +81,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func({ brightness: 70; color: \"red\"; }); } }"
+      "automation 'Test' { when test.value == 5 { do test.func({ brightness: 70; color: 'red'; }); } }"
     );
 
     // Assert
@@ -104,7 +104,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func({ a: 1, b: 2, c: 3 }); } }"
+      "automation 'Test' { when test.value == 5 { do test.func({ a: 1, b: 2, c: 3 }); } }"
     );
 
     // Assert
@@ -123,7 +123,7 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"Test\" { when test.value == 5 { do test.func({ }); } }"
+      "automation 'Test' { when test.value == 5 { do test.func({ }); } }"
     );
 
     // Assert

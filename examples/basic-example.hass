@@ -1,34 +1,34 @@
 // Минимальный пример для начала работы
 
-home "TestHome" {
+home 'TestHome' {
   settings {
     events {
       mode: rabbitmq; // auto | websocket | rabbitmq
 
       rabbitmq {
-        url: env("AMQP_URL"); // amqp://user:pass@host:5672/vhost
-        exchange: "homeassistant";
-        queue_prefix: "ha_events";
-        routing_key: "ha.state_changed";
+        url: env('AMQP_URL'); // amqp://user:pass@host:5672/vhost
+        exchange: 'homeassistant';
+        queue_prefix: 'ha_events';
+        routing_key: 'ha.state_changed';
 
         // кто имеет право публиковать в RMQ (чтобы в multi-replica не было дублей)
-        publisher_role: env("PUBLISHER_ROLE", "never"); // never|always|leader|explicit
-        publisher_enabled: env_bool("PUBLISHER_ENABLED", false); // для explicit
+        publisher_role: env('PUBLISHER_ROLE', 'never'); // never|always|leader|explicit
+        publisher_enabled: env_bool('PUBLISHER_ENABLED', false); // для explicit
       }
     }
   }
 
-  room "TestRoom" test {
-    device "TestDevice" test {
+  room 'TestRoom' test {
+    device 'TestDevice' test {
       entities: [
-        binary_sensor test_sensor { id: "binary_sensor.test"; }
+        binary_sensor test_sensor { id: 'binary_sensor.test'; }
       ];
     }
   }
 }
 
-automation "Simple test" {
-  when test.test.test_sensor == "on" {
-    do notify.telegram("Sensor activated!");
+automation 'Simple test' {
+  when test.test.test_sensor == 'on' {
+    do notify.telegram('Sensor activated!');
   }
 }

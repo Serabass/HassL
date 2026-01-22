@@ -1,72 +1,72 @@
 // Более сложный пример с комбинированными условиями
 
-home "SmartHome" {
-  room "Bedroom" bedroom {
-    device "Light" light {
+home 'SmartHome' {
+  room 'Bedroom' bedroom {
+    device 'Light' light {
       entities: [
-        light main { id: "light.bedroom_main"; },
-        light nightstand { id: "light.bedroom_nightstand"; }
+        light main { id: 'light.bedroom_main'; },
+        light nightstand { id: 'light.bedroom_nightstand'; }
       ];
     }
 
-    device "Sensors" sensors {
+    device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: "binary_sensor.bedroom_motion"; },
-        sensor lux { id: "sensor.bedroom_lux"; unit: "lx"; }
+        binary_sensor motion { id: 'binary_sensor.bedroom_motion'; },
+        sensor lux { id: 'sensor.bedroom_lux'; unit: 'lx'; }
       ];
     }
   }
 
-  room "Living Room" living {
-    device "Climate" climate {
+  room 'Living Room' living {
+    device 'Climate' climate {
       entities: [
-        climate ac { id: "climate.living_ac"; }
+        climate ac { id: 'climate.living_ac'; }
       ];
     }
 
-    device "Sensors" sensors {
+    device 'Sensors' sensors {
       entities: [
-        sensor temp { id: "sensor.living_temp"; unit: "°C"; },
-        binary_sensor window { id: "binary_sensor.living_window"; }
+        sensor temp { id: 'sensor.living_temp'; unit: '°C'; },
+        binary_sensor window { id: 'binary_sensor.living_window'; }
       ];
     }
   }
 }
 
 // Комбинированное условие: все условия должны выполняться 20 минут
-automation "Smart AC control" {
+automation 'Smart AC control' {
   when all for 20m {
     living.sensors.temp > 25.0;
     now().time in 09:00..23:00;
-    living.sensors.window == "closed";
+    living.sensors.window == 'closed';
   } {
-    do climate.set_mode(living.climate.ac, "cool");
+    do climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
 // Условие с диапазоном времени (через полночь)
-automation "Night mode" {
+automation 'Night mode' {
   when now().time in 23:00..06:00 {
     do light.set_brightness(bedroom.light.nightstand, 20);
   }
 }
 
 // Условие с диапазоном значений
-automation "Comfortable temperature" {
+automation 'Comfortable temperature' {
   when living.sensors.temp in 20.0..24.0 for 15m {
-    do climate.set_mode(living.climate.ac, "auto");
+    do climate.set_mode(living.climate.ac, 'auto');
   }
 }
 
 // Автоматизация с декораторами и wait
 @mode(parallel(3))
 @cooldown(5s)
-automation "Bedroom motion light" {
+automation 'Bedroom motion light' {
   @edge(rising)
   @max_age(1m)
-  when bedroom.sensors.motion == "on" {
+  when bedroom.sensors.motion == 'on' {
     do light.turn_on(bedroom.light.main, { brightness: 80 });
-    wait bedroom.sensors.motion == "off" for 2m timeout 30m;
+    wait bedroom.sensors.motion == 'off' for 2m timeout 30m;
     do light.turn_off(bedroom.light.main);
   }
 }

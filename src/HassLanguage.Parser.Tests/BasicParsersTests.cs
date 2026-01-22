@@ -15,7 +15,7 @@ public class BasicParsersTests
   public void ParseIdentifier_ShouldParseValidIdentifiers(string input, string expected)
   {
     // Act
-    var result = HassLanguageParser.Parse($"home \"Test\" {expected} {{ }}");
+    var result = HassLanguageParser.Parse($"home 'Test' {expected} {{ }}");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -47,7 +47,7 @@ public class BasicParsersTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when {input} == {expected} {{ do test(); }} }}"
+      $"automation 'Test' {{ when {input} == {expected} {{ do test(); }} }}"
     );
 
     // Assert
@@ -62,7 +62,7 @@ public class BasicParsersTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when {input} > 0.0 {{ do test(); }} }}"
+      $"automation 'Test' {{ when {input} > 0.0 {{ do test(); }} }}"
     );
 
     // Assert
@@ -76,7 +76,7 @@ public class BasicParsersTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation \"Test\" {{ when {input} == {expected.ToString().ToLower()} {{ do test(); }} }}"
+      $"automation 'Test' {{ when {input} == {expected.ToString().ToLower()} {{ do test(); }} }}"
     );
 
     // Assert
@@ -90,7 +90,7 @@ public class BasicParsersTests
     var input =
       @"
 // This is a comment
-home ""Test"" test {
+home 'Test' test {
   // Another comment
 }
 ";
@@ -110,7 +110,7 @@ home ""Test"" test {
     var input =
       @"
 /* This is a block comment */
-home ""Test"" test {
+home 'Test' test {
   /* Another block comment */
 }
 ";
@@ -127,7 +127,7 @@ home ""Test"" test {
   public void Parse_ShouldHandleWhitespace()
   {
     // Arrange
-    var input = "home   \"Test\"   test   {   }";
+    var input = "home   'Test'   test   {   }";
 
     // Act
     var result = HassLanguageParser.Parse(input);
@@ -141,7 +141,7 @@ home ""Test"" test {
   public void Parse_ShouldIgnoreLineCommentAtEndOfLine()
   {
     // Arrange
-    var input = "home \"Test\" test { } // comment at end";
+    var input = "home 'Test' test { } // comment at end";
 
     // Act
     var result = HassLanguageParser.Parse(input);
@@ -155,7 +155,7 @@ home ""Test"" test {
   public void Parse_ShouldIgnoreLineCommentBetweenTokens()
   {
     // Arrange
-    var input = "home // comment\n\"Test\" test { }";
+    var input = "home // comment\n'Test' test { }";
 
     // Act
     var result = HassLanguageParser.Parse(input);
@@ -174,7 +174,7 @@ home ""Test"" test {
 /* This is a
    multi-line
    block comment */
-home ""Test"" test {
+home 'Test' test {
 }
 ";
 
@@ -192,7 +192,7 @@ home ""Test"" test {
     // Arrange
     var input =
       @"
-automation ""Test"" {
+automation 'Test' {
   when test.value == 5 {
     do test.func(42);
   }
@@ -215,11 +215,11 @@ automation ""Test"" {
     // Arrange
     var input =
       @"
-automation ""Test"" {
+automation 'Test' {
   when test.value == 5 {
     do test.func({
       brightness: 100,
-      effect: ""rainbow""
+      effect: 'rainbow'
     });
   }
 }
@@ -248,7 +248,7 @@ automation ""Test"" {
     // Arrange
     var input =
       @"
-automation ""Test"" {
+automation 'Test' {
   when test.value == 5 {
     do test.func({
       rgb_color: [255, 0, 0]
@@ -284,14 +284,14 @@ automation ""Test"" {
     var input =
       @"
 // Comment before home
-home ""MyHome"" {
+home 'MyHome' {
   // Comment before room
   room ""Living Room"" living {
     // Comment before device
-    device ""Light"" light {
+    device 'Light' light {
       entities: [
         // Comment before entity
-        light chandelier { id: ""light.chandelier""; }
+        light chandelier { id: 'light.chandelier'; }
         // Comment after entity
       ];
     }
@@ -299,8 +299,8 @@ home ""MyHome"" {
 }
 
 // Comment before automation
-automation ""Test"" {
-  when living.light.chandelier == ""on"" {
+automation 'Test' {
+  when living.light.chandelier == 'on' {
     do light.turn_on(living.light.chandelier);
   }
 }
@@ -321,7 +321,7 @@ automation ""Test"" {
   public void Parse_ShouldIgnoreEmptyLineComment()
   {
     // Arrange
-    var input = "home \"Test\" test { } //";
+    var input = "home 'Test' test { } //";
 
     // Act
     var result = HassLanguageParser.Parse(input);
@@ -335,7 +335,7 @@ automation ""Test"" {
   public void Parse_ShouldIgnoreEmptyBlockComment()
   {
     // Arrange
-    var input = "home \"Test\" test { } /**/";
+    var input = "home 'Test' test { } /**/";
 
     // Act
     var result = HassLanguageParser.Parse(input);
@@ -352,8 +352,8 @@ automation ""Test"" {
     var input =
       @"
 // Comment with special chars: !@#$%^&*()_+-=[]{}|;:'"",.<>?
-home ""Test"" test {
-  /* Block comment with ""quotes"" and 'apostrophes' */
+home 'Test' test {
+  /* Block comment with 'quotes' and 'apostrophes' */
 }
 ";
 
@@ -422,7 +422,7 @@ home 'My Home' {
     // Arrange
     var input =
       @"
-automation ""Test"" {
+automation 'Test' {
   when test.value == 'on' {
     do test.func('string with single quotes');
   }
@@ -448,7 +448,7 @@ automation ""Test"" {
     // Arrange
     var input =
       @"
-automation ""Test"" {
+automation 'Test' {
   when test.value == 5 {
     do test.func({
       name: 'test name',

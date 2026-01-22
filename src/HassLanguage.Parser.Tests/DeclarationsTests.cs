@@ -11,7 +11,7 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseBasicHome()
   {
     // Act
-    var result = HassLanguageParser.Parse("home \"TestHome\" test { }");
+    var result = HassLanguageParser.Parse("home 'TestHome' test { }");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -24,7 +24,7 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseWithSettings()
   {
     // Act
-    var result = HassLanguageParser.Parse("home \"TestHome\" test { settings { } }");
+    var result = HassLanguageParser.Parse("home 'TestHome' test { settings { } }");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -35,7 +35,7 @@ public class DeclarationsTests
   public void ParseRoomDeclaration_ShouldParseBasicRoom()
   {
     // Act
-    var result = HassLanguageParser.Parse("home \"TestHome\" test { room \"TestRoom\" room { } }");
+    var result = HassLanguageParser.Parse("home 'TestHome' test { room 'TestRoom' room { } }");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -49,7 +49,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home \"TestHome\" test { room \"TestRoom\" room kitchen { } }"
+      "home 'TestHome' test { room 'TestRoom' room kitchen { } }"
     );
 
     // Assert
@@ -62,7 +62,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home \"TestHome\" test { room \"TestRoom\" room { device \"TestDevice\" device { } } }"
+      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { } } }"
     );
 
     // Assert
@@ -77,7 +77,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home \"TestHome\" test { room \"TestRoom\" room { device \"TestDevice\" device light { } } }"
+      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device light { } } }"
     );
 
     // Assert
@@ -90,7 +90,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home \"TestHome\" test { room \"TestRoom\" room { device \"TestDevice\" device { entities: [ light main { id: \"light.main\"; } ]; } } }"
+      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { entities: [ light main { id: 'light.main'; } ]; } } }"
     );
 
     // Assert
@@ -107,12 +107,12 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home ""TestHome"" test { 
-            room ""TestRoom"" room { 
-                device ""TestDevice"" device { 
-                    entities: [ 
-                        light main { id: ""light.main""; },
-                        sensor temp { id: ""sensor.temp""; unit: ""°C""; }
+      @"            home 'TestHome' test { 
+            room 'TestRoom' room { 
+                device 'TestDevice' device { 
+                    entities: [
+                        light main { id: 'light.main'; },
+                        sensor temp { id: 'sensor.temp'; unit: '°C'; }
                     ]; 
                 } 
             } 
@@ -132,7 +132,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home \"TestHome\" test { room \"TestRoom\" room { device \"TestDevice\" device { entities: [ sensor temp { id: \"sensor.temp\"; unit: \"°C\"; min: 0; max: 100; }; ]; } } }"
+      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { entities: [ sensor temp { id: 'sensor.temp'; unit: '°C'; min: 0; max: 100; }; ]; } } }"
     );
 
     // Assert
@@ -150,7 +150,7 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation \"TestAutomation\" { when test.value == 5 { do test(); } }"
+      "automation 'TestAutomation' { when test.value == 5 { do test(); } }"
     );
 
     // Assert
