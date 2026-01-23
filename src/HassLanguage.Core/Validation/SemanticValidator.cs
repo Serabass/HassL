@@ -101,7 +101,10 @@ public class SemanticValidator
 
   private void ValidateAutomation(AutomationDeclaration automation)
   {
-    ValidateWhenClause(automation.WhenClause);
+    foreach (var when in automation.WhenClauses)
+    {
+      ValidateWhenClause(when);
+    }
   }
 
   private void ValidateWhenClause(WhenClause when)

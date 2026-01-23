@@ -201,7 +201,26 @@ public class DeclarationsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     result.Automations[0].DisplayName.Should().Be("TestAutomation");
-    result.Automations[0].WhenClause.Should().NotBeNull();
+    result.Automations[0].WhenClauses.Should().HaveCount(1);
   }
 
+  [Fact]
+  public void ParseAutomationDeclaration_ShouldParseMultipleWhenClauses()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation ""TestAutomation"" {
+  when test.value == 5 {
+    do test1();
+  }
+  when test.value == 10 {
+    do test2();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    result.Automations[0].WhenClauses.Should().HaveCount(2);
+  }
 }

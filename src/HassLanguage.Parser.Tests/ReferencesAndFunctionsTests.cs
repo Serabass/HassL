@@ -19,7 +19,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ReferenceExpression;
     expr.Should().NotBeNull();
@@ -40,7 +40,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ReferenceExpression;
     expr.Should().NotBeNull();
@@ -61,7 +61,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("notify");
@@ -83,7 +83,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("turn_on");
@@ -104,7 +104,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -124,7 +124,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(4);
@@ -144,7 +144,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -167,7 +167,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -189,7 +189,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -213,7 +213,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var binExpr = condition!.Expression as BinaryExpression;
     binExpr.Should().NotBeNull();
@@ -238,7 +238,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var inRangeExpr = condition!.Expression as InRangeExpression;
     inRangeExpr.Should().NotBeNull();
@@ -263,7 +263,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("func");
@@ -288,7 +288,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("turn_on");
@@ -328,7 +328,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("post");
@@ -373,7 +373,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
 
@@ -412,7 +412,7 @@ public class ReferencesAndFunctionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     actionBlock.Statements.Should().HaveCount(3);
 
     // First action

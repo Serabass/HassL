@@ -117,13 +117,13 @@ automation 'Extreme conditions alert' {
     // Check first automation
     var firstAutomation = result.Automations[0];
     firstAutomation.DisplayName.Should().Be("Kitchen motion light");
-    firstAutomation.WhenClause.Should().NotBeNull();
-    firstAutomation.WhenClause.Actions.Statements.Should().HaveCount(3);
+    firstAutomation.WhenClauses.Should().HaveCount(1);
+    firstAutomation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
 
     // Check second automation
     var secondAutomation = result.Automations[1];
     secondAutomation.DisplayName.Should().Be("AC auto cool");
-    var condition = secondAutomation.WhenClause.Condition as SingleCondition;
+    var condition = secondAutomation.WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(30);
@@ -132,7 +132,7 @@ automation 'Extreme conditions alert' {
     // Check third automation
     var thirdAutomation = result.Automations[2];
     thirdAutomation.DisplayName.Should().Be("Extreme conditions alert");
-    var anyCondition = thirdAutomation.WhenClause.Condition as Core.Ast.AnyCondition;
+    var anyCondition = thirdAutomation.WhenClauses[0].Condition as Core.Ast.AnyCondition;
     anyCondition.Should().NotBeNull();
     anyCondition!.Conditions.Should().HaveCount(2);
   }
@@ -159,7 +159,7 @@ automation 'Bathroom light' {
     // Assert
     result.Automations.Should().HaveCount(1);
     result.Automations[0].Decorators.Should().HaveCount(2);
-    result.Automations[0].WhenClause.Decorators.Should().HaveCount(2);
+    result.Automations[0].WhenClauses[0].Decorators.Should().HaveCount(2);
   }
 
   [Fact]
@@ -276,11 +276,11 @@ automation 'Complex Auto' {
     result.Homes[0].Rooms.Should().HaveCount(2);
     result.Automations.Should().HaveCount(1);
     var automation = result.Automations[0];
-    automation.WhenClause.Should().NotBeNull();
-    var allCondition = automation.WhenClause.Condition as Core.Ast.AllCondition;
+    automation.WhenClauses.Should().HaveCount(1);
+    var allCondition = automation.WhenClauses[0].Condition as Core.Ast.AllCondition;
     allCondition.Should().NotBeNull();
     allCondition!.Conditions.Should().HaveCount(2);
-    automation.WhenClause.Actions.Statements.Should().HaveCount(3);
+    automation.WhenClauses[0].Actions.Statements.Should().HaveCount(3);
   }
 
   [Fact]
@@ -334,18 +334,18 @@ automation 'Update light to rainbow' {
     result.Automations.Should().HaveCount(1);
     var automation = result.Automations[0];
     automation.DisplayName.Should().Be("Update light to rainbow");
-    automation.WhenClause.Should().NotBeNull();
+    automation.WhenClauses.Should().HaveCount(1);
 
     // Check condition
-    var condition = automation.WhenClause.Condition as SingleCondition;
+    var condition = automation.WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
     expr!.Operator.Should().Be(BinaryOperator.Equals);
 
     // Check action
-    automation.WhenClause.Actions.Statements.Should().HaveCount(1);
-    var action = automation.WhenClause.Actions.Statements[0] as DoAction;
+    automation.WhenClauses[0].Actions.Statements.Should().HaveCount(1);
+    var action = automation.WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Target.Should().Be("light");
     action.FunctionCall.Name.Should().Be("turn_on");

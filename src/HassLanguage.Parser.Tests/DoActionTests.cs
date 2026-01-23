@@ -21,7 +21,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     actionBlock.Statements.Should().HaveCount(1);
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
@@ -43,7 +43,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("notify");
@@ -64,7 +64,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
@@ -84,7 +84,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().BeEmpty();
     action.FunctionCall.Name.Should().Be("turn_on");
@@ -105,7 +105,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -137,7 +137,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -164,7 +164,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -191,7 +191,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -214,7 +214,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -241,7 +241,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -266,7 +266,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -291,7 +291,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(6);
 
@@ -339,7 +339,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     // Note: текущий парсер поддерживает только target.name, не target.subtarget.name
     // Но проверим, что парсится хотя бы target.name
@@ -360,7 +360,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
 
@@ -394,7 +394,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
 
@@ -425,7 +425,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -454,7 +454,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -481,7 +481,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -511,7 +511,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     actionBlock.Statements.Should().HaveCount(3);
     actionBlock.Statements[0].Should().BeOfType<DoAction>();
     actionBlock.Statements[1].Should().BeOfType<DoAction>();
@@ -541,7 +541,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -566,7 +566,7 @@ public class DoActionTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 

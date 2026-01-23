@@ -97,17 +97,19 @@ public static partial class SpracheParser
             StringLiteral.Then(displayName =>
               Token("{")
                 .Then(_ =>
-                  WhenClause.Then(whenClause =>
-                    Token("}")
-                      .Return(
-                        new AutomationDeclaration
-                        {
-                          DisplayName = displayName,
-                          Decorators = decorators.IsDefined ? decorators.Get() : [],
-                          WhenClause = whenClause,
-                        }
-                      )
-                  )
+                  WhenClause
+                    .Many()
+                    .Then(whenClauses =>
+                      Token("}")
+                        .Return(
+                          new AutomationDeclaration
+                          {
+                            DisplayName = displayName,
+                            Decorators = decorators.IsDefined ? decorators.Get() : [],
+                            WhenClauses = whenClauses.ToList(),
+                          }
+                        )
+                    )
                 )
             )
           )

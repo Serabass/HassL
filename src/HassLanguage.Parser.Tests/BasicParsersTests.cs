@@ -215,7 +215,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
   }
@@ -241,7 +241,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -273,7 +273,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -445,7 +445,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var arg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -474,7 +474,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClause.Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;

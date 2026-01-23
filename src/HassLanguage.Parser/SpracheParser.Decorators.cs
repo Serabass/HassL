@@ -7,24 +7,26 @@ public static partial class SpracheParser
 {
   // Decorators
   private static Parser<Decorator> Decorator =>
-    Sprache
-      .Parse.Char('@')
-      .Then(_ =>
-        Identifier.Then(name =>
-          Sprache
-            .Parse.Char('(')
-            .Then(_ =>
-              DecoratorArgument
-                .DelimitedBy(Sprache.Parse.Char(',').Contained(SkipWhitespace, SkipWhitespace))
-                .Contained(SkipWhitespace, SkipWhitespace)
-                .Then(args =>
-                  Sprache
-                    .Parse.Char(')')
-                    .Return(new Decorator { Name = name, Arguments = args.ToList() })
-                )
-            )
+    Token(
+      Sprache
+        .Parse.Char('@')
+        .Then(_ =>
+          Identifier.Then(name =>
+            Sprache
+              .Parse.Char('(')
+              .Then(_ =>
+                DecoratorArgument
+                  .DelimitedBy(Sprache.Parse.Char(',').Contained(SkipWhitespace, SkipWhitespace))
+                  .Contained(SkipWhitespace, SkipWhitespace)
+                  .Then(args =>
+                    Sprache
+                      .Parse.Char(')')
+                      .Return(new Decorator { Name = name, Arguments = args.ToList() })
+                  )
+              )
+          )
         )
-      );
+    );
 
   private static Parser<DecoratorArgument> DecoratorArgument =>
     Identifier

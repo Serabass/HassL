@@ -30,7 +30,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -59,7 +59,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();
@@ -83,7 +83,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     // DateTime parsing is tested implicitly - if it fails, the parse would throw
   }
@@ -102,7 +102,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -129,7 +129,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;
@@ -152,7 +152,7 @@ public class SpecialTypesTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;

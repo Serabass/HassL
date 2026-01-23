@@ -21,8 +21,8 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    result.Automations[0].WhenClause.Should().NotBeNull();
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    result.Automations[0].WhenClauses.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.Expression.Should().NotBeNull();
   }
@@ -41,7 +41,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(30);
@@ -65,7 +65,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -86,7 +86,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(5);
@@ -110,7 +110,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -131,7 +131,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(10);
@@ -155,7 +155,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -186,7 +186,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -217,7 +217,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -248,7 +248,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -279,7 +279,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -301,7 +301,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.Expression.Should().NotBeNull();
     condition.ForDuration.Should().NotBeNull();
@@ -327,7 +327,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(3);
     condition.ForDuration.Should().NotBeNull();
@@ -352,7 +352,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -374,7 +374,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -395,7 +395,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -416,7 +416,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -435,7 +435,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -458,7 +458,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -481,7 +481,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -507,7 +507,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -533,7 +533,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -561,7 +561,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -596,7 +596,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -620,7 +620,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -644,7 +644,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -672,7 +672,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(3);
   }
@@ -694,7 +694,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -720,7 +720,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(3);
 
@@ -748,7 +748,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -773,7 +773,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -801,7 +801,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -832,7 +832,7 @@ public class ConditionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }

@@ -31,7 +31,10 @@ public class AutomationEngine
 
   private void ProcessAutomation(RegisteredAutomation automation, object eventData)
   {
-    ProcessWhenClause(automation, automation.Declaration.WhenClause, eventData);
+    foreach (var when in automation.Declaration.WhenClauses)
+    {
+      ProcessWhenClause(automation, when, eventData);
+    }
   }
 
   private void ProcessWhenClause(RegisteredAutomation automation, WhenClause when, object eventData)

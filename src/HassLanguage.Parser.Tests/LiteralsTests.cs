@@ -223,7 +223,7 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var binExpr = condition!.Expression as BinaryExpression;
     binExpr.Should().NotBeNull();
@@ -244,7 +244,7 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(5);
@@ -361,7 +361,7 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var inRangeExpr = condition!.Expression as InRangeExpression;
     inRangeExpr.Should().NotBeNull();
@@ -386,12 +386,12 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var binExpr = condition!.Expression as BinaryExpression;
     binExpr.Should().NotBeNull();
     binExpr!.Operator.Should().Be(BinaryOperator.Or);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
@@ -552,7 +552,7 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClause.Actions;
+    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);

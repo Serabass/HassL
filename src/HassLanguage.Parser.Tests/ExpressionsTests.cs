@@ -27,7 +27,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -48,7 +48,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -69,7 +69,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -90,7 +90,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ParenExpression;
     expr.Should().NotBeNull();
@@ -110,7 +110,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ReferenceExpression;
     expr.Should().NotBeNull();
@@ -131,7 +131,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as FunctionCallExpression;
     expr.Should().NotBeNull();
@@ -154,7 +154,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();
@@ -180,7 +180,7 @@ public class ExpressionsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();

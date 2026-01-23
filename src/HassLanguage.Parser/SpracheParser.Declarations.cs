@@ -147,30 +147,30 @@ public static partial class SpracheParser
                 Identifier.Or(SkipWhitespace.Many().Then(_ => Sprache.Parse.Return(string.Empty)))
               ).Then(alias =>
                 Token("{")
-                    .Then(_ =>
-                      Settings
-                        .Optional()
-                        .Then(settings =>
-                          RoomDeclaration
-                            .Many()
-                            .Then(rooms =>
-                              Token("}")
-                                .Return(
-                                  new HomeDeclaration
-                                  {
-                                    DisplayName = displayName,
-                                    Alias = alias,
-                                    Decorators = decorators.IsDefined
-                                      ? decorators.Get()
-                                      : new List<Decorator>(),
-                                    Settings = settings.IsDefined ? settings.Get() : null,
-                                    Rooms = rooms.ToList(),
-                                  }
-                                )
-                            )
-                        )
-                    )
-                )
+                  .Then(_ =>
+                    Settings
+                      .Optional()
+                      .Then(settings =>
+                        RoomDeclaration
+                          .Many()
+                          .Then(rooms =>
+                            Token("}")
+                              .Return(
+                                new HomeDeclaration
+                                {
+                                  DisplayName = displayName,
+                                  Alias = alias,
+                                  Decorators = decorators.IsDefined
+                                    ? decorators.Get()
+                                    : new List<Decorator>(),
+                                  Settings = settings.IsDefined ? settings.Get() : null,
+                                  Rooms = rooms.ToList(),
+                                }
+                              )
+                          )
+                      )
+                  )
+              )
             )
           )
       );
