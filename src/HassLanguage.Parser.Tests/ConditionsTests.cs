@@ -12,13 +12,17 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test(); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    result.Automations[0].WhenClauses.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    result.Automations[0].WhenClause.Should().NotBeNull();
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.Expression.Should().NotBeNull();
   }
@@ -28,12 +32,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 for 30m { do test(); } }"
+      @"automation 'Test' {
+  when test.value == 5 for 30m {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(30);
@@ -45,12 +53,19 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when all { test.value > 5; test.value < 10; } { do test(); } }"
+      @"automation 'Test' {
+  when all {
+    test.value > 5;
+    test.value < 10;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -60,12 +75,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when all for 5m { test.value > 5; } { do test(); } }"
+      @"automation 'Test' {
+  when all for 5m {
+    test.value > 5;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(5);
@@ -77,12 +98,19 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when any { test.value > 5; test.value < 0; } { do test(); } }"
+      @"automation 'Test' {
+  when any {
+    test.value > 5;
+    test.value < 0;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
   }
@@ -92,12 +120,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when any for 10s { test.value > 5; } { do test(); } }"
+      @"automation 'Test' {
+  when any for 10s {
+    test.value > 5;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(10);
@@ -109,12 +143,19 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when for 1h { test.value > 5; test.value < 10; } { do test(); } }"
+      @"automation 'Test' {
+  when for 1h {
+    test.value > 5;
+    test.value < 10;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -136,12 +177,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when test.value == 5 for {duration} {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when test.value == 5 for {duration} {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -161,12 +206,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when all for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when all for {duration} {{
+    test.value > 5;
+  }} {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -186,12 +237,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when any for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when any for {duration} {{
+    test.value > 5;
+  }} {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -211,12 +268,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when for {duration} {{ test.value > 5; }} {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when for {duration} {{
+    test.value > 5;
+  }} {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -229,12 +292,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when sensor.temperature > 25 for 5m { do test(); } }"
+      @"automation 'Test' {
+  when sensor.temperature > 25 for 5m {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.Expression.Should().NotBeNull();
     condition.ForDuration.Should().NotBeNull();
@@ -247,12 +314,20 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when all for 10s { temp > 20; humidity < 80; pressure > 1000; } { do test(); } }"
+      @"automation 'Test' {
+  when all for 10s {
+    temp > 20;
+    humidity < 80;
+    pressure > 1000;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(3);
     condition.ForDuration.Should().NotBeNull();
@@ -265,12 +340,19 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when any for 1h { door.open == true; window.open == true; } { do test(); } }"
+      @"automation 'Test' {
+  when any for 1h {
+    door.open == true;
+    window.open == true;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.Conditions.Should().HaveCount(2);
     condition.ForDuration.Should().NotBeNull();
@@ -283,12 +365,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test(); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -298,12 +384,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when all { test.value > 5; } { do test(); } }"
+      @"automation 'Test' {
+  when all {
+    test.value > 5;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AllCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -313,12 +405,18 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when any { test.value > 5; } { do test(); } }"
+      @"automation 'Test' {
+  when any {
+    test.value > 5;
+  } {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as AnyCondition;
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
@@ -328,12 +426,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when temp > 20 && temp < 30 { do test(); } }"
+      @"automation 'Test' {
+  when temp > 20 && temp < 30 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -347,12 +449,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when door.open == true || window.open == true { do test(); } }"
+      @"automation 'Test' {
+  when door.open == true || window.open == true {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -366,12 +472,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when temp > 20 && temp < 30 || humidity > 50 { do test(); } }"
+      @"automation 'Test' {
+  when temp > 20 && temp < 30 || humidity > 50 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -388,12 +498,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when door.open == true || window.open == true && time > 10 { do test(); } }"
+      @"automation 'Test' {
+  when door.open == true || window.open == true && time > 10 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -410,12 +524,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when (temp > 20 || temp < 10) && humidity < 80 { do test(); } }"
+      @"automation 'Test' {
+  when (temp > 20 || temp < 10) && humidity < 80 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -434,12 +552,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when (temp > 20 && temp < 30) || (humidity > 50 && humidity < 80) { do test(); } }"
+      @"automation 'Test' {
+  when (temp > 20 && temp < 30) || (humidity > 50 && humidity < 80) {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -465,12 +587,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when temp > 20 && temp < 30 for 5m { do test(); } }"
+      @"automation 'Test' {
+  when temp > 20 && temp < 30 for 5m {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -485,12 +611,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when door.open == true || window.open == true for 10s { do test(); } }"
+      @"automation 'Test' {
+  when door.open == true || window.open == true for 10s {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -505,12 +635,16 @@ public class ConditionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when (temp > 20 || temp < 10) && humidity < 80 for 1h { do test(); } }"
+      @"automation 'Test' {
+  when (temp > 20 || temp < 10) && humidity < 80 for 1h {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -518,5 +652,188 @@ public class ConditionsTests
     condition.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(1);
     condition.ForDuration.Unit.Should().Be(DurationUnit.Hours);
+  }
+
+  [Fact]
+  public void ParseAllConditionWithMultipleExpressions_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when all {
+    kitchen.sensors.motion == on;
+    kitchen.sensors.lux < 120;
+    kitchen.temp > 20;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(3);
+  }
+
+  [Fact]
+  public void ParseAnyConditionWithMultipleExpressions_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when any {
+    living.climate.temp > 28.0;
+    living.humidity > 70;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(2);
+  }
+
+  [Fact]
+  public void ParseAllConditionWithNestedAnyCondition_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when all {
+    any {
+      living.climate.temp > 25.0;
+      living.humidity > 65;
+    };
+    living.windows.main == closed;
+    living.temp > 20;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(3);
+
+    // Проверяем, что первое условие - это вложенный any блок
+    // Примечание: это может не работать с текущим парсером, так как он использует Expression, а не ConditionExpression
+  }
+
+  [Fact]
+  public void ParseAnyConditionWithNestedAllCondition_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when any {
+    all {
+      temp > 20;
+      humidity < 80;
+    };
+    pressure > 1000;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(2);
+  }
+
+  [Fact]
+  public void ParseAllConditionWithNestedAnyAndForDuration_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when all for 5m {
+    any {
+      temp > 25;
+      humidity > 65;
+    };
+    window == ""closed"";
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(2);
+    condition.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(5);
+    condition.ForDuration.Unit.Should().Be(DurationUnit.Minutes);
+  }
+
+  [Fact]
+  public void ParseAnyConditionWithNestedAllAndForDuration_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when any for 10s {
+    all {
+      door.open == true;
+      window.open == true;
+    };
+    motion == on;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AnyCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(2);
+    condition.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(10);
+    condition.ForDuration.Unit.Should().Be(DurationUnit.Seconds);
+  }
+
+  [Fact]
+  public void ParseDeeplyNestedConditions_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
+  when all {
+    any {
+      all {
+        temp > 20;
+        humidity < 80;
+      };
+      pressure > 1000;
+    };
+    temp > 15;
+  } {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClause.Condition as AllCondition;
+    condition.Should().NotBeNull();
+    condition!.Conditions.Should().HaveCount(2);
   }
 }

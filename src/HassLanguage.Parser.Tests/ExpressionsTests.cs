@@ -18,12 +18,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when test.value {op} 5 {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when test.value {op} 5 {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -35,12 +39,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value > 5 && test.value < 10 { do test(); } }"
+      @"automation 'Test' {
+  when test.value > 5 && test.value < 10 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -52,12 +60,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value > 5 || test.value < 0 { do test(); } }"
+      @"automation 'Test' {
+  when test.value > 5 || test.value < 0 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as BinaryExpression;
     expr.Should().NotBeNull();
@@ -69,12 +81,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when (test.value > 5) { do test(); } }"
+      @"automation 'Test' {
+  when (test.value > 5) {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ParenExpression;
     expr.Should().NotBeNull();
@@ -85,12 +101,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.device.entity { do test(); } }"
+      @"automation 'Test' {
+  when test.device.entity {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ReferenceExpression;
     expr.Should().NotBeNull();
@@ -102,12 +122,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.func(1, 2) { do test(); } }"
+      @"automation 'Test' {
+  when test.func(1, 2) {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as FunctionCallExpression;
     expr.Should().NotBeNull();
@@ -121,12 +145,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when time in 08:00..18:00 { do test(); } }"
+      @"automation 'Test' {
+  when time in 08:00..18:00 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();
@@ -143,12 +171,16 @@ public class ExpressionsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when temp in 20..25 { do test(); } }"
+      @"automation 'Test' {
+  when temp in 20..25 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();

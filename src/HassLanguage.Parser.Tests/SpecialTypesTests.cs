@@ -21,12 +21,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when test.value == 5 for {input} {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when test.value == 5 for {input} {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().NotBeNull();
     condition.ForDuration!.Value.Should().Be(expectedValue);
@@ -46,12 +50,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      $"automation 'Test' {{ when time in {input}..18:00 {{ do test(); }} }}"
+      $@"automation 'Test' {{
+  when time in {input}..18:00 {{
+    do test();
+  }}
+}}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var expr = condition!.Expression as InRangeExpression;
     expr.Should().NotBeNull();
@@ -66,12 +74,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when 2024-01-15T10:30:45 == 2024-01-15T10:30:45 { do test(); } }"
+      @"automation 'Test' {
+  when 2024-01-15T10:30:45 == 2024-01-15T10:30:45 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     // DateTime parsing is tested implicitly - if it fails, the parse would throw
   }
@@ -81,12 +93,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test.func({ brightness: 70; color: 'red'; }); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test.func({ brightness: 70; color: 'red'; });
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
@@ -104,12 +120,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test.func({ a: 1, b: 2, c: 3 }); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test.func({ a: 1, b: 2, c: 3 });
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;
@@ -123,12 +143,16 @@ public class SpecialTypesTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test.func({ }); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test.func({ });
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;

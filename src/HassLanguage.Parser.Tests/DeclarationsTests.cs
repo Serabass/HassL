@@ -11,7 +11,8 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseBasicHome()
   {
     // Act
-    var result = HassLanguageParser.Parse("home 'TestHome' test { }");
+    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
+}");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -24,7 +25,10 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseWithSettings()
   {
     // Act
-    var result = HassLanguageParser.Parse("home 'TestHome' test { settings { } }");
+    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
+  settings {
+  }
+}");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -35,7 +39,10 @@ public class DeclarationsTests
   public void ParseRoomDeclaration_ShouldParseBasicRoom()
   {
     // Act
-    var result = HassLanguageParser.Parse("home 'TestHome' test { room 'TestRoom' room { } }");
+    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
+  room 'TestRoom' room {
+  }
+}");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -49,7 +56,10 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room kitchen { } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room kitchen {
+  }
+}"
     );
 
     // Assert
@@ -62,7 +72,12 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { } } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room {
+    device 'TestDevice' device {
+    }
+  }
+}"
     );
 
     // Assert
@@ -77,7 +92,12 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device light { } } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room {
+    device 'TestDevice' device light {
+    }
+  }
+}"
     );
 
     // Assert
@@ -90,7 +110,15 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { entities: [ light main { id: 'light.main'; } ]; } } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room {
+    device 'TestDevice' device {
+      entities: [
+        light main { id: 'light.main'; }
+      ];
+    }
+  }
+}"
     );
 
     // Assert
@@ -132,7 +160,20 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room { device 'TestDevice' device { entities: [ sensor temp { id: 'sensor.temp'; unit: '°C'; min: 0; max: 100; }; ]; } } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room {
+    device 'TestDevice' device {
+      entities: [
+        sensor temp {
+          id: 'sensor.temp';
+          unit: '°C';
+          min: 0;
+          max: 100;
+        }
+      ];
+    }
+  }
+}"
     );
 
     // Assert
@@ -150,25 +191,17 @@ public class DeclarationsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'TestAutomation' { when test.value == 5 { do test(); } }"
+      @"automation 'TestAutomation' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
     result.Automations[0].DisplayName.Should().Be("TestAutomation");
-    result.Automations[0].WhenClauses.Should().HaveCount(1);
+    result.Automations[0].WhenClause.Should().NotBeNull();
   }
 
-  [Fact]
-  public void ParseAutomationDeclaration_ShouldParseMultipleWhenClauses()
-  {
-    // Act
-    var result = HassLanguageParser.Parse(
-      "automation \"TestAutomation\" { when test.value == 5 { do test1(); } when test.value == 10 { do test2(); } }"
-    );
-
-    // Assert
-    result.Automations.Should().HaveCount(1);
-    result.Automations[0].WhenClauses.Should().HaveCount(2);
-  }
 }

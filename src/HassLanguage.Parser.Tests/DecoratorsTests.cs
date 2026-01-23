@@ -12,7 +12,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@mode('restart') automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@mode('restart') automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -28,7 +32,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@mode(restart) automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@mode(restart) automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -49,7 +57,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@cooldown(10s) automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@cooldown(10s) automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -66,7 +78,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@retry(3) automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@retry(3) automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -82,7 +98,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@test('arg1', 10s, 5) automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@test('arg1', 10s, 5) automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -96,7 +116,11 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "@mode(restart) @cooldown(10s) automation 'Test' { when test.value == 5 { do test(); } }"
+      @"@mode(restart) @cooldown(10s) automation 'Test' {
+  when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
@@ -111,20 +135,25 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { @edge(rising) when test.value == 5 { do test(); } }"
+      @"automation 'Test' {
+  @edge(rising) when test.value == 5 {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    result.Automations[0].WhenClauses[0].Decorators.Should().HaveCount(1);
-    result.Automations[0].WhenClauses[0].Decorators[0].Name.Should().Be("edge");
+    result.Automations[0].WhenClause.Decorators.Should().HaveCount(1);
+    result.Automations[0].WhenClause.Decorators[0].Name.Should().Be("edge");
   }
 
   [Fact]
   public void ParseDecorator_ShouldParseOnHome()
   {
     // Act
-    var result = HassLanguageParser.Parse("@enabled(true) home 'TestHome' test { }");
+    var result = HassLanguageParser.Parse(@"@enabled(true) home 'TestHome' test {
+}");
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -137,7 +166,10 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { @priority(high) room 'TestRoom' room { } }"
+      @"home 'TestHome' test {
+  @priority(high) room 'TestRoom' room {
+  }
+}"
     );
 
     // Assert
@@ -151,7 +183,12 @@ public class DecoratorsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "home 'TestHome' test { room 'TestRoom' room { @enabled(true) device 'TestDevice' device { } } }"
+      @"home 'TestHome' test {
+  room 'TestRoom' room {
+    @enabled(true) device 'TestDevice' device {
+    }
+  }
+}"
     );
 
     // Assert

@@ -214,12 +214,16 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when 42 > 10 && 3.14 < 5.0 && 'test' == 'test' { do test(); } }"
+      @"automation 'Test' {
+  when 42 > 10 && 3.14 < 5.0 && 'test' == 'test' {
+    do test();
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var binExpr = condition!.Expression as BinaryExpression;
     binExpr.Should().NotBeNull();
@@ -231,12 +235,16 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do test.func(42, 3.14, 'string', true, 30s); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do test.func(42, 3.14, 'string', true, 30s);
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(5);
@@ -353,7 +361,7 @@ public class LiteralsTests
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var inRangeExpr = condition!.Expression as InRangeExpression;
     inRangeExpr.Should().NotBeNull();
@@ -369,17 +377,21 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when 42 > 10 || 3.14 < 10.0 { do test.func({ value: 100, enabled: true }, 'test', 5m); } }"
+      @"automation 'Test' {
+  when 42 > 10 || 3.14 < 10.0 {
+    do test.func({ value: 100, enabled: true }, 'test', 5m);
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    var condition = result.Automations[0].WhenClause.Condition as SingleCondition;
     condition.Should().NotBeNull();
     var binExpr = condition!.Expression as BinaryExpression;
     binExpr.Should().NotBeNull();
     binExpr!.Operator.Should().Be(BinaryOperator.Or);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
@@ -531,12 +543,16 @@ public class LiteralsTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      "automation 'Test' { when test.value == 5 { do light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 }); } }"
+      @"automation 'Test' {
+  when test.value == 5 {
+    do light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 });
+  }
+}"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var actionBlock = result.Automations[0].WhenClauses[0].Actions;
+    var actionBlock = result.Automations[0].WhenClause.Actions;
     var action = actionBlock.Statements[0] as DoAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
