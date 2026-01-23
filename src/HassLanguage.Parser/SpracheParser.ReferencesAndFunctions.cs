@@ -56,7 +56,8 @@ public static partial class SpracheParser
         Expression
           .DelimitedBy(Token(","))
           .Contained(SkipWhitespace, SkipWhitespace)
-          .Then(args => Token(")").Return(args.ToList()))
+          .Optional()
+          .Then(args => Token(")").Return(args.IsDefined ? args.Get().ToList() : new List<Expression>()))
       );
 
   private static Parser<FunctionCall> FunctionCallImpl =>

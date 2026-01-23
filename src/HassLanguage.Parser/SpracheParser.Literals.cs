@@ -63,9 +63,7 @@ public static partial class SpracheParser
             .Contained(SkipWhitespace, SkipWhitespace)
             .Select(elements => elements.ToList())
         )
-        .Or(SkipWhitespace.Return(new List<Expression>()))
-        .Then(elements =>
-          Token("]").Return(new ArrayLiteral { Elements = elements })
-        )
+          .Or(SkipWhitespace.Return(new List<Expression>()))
+          .Then(elements => Token("]").Return(new ArrayLiteral { Elements = elements }))
       );
 }

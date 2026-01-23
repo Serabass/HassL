@@ -15,6 +15,20 @@ public static partial class SpracheParser
       )
       .Or(ParseWaitAction());
 
+  // Public parser for parsing single action statement
+  public static Parser<ActionStatement> ParseActionStatement =>
+    SkipWhitespace
+      .Many()
+      .Then(_ => ActionStatement)
+      .Then(action => SkipWhitespace.Many().Then(_ => Sprache.Parse.Return(action)));
+
+  // Public parser for parsing action block
+  public static Parser<ActionBlock> ParseActionBlock =>
+    SkipWhitespace
+      .Many()
+      .Then(_ => ActionBlock)
+      .Then(block => SkipWhitespace.Many().Then(_ => Sprache.Parse.Return(block)));
+
   private static Parser<ActionStatement> ParseWaitAction() =>
     Token("wait")
       .Then(_ =>
@@ -22,17 +36,20 @@ public static partial class SpracheParser
           Token("for")
             .Then(_ =>
               Duration.Then(forDur =>
-                (Token("timeout").Then(_ => Duration).Optional()).Then(timeout =>
-                  Token(";")
-                    .Return(
-                      new WaitAction
-                      {
-                        Condition = condition,
-                        ForDuration = forDur,
-                        Timeout = timeout.IsDefined ? timeout.Get() : null,
-                      } as ActionStatement
-                    )
-                )
+                Token("timeout")
+                  .Then(_ => Duration)
+                  .Optional()
+                  .Then(timeout =>
+                    Token(";")
+                      .Return(
+                        new WaitAction
+                        {
+                          Condition = condition,
+                          ForDuration = forDur,
+                          Timeout = timeout.IsDefined ? timeout.Get() : null,
+                        } as ActionStatement
+                      )
+                  )
               )
             )
         )
@@ -60,7 +77,7 @@ public static partial class SpracheParser
                 Sprache.Parse.Return(
                   new WhenClause
                   {
-                    Decorators = decorators.IsDefined ? decorators.Get() : new List<Decorator>(),
+                    Decorators = decorators.IsDefined ? decorators.Get() : [],
                     Condition = condition,
                     Actions = actions,
                   }
@@ -88,9 +105,7 @@ public static partial class SpracheParser
                           new AutomationDeclaration
                           {
                             DisplayName = displayName,
-                            Decorators = decorators.IsDefined
-                              ? decorators.Get()
-                              : new List<Decorator>(),
+                            Decorators = decorators.IsDefined ? decorators.Get() : [],
                             WhenClauses = whenClauses.ToList(),
                           }
                         )
