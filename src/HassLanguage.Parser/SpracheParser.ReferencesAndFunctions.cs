@@ -24,8 +24,7 @@ public static partial class SpracheParser
             parts.AddRange(rest);
             return new Reference { Parts = parts };
           })
-      )
-      .Or(Sprache.Parse.Return(new Reference { Parts = new List<string> { first } }))
+      ).Or(Sprache.Parse.Return(new Reference { Parts = new List<string> { first } }))
     );
 
   // Function calls
@@ -57,7 +56,9 @@ public static partial class SpracheParser
           .DelimitedBy(Token(","))
           .Contained(SkipWhitespace, SkipWhitespace)
           .Optional()
-          .Then(args => Token(")").Return(args.IsDefined ? args.Get().ToList() : new List<Expression>()))
+          .Then(args =>
+            Token(")").Return(args.IsDefined ? args.Get().ToList() : new List<Expression>())
+          )
       );
 
   private static Parser<FunctionCall> FunctionCallImpl =>

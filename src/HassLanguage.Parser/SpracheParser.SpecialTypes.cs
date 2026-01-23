@@ -63,7 +63,7 @@ public static partial class SpracheParser
                           .Select(s =>
                           {
                             var dateStr = y + "-" + m + "-" + d + "T" + h + ":" + min + ":" + s;
-                            return System.DateTime.Parse(dateStr);
+                            return DateTime.Parse(dateStr);
                           })
                       )
                   )

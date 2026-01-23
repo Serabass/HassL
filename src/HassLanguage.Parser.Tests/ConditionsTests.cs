@@ -322,4 +322,201 @@ public class ConditionsTests
     condition.Should().NotBeNull();
     condition!.ForDuration.Should().BeNull();
   }
+
+  [Fact]
+  public void ParseSingleConditionWithAndOperator_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when temp > 20 && temp < 30 { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.And);
+    expr.Left.Should().NotBeNull();
+    expr.Right.Should().NotBeNull();
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithOrOperator_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when door.open == true || window.open == true { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Or);
+    expr.Left.Should().NotBeNull();
+    expr.Right.Should().NotBeNull();
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithAndAndOrOperators_ShouldRespectOperatorPrecedence()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when temp > 20 && temp < 30 || humidity > 50 { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Or);
+
+    // Проверяем, что левая часть содержит && (более высокий приоритет)
+    var leftExpr = expr.Left as BinaryExpression;
+    leftExpr.Should().NotBeNull();
+    leftExpr!.Operator.Should().Be(BinaryOperator.And);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithOrAndAndOperators_ShouldRespectOperatorPrecedence()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when door.open == true || window.open == true && time > 10 { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Or);
+
+    // Проверяем, что правая часть содержит && (более высокий приоритет)
+    var rightExpr = expr.Right as BinaryExpression;
+    rightExpr.Should().NotBeNull();
+    rightExpr!.Operator.Should().Be(BinaryOperator.And);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithParentheses_ShouldOverrideOperatorPrecedence()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when (temp > 20 || temp < 10) && humidity < 80 { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.And);
+
+    // Проверяем, что левая часть - это выражение в скобках с ||
+    var leftExpr = expr.Left as ParenExpression;
+    leftExpr.Should().NotBeNull();
+    var innerExpr = leftExpr!.Inner as BinaryExpression;
+    innerExpr.Should().NotBeNull();
+    innerExpr!.Operator.Should().Be(BinaryOperator.Or);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithComplexNestedOperators_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when (temp > 20 && temp < 30) || (humidity > 50 && humidity < 80) { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Or);
+
+    // Проверяем левую часть (скобки с &&)
+    var leftExpr = expr.Left as ParenExpression;
+    leftExpr.Should().NotBeNull();
+    var leftInner = leftExpr!.Inner as BinaryExpression;
+    leftInner.Should().NotBeNull();
+    leftInner!.Operator.Should().Be(BinaryOperator.And);
+
+    // Проверяем правую часть (скобки с &&)
+    var rightExpr = expr.Right as ParenExpression;
+    rightExpr.Should().NotBeNull();
+    var rightInner = rightExpr!.Inner as BinaryExpression;
+    rightInner.Should().NotBeNull();
+    rightInner!.Operator.Should().Be(BinaryOperator.And);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithAndOperatorAndForDuration_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when temp > 20 && temp < 30 for 5m { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.And);
+    condition.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(5);
+    condition.ForDuration.Unit.Should().Be(DurationUnit.Minutes);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithOrOperatorAndForDuration_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when door.open == true || window.open == true for 10s { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.Or);
+    condition.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(10);
+    condition.ForDuration.Unit.Should().Be(DurationUnit.Seconds);
+  }
+
+  [Fact]
+  public void ParseSingleConditionWithComplexOperatorsAndForDuration_ShouldParseCorrectly()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when (temp > 20 || temp < 10) && humidity < 80 for 1h { do test(); } }"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
+    condition.Should().NotBeNull();
+    var expr = condition!.Expression as BinaryExpression;
+    expr.Should().NotBeNull();
+    expr!.Operator.Should().Be(BinaryOperator.And);
+    condition.ForDuration.Should().NotBeNull();
+    condition.ForDuration!.Value.Should().Be(1);
+    condition.ForDuration.Unit.Should().Be(DurationUnit.Hours);
+  }
 }
