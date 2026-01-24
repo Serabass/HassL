@@ -11,6 +11,76 @@ public static partial class SpracheParser
   );
   private static readonly Parser<Duration> ForDuration = Sprache.Parse.Ref(() => ForDurationImpl);
 
+  // Condition item - either Expression or nested ConditionExpression (all { ... } or any { ... })
+  // Each item ends with ;
+  private static readonly Parser<Expression> ConditionItem = Sprache.Parse.Ref(() =>
+    ConditionItemImpl
+  );
+
+  private static Parser<Expression> ConditionItemImpl =>
+    // Try to parse nested condition first (all { ... } or any { ... })
+    (
+      Token("all")
+        .Then(_ =>
+          ForDuration
+            .Optional()
+            .Then(forDur =>
+              Token("{")
+                .Then(_ =>
+                  ConditionItem
+                    .Many()
+                    .Then(conditions =>
+                      Token("}")
+                        .Then(_ =>
+                          Token(";")
+                            .Return(
+                              new FunctionCallExpression
+                              {
+                                FunctionCall = new FunctionCall
+                                {
+                                  Name = "all",
+                                  Arguments = conditions.ToList(),
+                                },
+                              } as Expression
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        .Or(
+          Token("any")
+            .Then(_ =>
+              ForDuration
+                .Optional()
+                .Then(forDur =>
+                  Token("{")
+                    .Then(_ =>
+                      ConditionItem
+                        .Many()
+                        .Then(conditions =>
+                          Token("}")
+                            .Then(_ =>
+                              Token(";")
+                                .Return(
+                                  new FunctionCallExpression
+                                  {
+                                    FunctionCall = new FunctionCall
+                                    {
+                                      Name = "any",
+                                      Arguments = conditions.ToList(),
+                                    },
+                                  } as Expression
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        .Or(Expression.Then(expr => Token(";").Return(expr)))
+    );
+
   // Condition expressions
   private static Parser<ConditionExpression> ConditionExpressionImpl =>
     Token("all")
@@ -20,16 +90,18 @@ public static partial class SpracheParser
           .Then(forDur =>
             Token("{")
               .Then(_ =>
-                (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
-                  Token("}")
-                    .Return(
-                      new AllCondition
-                      {
-                        Conditions = conditions.ToList(),
-                        ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                      } as ConditionExpression
-                    )
-                )
+                ConditionItem
+                  .Many()
+                  .Then(conditions =>
+                    Token("}")
+                      .Return(
+                        new AllCondition
+                        {
+                          Conditions = conditions.ToList(),
+                          ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                        } as ConditionExpression
+                      )
+                  )
               )
           )
       )
@@ -41,16 +113,18 @@ public static partial class SpracheParser
               .Then(forDur =>
                 Token("{")
                   .Then(_ =>
-                    (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
-                      Token("}")
-                        .Return(
-                          new AnyCondition
-                          {
-                            Conditions = conditions.ToList(),
-                            ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                          } as ConditionExpression
-                        )
-                    )
+                    ConditionItem
+                      .Many()
+                      .Then(conditions =>
+                        Token("}")
+                          .Return(
+                            new AnyCondition
+                            {
+                              Conditions = conditions.ToList(),
+                              ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                            } as ConditionExpression
+                          )
+                      )
                   )
               )
           )
