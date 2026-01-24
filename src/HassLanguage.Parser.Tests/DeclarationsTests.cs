@@ -11,8 +11,10 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseBasicHome()
   {
     // Act
-    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
-}");
+    var result = HassLanguageParser.Parse(
+      @"home 'TestHome' test {
+}"
+    );
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -25,10 +27,12 @@ public class DeclarationsTests
   public void ParseHomeDeclaration_ShouldParseWithSettings()
   {
     // Act
-    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
+    var result = HassLanguageParser.Parse(
+      @"home 'TestHome' test {
   settings {
   }
-}");
+}"
+    );
 
     // Assert
     result.Homes.Should().HaveCount(1);
@@ -39,10 +43,12 @@ public class DeclarationsTests
   public void ParseAreaDeclaration_ShouldParseBasicArea()
   {
     // Act
-    var result = HassLanguageParser.Parse(@"home 'TestHome' test {
+    var result = HassLanguageParser.Parse(
+      @"home 'TestHome' test {
   area 'TestArea' area {
   }
-}");
+}"
+    );
 
     // Assert
     result.Homes.Should().HaveCount(1);

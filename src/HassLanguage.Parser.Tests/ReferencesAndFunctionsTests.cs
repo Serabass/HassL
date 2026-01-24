@@ -11,11 +11,13 @@ public class ReferencesAndFunctionsTests
   public void ParseReference_ShouldParseSinglePart()
   {
     // Act
-    var result = HassLanguageParser.Parse(@"automation 'Test' {
+    var result = HassLanguageParser.Parse(
+      @"automation 'Test' {
   when test {
     do test();
   }
-}");
+}"
+    );
 
     // Assert
     result.Automations.Should().HaveCount(1);

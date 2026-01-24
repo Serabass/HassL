@@ -1,1 +1,1 @@
-dotnet csharpier format src/**/*.cs
+dotnet csharpier format ./src
