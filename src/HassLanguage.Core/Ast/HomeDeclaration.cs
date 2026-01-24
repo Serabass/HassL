@@ -6,5 +6,5 @@ public class HomeDeclaration : IAstNode
   public string Alias { get; set; } = string.Empty;
   public List<Decorator> Decorators { get; set; } = new();
   public Settings? Settings { get; set; }
-  public List<RoomDeclaration> Rooms { get; set; } = new();
+  public List<AreaDeclaration> Areas { get; set; } = new();
 }

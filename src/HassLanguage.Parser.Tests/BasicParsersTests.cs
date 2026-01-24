@@ -296,8 +296,8 @@ automation 'Test' {
       @"
 // Comment before home
 home 'MyHome' {
-  // Comment before room
-  room ""Living Room"" living {
+  // Comment before area
+  area ""Living Room"" living {
     // Comment before device
     device 'Light' light {
       entities: [
@@ -322,9 +322,9 @@ automation 'Test' {
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Homes[0].Areas.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
     result.Automations.Should().HaveCount(1);
   }
 
@@ -404,7 +404,7 @@ automation 'Test Automation' {
     var input =
       @"
 home 'My Home' {
-  room ""Living Room"" living {
+  area ""Living Room"" living {
     device 'Light Device' light {
       entities: [
         light main { id: 'light.main'; }
@@ -420,11 +420,11 @@ home 'My Home' {
     // Assert
     result.Homes.Should().HaveCount(1);
     result.Homes[0].DisplayName.Should().Be("My Home");
-    result.Homes[0].Rooms.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].DisplayName.Should().Be("Living Room");
-    result.Homes[0].Rooms[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].DisplayName.Should().Be("Light Device");
-    result.Homes[0].Rooms[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Homes[0].Areas.Should().HaveCount(1);
+    result.Homes[0].Areas[0].DisplayName.Should().Be("Living Room");
+    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices[0].DisplayName.Should().Be("Light Device");
+    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
   }
 
   [Fact]

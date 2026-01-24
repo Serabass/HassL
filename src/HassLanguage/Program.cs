@@ -17,7 +17,7 @@ else
   exampleCode =
     @"
 home ""MyFlat"" {
-  room ""Kitchen"" kitchen {
+  area ""Kitchen"" kitchen {
     device ""Light"" light {
       entities: [
         light ceiling { id: ""light.kitchen_ceiling""; },

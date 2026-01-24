@@ -253,7 +253,7 @@ public class ActionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.room.device.entity);
+    do light.turn_on(home.area.device.entity);
   }
 }"
     );
@@ -266,7 +266,7 @@ public class ActionsTests
 
     var arg = action.FunctionCall.Arguments[0] as ReferenceExpression;
     arg.Should().NotBeNull();
-    arg!.Reference.Parts.Should().Equal("home", "room", "device", "entity");
+    arg!.Reference.Parts.Should().Equal("home", "area", "device", "entity");
   }
 
   [Fact]
@@ -353,7 +353,7 @@ public class ActionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(42, 'string', true, home.room.entity, { key: 'value' }, [1, 2, 3]);
+    do test.func(42, 'string', true, home.area.entity, { key: 'value' }, [1, 2, 3]);
   }
 }"
     );
@@ -381,7 +381,7 @@ public class ActionsTests
 
     // Check reference
     var arg4 = action.FunctionCall.Arguments[3] as ReferenceExpression;
-    arg4!.Reference.Parts.Should().Equal("home", "room", "entity");
+    arg4!.Reference.Parts.Should().Equal("home", "area", "entity");
 
     // Check object
     var arg5 = action.FunctionCall.Arguments[4] as LiteralExpression;

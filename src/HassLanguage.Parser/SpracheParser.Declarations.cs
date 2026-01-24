@@ -97,12 +97,12 @@ public static partial class SpracheParser
           )
       );
 
-  // Room declaration
-  private static Parser<RoomDeclaration> RoomDeclaration =>
+  // Area declaration
+  private static Parser<AreaDeclaration> AreaDeclaration =>
     DecoratorList
       .Optional()
       .Then(decorators =>
-        Token("room")
+        Token("area")
           .Then(_ =>
             StringLiteral.Then(displayName =>
               Identifier.Then(alias =>
@@ -116,7 +116,7 @@ public static partial class SpracheParser
                           .Then(devices =>
                             Token("}")
                               .Return(
-                                new RoomDeclaration
+                                new AreaDeclaration
                                 {
                                   DisplayName = displayName,
                                   Alias = alias,
@@ -151,9 +151,9 @@ public static partial class SpracheParser
                     Settings
                       .Optional()
                       .Then(settings =>
-                        RoomDeclaration
+                        AreaDeclaration
                           .Many()
-                          .Then(rooms =>
+                          .Then(areas =>
                             Token("}")
                               .Return(
                                 new HomeDeclaration
@@ -164,7 +164,7 @@ public static partial class SpracheParser
                                     ? decorators.Get()
                                     : new List<Decorator>(),
                                   Settings = settings.IsDefined ? settings.Get() : null,
-                                  Rooms = rooms.ToList(),
+                                  Areas = areas.ToList(),
                                 }
                               )
                           )

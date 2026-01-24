@@ -1,7 +1,7 @@
 // Примеры различных типов сущностей Home Assistant
 
 home 'EntityTypesHome' {
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Lights' lights {
       entities: [
         light main { id: 'light.living_main'; },
@@ -48,7 +48,7 @@ home 'EntityTypesHome' {
     }
   }
 
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },

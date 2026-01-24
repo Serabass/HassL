@@ -1,7 +1,7 @@
 // Минимальный пример - самая простая структура
 
 home 'Minimal' {
-  room 'Room' room {
+  area 'Room' room {
     device 'Device' device {
       entities: [
         sensor value { id: 'sensor.value'; }

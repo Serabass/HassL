@@ -36,42 +36,42 @@ public class SemanticValidator
       return;
     }
 
-    foreach (var room in home.Rooms)
+    foreach (var area in home.Areas)
     {
-      ValidateRoom(home.Alias, room);
+      ValidateArea(home.Alias, area);
     }
   }
 
-  private void ValidateRoom(string homeAlias, RoomDeclaration room)
+  private void ValidateArea(string homeAlias, AreaDeclaration area)
   {
-    var fullPath = $"{homeAlias}.{room.Alias}";
+    var fullPath = $"{homeAlias}.{area.Alias}";
 
-    if (!_symbols.AddRoom(fullPath, room))
+    if (!_symbols.AddArea(fullPath, area))
     {
       _errors.Add(
         new ValidationError(
-          $"Room alias '{room.Alias}' is already defined in home '{homeAlias}'",
-          room
+          $"Area alias '{area.Alias}' is already defined in home '{homeAlias}'",
+          area
         )
       );
       return;
     }
 
-    foreach (var device in room.Devices)
+    foreach (var device in area.Devices)
     {
       ValidateDevice(fullPath, device);
     }
   }
 
-  private void ValidateDevice(string roomPath, DeviceDeclaration device)
+  private void ValidateDevice(string areaPath, DeviceDeclaration device)
   {
-    var fullPath = $"{roomPath}.{device.Alias}";
+    var fullPath = $"{areaPath}.{device.Alias}";
 
     if (!_symbols.AddDevice(fullPath, device))
     {
       _errors.Add(
         new ValidationError(
-          $"Device alias '{device.Alias}' is already defined in room '{roomPath}'",
+          $"Device alias '{device.Alias}' is already defined in area '{areaPath}'",
           device
         )
       );

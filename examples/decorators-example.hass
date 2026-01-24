@@ -1,7 +1,7 @@
 // Примеры использования декораторов
 
 home 'DecoratorHome' {
-  room 'Bathroom' bathroom {
+  area 'Bathroom' bathroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },
@@ -16,7 +16,7 @@ home 'DecoratorHome' {
     }
   }
 
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },

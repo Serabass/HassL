@@ -1,7 +1,7 @@
 // Примеры автоматизаций, основанных на времени
 
 home 'TimeBasedHome' {
-  room 'Bedroom' bedroom {
+  area 'Bedroom' bedroom {
     device 'Light' light {
       entities: [
         light main { id: 'light.bedroom_main'; },
@@ -10,7 +10,7 @@ home 'TimeBasedHome' {
     }
   }
 
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Light' light {
       entities: [
         light main { id: 'light.living_main'; },

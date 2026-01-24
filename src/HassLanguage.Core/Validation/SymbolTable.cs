@@ -5,7 +5,7 @@ namespace HassLanguage.Core.Validation;
 public class SymbolTable
 {
   private readonly Dictionary<string, HomeDeclaration> _homes = new();
-  private readonly Dictionary<string, RoomDeclaration> _rooms = new();
+  private readonly Dictionary<string, AreaDeclaration> _areas = new();
   private readonly Dictionary<string, DeviceDeclaration> _devices = new();
   private readonly Dictionary<string, EntityDeclaration> _entities = new();
 
@@ -19,13 +19,13 @@ public class SymbolTable
     return true;
   }
 
-  public bool AddRoom(string fullPath, RoomDeclaration room)
+  public bool AddArea(string fullPath, AreaDeclaration area)
   {
-    if (_rooms.ContainsKey(fullPath))
+    if (_areas.ContainsKey(fullPath))
     {
       return false;
     }
-    _rooms[fullPath] = room;
+    _areas[fullPath] = area;
     return true;
   }
 
@@ -76,7 +76,7 @@ public class SymbolTable
   public void Clear()
   {
     _homes.Clear();
-    _rooms.Clear();
+    _areas.Clear();
     _devices.Clear();
     _entities.Clear();
   }

@@ -164,20 +164,20 @@ public class DecoratorsTests
   }
 
   [Fact]
-  public void ParseDecorator_ShouldParseOnRoom()
+  public void ParseDecorator_ShouldParseOnArea()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"home 'TestHome' test {
-  @priority(high) room 'TestRoom' room {
+  @priority(high) area 'TestArea' area {
   }
 }"
     );
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Decorators.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Decorators[0].Name.Should().Be("priority");
+    result.Homes[0].Areas[0].Decorators.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Decorators[0].Name.Should().Be("priority");
   }
 
   [Fact]
@@ -186,7 +186,7 @@ public class DecoratorsTests
     // Act
     var result = HassLanguageParser.Parse(
       @"home 'TestHome' test {
-  room 'TestRoom' room {
+  area 'TestArea' area {
     @enabled(true) device 'TestDevice' device {
     }
   }
@@ -195,8 +195,8 @@ public class DecoratorsTests
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].Decorators.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].Decorators[0].Name.Should().Be("enabled");
+    result.Homes[0].Areas[0].Devices[0].Decorators.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices[0].Decorators[0].Name.Should().Be("enabled");
   }
 
   [Fact]
@@ -348,16 +348,16 @@ public class DecoratorsTests
     // Act
     var result = HassLanguageParser.Parse(
       @"home 'TestHome' test {
-  @priority(high) @enabled(true) room 'TestRoom' room {
+  @priority(high) @enabled(true) area 'TestArea' area {
   }
 }"
     );
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Decorators.Should().HaveCount(2);
-    result.Homes[0].Rooms[0].Decorators[0].Name.Should().Be("priority");
-    result.Homes[0].Rooms[0].Decorators[1].Name.Should().Be("enabled");
+    result.Homes[0].Areas[0].Decorators.Should().HaveCount(2);
+    result.Homes[0].Areas[0].Decorators[0].Name.Should().Be("priority");
+    result.Homes[0].Areas[0].Decorators[1].Name.Should().Be("enabled");
   }
 
   [Fact]
@@ -366,7 +366,7 @@ public class DecoratorsTests
     // Act
     var result = HassLanguageParser.Parse(
       @"home 'TestHome' test {
-  room 'TestRoom' room {
+  area 'TestArea' area {
     @enabled(true) @priority(low) device 'TestDevice' device {
     }
   }
@@ -375,9 +375,9 @@ public class DecoratorsTests
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].Decorators.Should().HaveCount(2);
-    result.Homes[0].Rooms[0].Devices[0].Decorators[0].Name.Should().Be("enabled");
-    result.Homes[0].Rooms[0].Devices[0].Decorators[1].Name.Should().Be("priority");
+    result.Homes[0].Areas[0].Devices[0].Decorators.Should().HaveCount(2);
+    result.Homes[0].Areas[0].Devices[0].Decorators[0].Name.Should().Be("enabled");
+    result.Homes[0].Areas[0].Devices[0].Decorators[1].Name.Should().Be("priority");
   }
 
   [Fact]

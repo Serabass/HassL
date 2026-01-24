@@ -1,7 +1,7 @@
 // Простой пример автоматизации умного дома
 
 home 'MyFlat' {
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
         light ceiling { id: 'light.kitchen_ceiling'; },
@@ -17,7 +17,7 @@ home 'MyFlat' {
     }
   }
 
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Climate' climate {
       entities: [
         climate ac { id: 'climate.living_ac'; }

@@ -32,7 +32,7 @@ public class ReferencesAndFunctionsTests
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
-  when home.room.device.entity {
+  when home.area.device.entity {
     do test();
   }
 }"
@@ -44,7 +44,7 @@ public class ReferencesAndFunctionsTests
     condition.Should().NotBeNull();
     var expr = condition!.Expression as ReferenceExpression;
     expr.Should().NotBeNull();
-    expr!.Reference.Parts.Should().Equal("home", "room", "device", "entity");
+    expr!.Reference.Parts.Should().Equal("home", "area", "device", "entity");
   }
 
   [Fact]
@@ -137,7 +137,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.room.device.entity);
+    do light.turn_on(home.area.device.entity);
   }
 }"
     );
@@ -150,7 +150,7 @@ public class ReferencesAndFunctionsTests
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var expr = action.FunctionCall.Arguments[0] as ReferenceExpression;
     expr.Should().NotBeNull();
-    expr!.Reference.Parts.Should().Equal("home", "room", "device", "entity");
+    expr!.Reference.Parts.Should().Equal("home", "area", "device", "entity");
   }
 
   [Fact]
@@ -281,7 +281,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.room.device.entity, { brightness: 70 }, true);
+    do light.turn_on(home.area.device.entity, { brightness: 70 }, true);
   }
 }"
     );
@@ -298,7 +298,7 @@ public class ReferencesAndFunctionsTests
     // First argument - reference
     var refExpr = action.FunctionCall.Arguments[0] as ReferenceExpression;
     refExpr.Should().NotBeNull();
-    refExpr!.Reference.Parts.Should().Equal("home", "room", "device", "entity");
+    refExpr!.Reference.Parts.Should().Equal("home", "area", "device", "entity");
 
     // Second argument - object literal
     var objExpr = action.FunctionCall.Arguments[1] as LiteralExpression;

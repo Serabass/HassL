@@ -47,11 +47,11 @@ docker-compose -f docker-compose.run.yml run --rm hass-language dotnet HassLangu
 
 ## 📝 Синтаксис
 
-### Иерархия: home → room → device → entities
+### Иерархия: home → area → device → entities
 
 ```c
 home "MyFlat" {
-  room "Kitchen" kitchen {
+  area "Kitchen" kitchen {
     device "Light" light {
       entities: [
         light ceiling { id: "light.kitchen_ceiling"; },
@@ -146,7 +146,7 @@ automation "Bathroom light" {
 
 ### Парсер (Sprache)
 - ✅ Полный парсинг синтаксиса DSL
-- ✅ Поддержка home/room/device/entity иерархии
+- ✅ Поддержка home/area/device/entity иерархии
 - ✅ Поддержка automation/when/do/wait конструкций
 - ✅ Декораторы для automation и when
 - ✅ Выражения с приоритетами операторов

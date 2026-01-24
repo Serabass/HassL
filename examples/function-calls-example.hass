@@ -1,7 +1,7 @@
 // Примеры различных вызовов функций
 
 home 'FunctionHome' {
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Light' light {
       entities: [
         light main { id: 'light.living_main'; },
@@ -16,7 +16,7 @@ home 'FunctionHome' {
     }
   }
 
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
         light main { id: 'light.kitchen_main'; }

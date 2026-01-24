@@ -8,7 +8,7 @@
 
 ```c
 home "TestHome" {
-  room "TestRoom" test {
+  area "TestArea" test {
     device "TestDevice" test {
       entities: [
         binary_sensor test_sensor { id: "binary_sensor.test"; }
@@ -67,7 +67,7 @@ docker run --rm -v "${PWD}:/workspace" -w /workspace mcr.microsoft.com/dotnet/sd
 Все примеры следуют одной структуре:
 
 1. **Определение home** - корневой контейнер
-2. **Определение rooms** - комнаты в доме
+2. **Определение areas** - зоны в доме
 3. **Определение devices** - устройства в комнатах
 4. **Определение entities** - конкретные сущности (лампы, датчики)
 5. **Определение automations** - правила автоматизации
@@ -77,7 +77,7 @@ docker run --rm -v "${PWD}:/workspace" -w /workspace mcr.microsoft.com/dotnet/sd
 ### Иерархия
 ```
 home "Name" alias {
-  room "Name" alias {
+  area "Name" alias {
     device "Name" alias {
       entities: [
         entity_type alias { id: "entity.id"; }

@@ -16,7 +16,7 @@ public class IntegrationTests
 home 'TestHome' {
   settings { }
 
-  room 'TestRoom' test {
+  area 'TestRoom' test {
     device 'TestDevice' test {
       entities: [
         binary_sensor test_sensor { id: 'binary_sensor.test'; }
@@ -37,9 +37,9 @@ automation 'Simple test' {
     // Assert
     result.Homes.Should().HaveCount(1);
     result.Homes[0].DisplayName.Should().Be("TestHome");
-    result.Homes[0].Rooms.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Rooms[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Homes[0].Areas.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
     result.Automations.Should().HaveCount(1);
     result.Automations[0].DisplayName.Should().Be("Simple test");
   }
@@ -51,7 +51,7 @@ automation 'Simple test' {
     var input =
       @"
 home 'MyFlat' {
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
         light ceiling { id: 'light.kitchen_ceiling'; },
@@ -67,7 +67,7 @@ home 'MyFlat' {
     }
   }
 
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Climate' climate {
       entities: [
         climate ac { id: 'climate.living_ac'; }
@@ -111,7 +111,7 @@ automation 'Extreme conditions alert' {
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms.Should().HaveCount(2);
+    result.Homes[0].Areas.Should().HaveCount(2);
     result.Automations.Should().HaveCount(3);
 
     // Check first automation
@@ -239,7 +239,7 @@ automation 'Auto3' {
     var input =
       @"
 home 'Complex' complex {
-  room 'Room1' room1 {
+  area 'Area1' area1 {
     device 'Device1' device1 {
       entities: [
         light main { id: 'light.main'; },
@@ -248,7 +248,7 @@ home 'Complex' complex {
     }
   }
   
-  room 'Room2' room2 {
+  area 'Area2' area2 {
     device 'Device2' device2 {
       entities: [
         switch sw { id: 'switch.sw'; }
@@ -259,11 +259,11 @@ home 'Complex' complex {
 
 automation 'Complex Auto' {
   when all {
-    room1.device1.temp > 25.0;
-    room2.device2.sw == 'on';
+    area1.device1.temp > 25.0;
+    area2.device2.sw == 'on';
   } for 5m {
     do notify.telegram('Complex condition met');
-    wait room1.device1.temp < 20.0 for 10m timeout 1h;
+    wait area1.device1.temp < 20.0 for 10m timeout 1h;
     do notify.telegram('Temperature dropped');
   }
 }";
@@ -273,7 +273,7 @@ automation 'Complex Auto' {
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms.Should().HaveCount(2);
+    result.Homes[0].Areas.Should().HaveCount(2);
     result.Automations.Should().HaveCount(1);
     var automation = result.Automations[0];
     automation.WhenClauses.Should().HaveCount(1);
@@ -290,7 +290,7 @@ automation 'Complex Auto' {
     var input =
       @"
 home 'MyHome' {
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Light' light {
       entities: [
         light chandelier { id: 'light.living_chandelier'; }
@@ -316,17 +316,17 @@ automation 'Update light to rainbow' {
 
     // Assert
     result.Homes.Should().HaveCount(1);
-    result.Homes[0].Rooms.Should().HaveCount(1);
-    var room = result.Homes[0].Rooms[0];
-    room.Devices.Should().HaveCount(2);
+    result.Homes[0].Areas.Should().HaveCount(1);
+    var area = result.Homes[0].Areas[0];
+    area.Devices.Should().HaveCount(2);
 
     // Check light device
-    var lightDevice = room.Devices.First(d => d.Alias == "light");
+    var lightDevice = area.Devices.First(d => d.Alias == "light");
     lightDevice.Entities.Should().HaveCount(1);
     lightDevice.Entities[0].Alias.Should().Be("chandelier");
 
     // Check voice device
-    var voiceDevice = room.Devices.First(d => d.Alias == "voice");
+    var voiceDevice = area.Devices.First(d => d.Alias == "voice");
     voiceDevice.Entities.Should().HaveCount(1);
     voiceDevice.Entities[0].Alias.Should().Be("command");
 

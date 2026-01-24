@@ -1,7 +1,7 @@
 // Примеры использования all и any условий
 
 home 'ConditionHome' {
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.living_motion'; },
@@ -24,7 +24,7 @@ home 'ConditionHome' {
     }
   }
 
-  room 'Bedroom' bedroom {
+  area 'Bedroom' bedroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bedroom_motion'; },

@@ -1,7 +1,7 @@
 // Пример с несколькими комнатами и сложными связями между ними
 
 home 'MultiRoomHome' {
-  room 'Entrance' entrance {
+  area 'Entrance' entrance {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.entrance_motion'; },
@@ -16,7 +16,7 @@ home 'MultiRoomHome' {
     }
   }
 
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.living_motion'; },
@@ -39,7 +39,7 @@ home 'MultiRoomHome' {
     }
   }
 
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
@@ -54,7 +54,7 @@ home 'MultiRoomHome' {
     }
   }
 
-  room 'Bedroom' bedroom {
+  area 'Bedroom' bedroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bedroom_motion'; },
@@ -70,7 +70,7 @@ home 'MultiRoomHome' {
     }
   }
 
-  room 'Bathroom' bathroom {
+  area 'Bathroom' bathroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },

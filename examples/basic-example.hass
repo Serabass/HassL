@@ -18,7 +18,7 @@ home 'TestHome' {
     }
   }
 
-  room 'TestRoom' test {
+  area 'TestRoom' test {
     device 'TestDevice' test {
       entities: [
         binary_sensor test_sensor { id: 'binary_sensor.test'; }

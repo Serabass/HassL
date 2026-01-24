@@ -1,7 +1,7 @@
 // Примеры использования wait с таймаутами
 
 home 'WaitHome' {
-  room 'Hallway' hallway {
+  area 'Hallway' hallway {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.hallway_motion'; }
@@ -15,7 +15,7 @@ home 'WaitHome' {
     }
   }
 
-  room 'Bathroom' bathroom {
+  area 'Bathroom' bathroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },

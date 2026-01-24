@@ -1,7 +1,7 @@
 // Примеры использования логических операторов в условиях
 
 home 'LogicalHome' {
-  room 'Kitchen' kitchen {
+  area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
@@ -18,7 +18,7 @@ home 'LogicalHome' {
     }
   }
 
-  room 'Bathroom' bathroom {
+  area 'Bathroom' bathroom {
     device 'Sensors' sensors {
       entities: [
         binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },

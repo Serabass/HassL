@@ -1,7 +1,7 @@
 // Более сложный пример с комбинированными условиями
 
 home 'SmartHome' {
-  room 'Bedroom' bedroom {
+  area 'Bedroom' bedroom {
     device 'Light' light {
       entities: [
         light main { id: 'light.bedroom_main'; },
@@ -17,7 +17,7 @@ home 'SmartHome' {
     }
   }
 
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Climate' climate {
       entities: [
         climate ac { id: 'climate.living_ac'; }

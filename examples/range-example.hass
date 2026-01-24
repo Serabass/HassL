@@ -1,7 +1,7 @@
 // Примеры использования диапазонов (in range)
 
 home 'RangeHome' {
-  room 'Living Room' living {
+  area 'Living Room' living {
     device 'Sensors' sensors {
       entities: [
         sensor temp { id: 'sensor.living_temp'; unit: '°C'; },

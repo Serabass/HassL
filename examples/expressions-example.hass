@@ -1,7 +1,7 @@
 // Примеры различных выражений и операций
 
 home 'ExpressionHome' {
-  room 'Test' test {
+  area 'Test' test {
     device 'Sensors' sensors {
       entities: [
         sensor temp1 { id: 'sensor.temp1'; unit: '°C'; },
