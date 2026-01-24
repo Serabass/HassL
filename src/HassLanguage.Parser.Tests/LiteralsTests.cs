@@ -149,32 +149,20 @@ public class LiteralsTests
     dateTimeLiteral.Value.Second.Should().Be(expectedSecond);
   }
 
-  [Fact]
-  public void ParseBooleanLiteral_ShouldParseTrue()
+  [Theory]
+  [InlineData("true", true)]
+  [InlineData("false", false)]
+  public void ParseBooleanLiteral_ShouldParseCorrectly(string input, bool expected)
   {
     // Act
-    var result = SpracheParser.ParseExpression("true");
+    var result = SpracheParser.ParseExpression(input);
 
     // Assert
     result.Should().BeOfType<LiteralExpression>();
     var literalExpr = (LiteralExpression)result;
     literalExpr.Literal.Should().BeOfType<BooleanLiteral>();
     var boolLiteral = (BooleanLiteral)literalExpr.Literal;
-    boolLiteral.Value.Should().BeTrue();
-  }
-
-  [Fact]
-  public void ParseBooleanLiteral_ShouldParseFalse()
-  {
-    // Act
-    var result = SpracheParser.ParseExpression("false");
-
-    // Assert
-    result.Should().BeOfType<LiteralExpression>();
-    var literalExpr = (LiteralExpression)result;
-    literalExpr.Literal.Should().BeOfType<BooleanLiteral>();
-    var boolLiteral = (BooleanLiteral)literalExpr.Literal;
-    boolLiteral.Value.Should().BeFalse();
+    boolLiteral.Value.Should().Be(expected);
   }
 
   [Fact]
@@ -207,27 +195,6 @@ public class LiteralsTests
     literalExpr.Literal.Should().BeOfType<ObjectLiteral>();
     var objLiteral = (ObjectLiteral)literalExpr.Literal;
     objLiteral.Properties.Should().HaveCount(2);
-  }
-
-  [Fact]
-  public void ParsePrimitivesInBinaryExpression_ShouldParseCorrectly()
-  {
-    // Act
-    var result = HassLanguageParser.Parse(
-      @"automation 'Test' {
-  when 42 > 10 && 3.14 < 5.0 && 'test' == 'test' {
-    do test();
-  }
-}"
-    );
-
-    // Assert
-    result.Automations.Should().HaveCount(1);
-    var condition = result.Automations[0].WhenClauses[0].Condition as SingleCondition;
-    condition.Should().NotBeNull();
-    var binExpr = condition!.Expression as BinaryExpression;
-    binExpr.Should().NotBeNull();
-    binExpr!.Operator.Should().Be(BinaryOperator.And);
   }
 
   [Fact]

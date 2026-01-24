@@ -20,19 +20,16 @@ public static partial class SpracheParser
           .Then(forDur =>
             Token("{")
               .Then(_ =>
-                Expression
-                  .DelimitedBy(Token(";"))
-                  .Contained(SkipWhitespace, SkipWhitespace)
-                  .Then(conditions =>
-                    Token("}")
-                      .Return(
-                        new AllCondition
-                        {
-                          Conditions = conditions.ToList(),
-                          ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                        } as ConditionExpression
-                      )
-                  )
+                (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
+                  Token("}")
+                    .Return(
+                      new AllCondition
+                      {
+                        Conditions = conditions.ToList(),
+                        ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                      } as ConditionExpression
+                    )
+                )
               )
           )
       )
@@ -44,19 +41,16 @@ public static partial class SpracheParser
               .Then(forDur =>
                 Token("{")
                   .Then(_ =>
-                    Expression
-                      .DelimitedBy(Token(";"))
-                      .Contained(SkipWhitespace, SkipWhitespace)
-                      .Then(conditions =>
-                        Token("}")
-                          .Return(
-                            new AnyCondition
-                            {
-                              Conditions = conditions.ToList(),
-                              ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                            } as ConditionExpression
-                          )
-                      )
+                    (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
+                      Token("}")
+                        .Return(
+                          new AnyCondition
+                          {
+                            Conditions = conditions.ToList(),
+                            ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                          } as ConditionExpression
+                        )
+                    )
                   )
               )
           )
@@ -66,19 +60,16 @@ public static partial class SpracheParser
               .Then(forDur =>
                 Token("{")
                   .Then(_ =>
-                    Expression
-                      .DelimitedBy(Token(";"))
-                      .Contained(SkipWhitespace, SkipWhitespace)
-                      .Then(conditions =>
-                        Token("}")
-                          .Return(
-                            new AllCondition
-                            {
-                              Conditions = conditions.ToList(),
-                              ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                            } as ConditionExpression
-                          )
-                      )
+                    (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
+                      Token("}")
+                        .Return(
+                          new AllCondition
+                          {
+                            Conditions = conditions.ToList(),
+                            ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                          } as ConditionExpression
+                        )
+                    )
                   )
               )
           )

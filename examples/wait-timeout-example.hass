@@ -1,0 +1,82 @@
+// Примеры использования wait с таймаутами
+
+home 'WaitHome' {
+  room 'Hallway' hallway {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.hallway_motion'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.hallway_main'; }
+      ];
+    }
+  }
+
+  room 'Bathroom' bathroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },
+        binary_sensor door { id: 'binary_sensor.bathroom_door'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bathroom_main'; }
+      ];
+    }
+  }
+}
+
+// Простой wait без таймаута
+automation 'Hallway light with wait' {
+  when hallway.sensors.motion == 'on' {
+    do light.turn_on(hallway.light.main, { brightness: 70 });
+    wait hallway.sensors.motion == 'off';
+    do light.turn_off(hallway.light.main);
+  }
+}
+
+// Wait с for duration - ждем, пока условие выполняется определенное время
+automation 'Bathroom light extended' {
+  when bathroom.sensors.motion == 'on' {
+    do light.turn_on(bathroom.light.main, { brightness: 80 });
+    wait bathroom.sensors.motion == 'off' for 2m;
+    do light.turn_off(bathroom.light.main);
+  }
+}
+
+// Wait с timeout - ждем максимум указанное время
+automation 'Bathroom light with timeout' {
+  when bathroom.sensors.motion == 'on' {
+    do light.turn_on(bathroom.light.main, { brightness: 80 });
+    wait bathroom.sensors.motion == 'off' for 2m timeout 10m;
+    do light.turn_off(bathroom.light.main);
+  }
+}
+
+// Wait с несколькими действиями до и после
+automation 'Complex wait sequence' {
+  when bathroom.sensors.door == 'open' {
+    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    wait bathroom.sensors.motion == 'on' timeout 30s;
+    do light.set_brightness(bathroom.light.main, 60);
+    wait bathroom.sensors.motion == 'off' for 3m timeout 20m;
+    do light.turn_off(bathroom.light.main);
+  }
+}
+
+// Wait с условием all
+automation 'Multi-condition wait' {
+  when hallway.sensors.motion == 'on' {
+    do light.turn_on(hallway.light.main, { brightness: 50 });
+    wait all {
+      hallway.sensors.motion == 'off';
+      now().time in 22:00..06:00;
+    } for 1m timeout 15m;
+    do light.turn_off(hallway.light.main);
+  }
+}

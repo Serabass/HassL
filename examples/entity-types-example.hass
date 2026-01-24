@@ -1,0 +1,136 @@
+// Примеры различных типов сущностей Home Assistant
+
+home 'EntityTypesHome' {
+  room 'Living Room' living {
+    device 'Lights' lights {
+      entities: [
+        light main { id: 'light.living_main'; },
+        light accent { id: 'light.living_accent'; }
+      ];
+    }
+
+    device 'Sensors' sensors {
+      entities: [
+        // Бинарные сенсоры
+        binary_sensor motion { id: 'binary_sensor.living_motion'; },
+        binary_sensor window { id: 'binary_sensor.living_window'; },
+        binary_sensor door { id: 'binary_sensor.living_door'; },
+        binary_sensor presence { id: 'binary_sensor.living_presence'; },
+        
+        // Обычные сенсоры
+        sensor temperature { id: 'sensor.living_temperature'; unit: '°C'; },
+        sensor humidity { id: 'sensor.living_humidity'; unit: '%'; },
+        sensor pressure { id: 'sensor.living_pressure'; unit: 'hPa'; },
+        sensor co2 { id: 'sensor.living_co2'; unit: 'ppm'; },
+        sensor lux { id: 'sensor.living_lux'; unit: 'lx'; }
+      ];
+    }
+
+    device 'Climate' climate {
+      entities: [
+        climate ac { id: 'climate.living_ac'; },
+        climate heater { id: 'climate.living_heater'; }
+      ];
+    }
+
+    device 'Switches' switches {
+      entities: [
+        switch fan { id: 'switch.living_fan'; },
+        switch tv { id: 'switch.living_tv'; }
+      ];
+    }
+
+    device 'Covers' covers {
+      entities: [
+        cover blinds { id: 'cover.living_blinds'; },
+        cover curtains { id: 'cover.living_curtains'; }
+      ];
+    }
+  }
+
+  room 'Kitchen' kitchen {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
+        binary_sensor smoke { id: 'binary_sensor.kitchen_smoke'; },
+        sensor temperature { id: 'sensor.kitchen_temperature'; unit: '°C'; },
+        sensor gas { id: 'sensor.kitchen_gas'; unit: 'ppm'; }
+      ];
+    }
+
+    device 'Lights' lights {
+      entities: [
+        light main { id: 'light.kitchen_main'; }
+      ];
+    }
+  }
+}
+
+// Работа с binary_sensor
+automation 'Motion detection' {
+  when living.sensors.motion == 'on' {
+    do light.turn_on(living.lights.main, { brightness: 70 });
+  }
+}
+
+// Работа с sensor (числовые значения)
+automation 'Temperature control' {
+  when living.sensors.temperature > 26.0 for 10m {
+    do climate.set_mode(living.climate.ac, 'cool');
+  }
+}
+
+// Работа с climate
+automation 'Climate automation' {
+  when all {
+    living.sensors.temperature < 18.0;
+    now().time in 20:00..08:00;
+  } {
+    do climate.set_mode(living.climate.heater, 'heat');
+    do climate.set_temperature(living.climate.heater, 22.0);
+  }
+}
+
+// Работа с switch
+automation 'Fan control' {
+  when all {
+    living.sensors.temperature > 28.0;
+    living.sensors.humidity > 70;
+  } {
+    do switch.turn_on(living.switches.fan);
+  }
+}
+
+// Работа с cover
+automation 'Blinds control' {
+  when now().time == 08:00 {
+    do cover.open(living.covers.blinds);
+  }
+  
+  when now().time == 20:00 {
+    do cover.close(living.covers.blinds);
+  }
+}
+
+// Комбинация разных типов сущностей
+automation 'Multi-entity automation' {
+  when all {
+    living.sensors.motion == 'on';
+    living.sensors.lux < 100;
+    living.sensors.window == 'closed';
+  } {
+    do light.turn_on(living.lights.main, { brightness: 80 });
+    do cover.open(living.covers.curtains);
+  }
+}
+
+// Безопасность - дым и газ
+automation 'Safety alert' {
+  when any {
+    kitchen.sensors.smoke == 'on';
+    kitchen.sensors.gas > 100;
+  } {
+    do notify.telegram('ВНИМАНИЕ! Обнаружен дым или газ на кухне!');
+    do light.turn_on(kitchen.lights.main, { brightness: 100, color: 'red' });
+  }
+}

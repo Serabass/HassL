@@ -1,0 +1,74 @@
+// Примеры использования диапазонов (in range)
+
+home 'RangeHome' {
+  room 'Living Room' living {
+    device 'Sensors' sensors {
+      entities: [
+        sensor temp { id: 'sensor.living_temp'; unit: '°C'; },
+        sensor humidity { id: 'sensor.living_humidity'; unit: '%'; },
+        sensor co2 { id: 'sensor.living_co2'; unit: 'ppm'; }
+      ];
+    }
+
+    device 'Climate' climate {
+      entities: [
+        climate ac { id: 'climate.living_ac'; }
+      ];
+    }
+  }
+}
+
+// Диапазон значений температуры
+automation 'Comfortable temperature' {
+  when living.sensors.temp in 20.0..24.0 for 15m {
+    do climate.set_mode(living.climate.ac, 'auto');
+  }
+}
+
+// Диапазон времени суток
+automation 'Daytime cooling' {
+  when all for 20m {
+    living.sensors.temp > 26.0;
+    now().time in 09:00..22:00;
+  } {
+    do climate.set_mode(living.climate.ac, 'cool');
+  }
+}
+
+// Диапазон через полночь
+automation 'Night heating' {
+  when all {
+    living.sensors.temp < 18.0;
+    now().time in 22:00..08:00;
+  } {
+    do climate.set_mode(living.climate.ac, 'heat');
+  }
+}
+
+// Несколько диапазонов в одном условии
+automation 'Optimal conditions' {
+  when all for 30m {
+    living.sensors.temp in 21.0..23.0;
+    living.sensors.humidity in 40.0..60.0;
+    living.sensors.co2 in 400.0..800.0;
+  } {
+    do notify.telegram('Идеальные условия в гостиной!');
+  }
+}
+
+// Диапазон с границами включительно
+automation 'High CO2 warning' {
+  when living.sensors.co2 >= 1000.0 && living.sensors.co2 <= 1500.0 {
+    do notify.telegram('Повышенный уровень CO2, рекомендуется проветрить');
+  }
+}
+
+// Комбинация диапазона времени и значения
+automation 'Evening comfort' {
+  when all {
+    now().time in 18:00..23:00;
+    living.sensors.temp in 22.0..24.0;
+  } {
+    do climate.set_mode(living.climate.ac, 'auto');
+  }
+}

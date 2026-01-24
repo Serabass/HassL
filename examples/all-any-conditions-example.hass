@@ -1,0 +1,117 @@
+// Примеры использования all и any условий
+
+home 'ConditionHome' {
+  room 'Living Room' living {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.living_motion'; },
+        binary_sensor window { id: 'binary_sensor.living_window'; },
+        sensor temp { id: 'sensor.living_temp'; unit: '°C'; },
+        sensor humidity { id: 'sensor.living_humidity'; unit: '%'; }
+      ];
+    }
+
+    device 'Climate' climate {
+      entities: [
+        climate ac { id: 'climate.living_ac'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.living_main'; }
+      ];
+    }
+  }
+
+  room 'Bedroom' bedroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bedroom_motion'; },
+        binary_sensor door { id: 'binary_sensor.bedroom_door'; },
+        sensor temp { id: 'sensor.bedroom_temp'; unit: '°C'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bedroom_main'; }
+      ];
+    }
+  }
+}
+
+// all - все условия должны выполняться
+automation 'All conditions must be true' {
+  when all {
+    living.sensors.temp > 25.0;
+    living.sensors.window == 'closed';
+    now().time in 09:00..22:00;
+  } {
+    do climate.set_mode(living.climate.ac, 'cool');
+  }
+}
+
+// any - хотя бы одно условие должно выполняться
+automation 'Any condition triggers' {
+  when any {
+    living.sensors.temp > 28.0;
+    living.sensors.humidity > 70;
+    living.sensors.window == 'open';
+  } {
+    do notify.telegram('Внимание! Проблема в гостиной');
+  }
+}
+
+// all с for duration
+automation 'All conditions for duration' {
+  when all for 20m {
+    living.sensors.temp in 20.0..24.0;
+    living.sensors.humidity in 40.0..60.0;
+    living.sensors.window == 'closed';
+  } {
+    do notify.telegram('Идеальные условия поддерживаются 20 минут');
+  }
+}
+
+// any с for duration
+automation 'Any condition for duration' {
+  when any for 15m {
+    bedroom.sensors.temp < 16.0;
+    bedroom.sensors.door == 'open';
+    bedroom.sensors.motion == 'on';
+  } {
+    do notify.telegram('В спальне что-то не так уже 15 минут');
+  }
+}
+
+// Вложенные условия (all внутри any или наоборот через выражения)
+automation 'Complex nested logic' {
+  when all {
+    (living.sensors.motion == 'on' || living.sensors.window == 'open');
+    living.sensors.temp > 22.0;
+  } {
+    do light.turn_on(living.light.main, { brightness: 60 });
+  }
+}
+
+// Неявный all (без ключевого слова)
+automation 'Implicit all condition' {
+  when {
+    bedroom.sensors.motion == 'on';
+    bedroom.sensors.door == 'closed';
+    now().time in 20:00..23:00;
+  } {
+    do light.turn_on(bedroom.light.main, { brightness: 40 });
+  }
+}
+
+// Комбинация all с логическими операторами внутри
+automation 'All with logical operators' {
+  when all {
+    living.sensors.temp > 25.0 && living.sensors.window == 'closed';
+    living.sensors.humidity < 60 || living.sensors.motion == 'on';
+  } {
+    do climate.set_mode(living.climate.ac, 'cool');
+  }
+}

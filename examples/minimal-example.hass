@@ -1,0 +1,17 @@
+// Минимальный пример - самая простая структура
+
+home 'Minimal' {
+  room 'Room' room {
+    device 'Device' device {
+      entities: [
+        sensor value { id: 'sensor.value'; }
+      ];
+    }
+  }
+}
+
+automation 'Minimal automation' {
+  when room.device.value > 10 {
+    do notify.telegram('Value is high');
+  }
+}

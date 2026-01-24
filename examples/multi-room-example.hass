@@ -1,0 +1,160 @@
+// Пример с несколькими комнатами и сложными связями между ними
+
+home 'MultiRoomHome' {
+  room 'Entrance' entrance {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.entrance_motion'; },
+        binary_sensor door { id: 'binary_sensor.entrance_door'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.entrance_main'; }
+      ];
+    }
+  }
+
+  room 'Living Room' living {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.living_motion'; },
+        binary_sensor window { id: 'binary_sensor.living_window'; },
+        sensor temp { id: 'sensor.living_temp'; unit: '°C'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.living_main'; },
+        light accent { id: 'light.living_accent'; }
+      ];
+    }
+
+    device 'Climate' climate {
+      entities: [
+        climate ac { id: 'climate.living_ac'; }
+      ];
+    }
+  }
+
+  room 'Kitchen' kitchen {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
+        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.kitchen_main'; }
+      ];
+    }
+  }
+
+  room 'Bedroom' bedroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bedroom_motion'; },
+        sensor temp { id: 'sensor.bedroom_temp'; unit: '°C'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bedroom_main'; },
+        light nightstand { id: 'light.bedroom_nightstand'; }
+      ];
+    }
+  }
+
+  room 'Bathroom' bathroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },
+        binary_sensor door { id: 'binary_sensor.bathroom_door'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bathroom_main'; }
+      ];
+    }
+  }
+}
+
+// Вход в дом - включает свет в прихожей и гостиной
+automation 'Welcome home' {
+  when entrance.sensors.door == 'open' {
+    do light.turn_on(entrance.light.main, { brightness: 100 });
+    do light.turn_on(living.light.main, { brightness: 60 });
+    wait entrance.sensors.motion == 'off' for 2m timeout 10m;
+    do light.turn_off(entrance.light.main);
+  }
+}
+
+// Движение в гостиной включает свет там и на кухне
+automation 'Living room activity' {
+  when living.sensors.motion == 'on' {
+    do light.turn_on(living.light.main, { brightness: 70 });
+    do light.turn_on(kitchen.light.main, { brightness: 50 });
+    wait living.sensors.motion == 'off' for 5m timeout 30m;
+    do light.turn_off(living.light.main);
+    do light.turn_off(kitchen.light.main);
+  }
+}
+
+// Климат-контроль на основе температуры в разных комнатах
+automation 'Multi-room climate control' {
+  when all for 15m {
+    living.sensors.temp > 26.0;
+    kitchen.sensors.temp > 25.0;
+    bedroom.sensors.temp > 24.0;
+  } {
+    do climate.set_mode(living.climate.ac, 'cool');
+    do notify.telegram('Жарко во всех комнатах, включаю охлаждение');
+  }
+}
+
+// Вечерний режим - мягкое освещение во всех комнатах
+automation 'Evening ambiance' {
+  when now().time in 18:00..22:00 {
+    do light.turn_on(living.light.accent, { brightness: 30, color_temp: 300 });
+    do light.turn_on(living.light.main, { brightness: 40, color_temp: 350 });
+    do light.turn_on(kitchen.light.main, { brightness: 35 });
+  }
+}
+
+// Ночной режим - только ночники в спальне
+automation 'Night mode' {
+  when now().time in 23:00..06:00 {
+    do light.turn_off(living.light.main);
+    do light.turn_off(living.light.accent);
+    do light.turn_off(kitchen.light.main);
+    do light.turn_off(bedroom.light.main);
+    do light.set_brightness(bedroom.light.nightstand, 5);
+  }
+}
+
+// Проветривание - выключение климата при открытом окне
+automation 'Ventilation mode' {
+  when living.sensors.window == 'open' {
+    do climate.set_mode(living.climate.ac, 'off');
+    do notify.telegram('Окно открыто, климат выключен');
+  }
+}
+
+// Утреннее пробуждение - постепенное включение света
+automation 'Morning routine' {
+  when now().time in 06:30..07:00 {
+    do light.set_brightness(bedroom.light.nightstand, 10);
+    wait 5m;
+    do light.set_brightness(bedroom.light.main, 20);
+    wait 5m;
+    do light.set_brightness(bedroom.light.main, 50);
+    do light.turn_on(kitchen.light.main, { brightness: 40 });
+  }
+}

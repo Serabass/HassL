@@ -1,0 +1,90 @@
+// Примеры использования декораторов
+
+home 'DecoratorHome' {
+  room 'Bathroom' bathroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },
+        binary_sensor door { id: 'binary_sensor.bathroom_door'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bathroom_main'; }
+      ];
+    }
+  }
+
+  room 'Kitchen' kitchen {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
+        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.kitchen_main'; }
+      ];
+    }
+  }
+}
+
+// Декоратор @mode - режим выполнения автоматизации
+@mode(restart)
+automation 'Restart mode automation' {
+  when bathroom.sensors.motion == 'on' {
+    do light.turn_on(bathroom.light.main, { brightness: 100 });
+  }
+}
+
+@mode(parallel(3))
+automation 'Parallel mode automation' {
+  when kitchen.sensors.motion == 'on' {
+    do light.turn_on(kitchen.light.main, { brightness: 80 });
+  }
+}
+
+// Декоратор @cooldown - период охлаждения между запусками
+@cooldown(10s)
+automation 'Cooldown automation' {
+  when bathroom.sensors.door == 'open' {
+    do light.turn_on(bathroom.light.main, { brightness: 90 });
+  }
+}
+
+// Комбинация декораторов на уровне automation
+@mode(restart)
+@cooldown(5s)
+automation 'Multiple automation decorators' {
+  when kitchen.sensors.temp > 25.0 {
+    do notify.telegram('Жарко на кухне!');
+  }
+}
+
+// Декораторы на уровне when
+automation 'When decorators' {
+  @edge(rising)
+  @debounce(2s)
+  @max_age(1m)
+  when bathroom.sensors.motion == 'on' {
+    do light.turn_on(bathroom.light.main, { brightness: 100 });
+  }
+}
+
+// Комбинация всех декораторов
+@mode(parallel(2))
+@cooldown(15s)
+automation 'Full decorator example' {
+  @edge(rising)
+  @debounce(3s)
+  @max_age(5m)
+  when all {
+    kitchen.sensors.motion == 'on';
+    kitchen.sensors.temp > 20.0;
+  } {
+    do light.turn_on(kitchen.light.main, { brightness: 70 });
+  }
+}

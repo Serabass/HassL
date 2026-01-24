@@ -1,0 +1,77 @@
+// Примеры использования логических операторов в условиях
+
+home 'LogicalHome' {
+  room 'Kitchen' kitchen {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
+        binary_sensor door { id: 'binary_sensor.kitchen_door'; },
+        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; },
+        sensor humidity { id: 'sensor.kitchen_humidity'; unit: '%'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.kitchen_main'; }
+      ];
+    }
+  }
+
+  room 'Bathroom' bathroom {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion { id: 'binary_sensor.bathroom_motion'; },
+        binary_sensor door { id: 'binary_sensor.bathroom_door'; }
+      ];
+    }
+
+    device 'Light' light {
+      entities: [
+        light main { id: 'light.bathroom_main'; }
+      ];
+    }
+  }
+}
+
+// И (&&) - оба условия должны быть истинны
+automation 'Kitchen light when motion and door closed' {
+  when kitchen.sensors.motion == 'on' && kitchen.sensors.door == 'closed' {
+    do light.turn_on(kitchen.light.main, { brightness: 80 });
+  }
+}
+
+// ИЛИ (||) - хотя бы одно условие должно быть истинно
+automation 'Alert on extreme conditions' {
+  when kitchen.sensors.temp > 30.0 || kitchen.sensors.humidity > 80 {
+    do notify.telegram('Внимание! Экстремальные условия в кухне');
+  }
+}
+
+// Комбинация И и ИЛИ с приоритетами
+automation 'Complex condition' {
+  when (kitchen.sensors.motion == 'on' || kitchen.sensors.door == 'open') && kitchen.sensors.temp < 15.0 {
+    do light.turn_on(kitchen.light.main, { brightness: 100, color_temp: 200 });
+  }
+}
+
+// Неравенство (!=)
+automation 'Bathroom light when door not closed' {
+  when bathroom.sensors.door != 'closed' && bathroom.sensors.motion == 'on' {
+    do light.turn_on(bathroom.light.main, { brightness: 90 });
+  }
+}
+
+// Сравнения с числами
+automation 'Temperature range check' {
+  when kitchen.sensors.temp >= 20.0 && kitchen.sensors.temp <= 25.0 {
+    do notify.telegram('Температура в комфортном диапазоне');
+  }
+}
+
+// Комбинация с for duration
+automation 'Stable conditions' {
+  when (kitchen.sensors.temp > 25.0 && kitchen.sensors.humidity < 60) for 10m {
+    do notify.telegram('Условия стабильны уже 10 минут');
+  }
+}

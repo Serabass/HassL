@@ -1,0 +1,99 @@
+// Примеры различных выражений и операций
+
+home 'ExpressionHome' {
+  room 'Test' test {
+    device 'Sensors' sensors {
+      entities: [
+        sensor temp1 { id: 'sensor.temp1'; unit: '°C'; },
+        sensor temp2 { id: 'sensor.temp2'; unit: '°C'; },
+        sensor humidity { id: 'sensor.humidity'; unit: '%'; }
+      ];
+    }
+  }
+}
+
+// Простые сравнения
+automation 'Simple comparisons' {
+  when test.sensors.temp1 > 25.0 {
+    do notify.telegram('Температура выше 25');
+  }
+  
+  when test.sensors.temp1 < 15.0 {
+    do notify.telegram('Температура ниже 15');
+  }
+  
+  when test.sensors.temp1 >= 20.0 {
+    do notify.telegram('Температура не менее 20');
+  }
+  
+  when test.sensors.temp1 <= 30.0 {
+    do notify.telegram('Температура не более 30');
+  }
+  
+  when test.sensors.temp1 == 22.0 {
+    do notify.telegram('Температура равна 22');
+  }
+  
+  when test.sensors.temp1 != 0.0 {
+    do notify.telegram('Температура не равна нулю');
+  }
+}
+
+// Логические операторы
+automation 'Logical operators' {
+  when test.sensors.temp1 > 20.0 && test.sensors.temp2 > 20.0 {
+    do notify.telegram('Обе температуры выше 20');
+  }
+  
+  when test.sensors.temp1 > 30.0 || test.sensors.temp2 > 30.0 {
+    do notify.telegram('Хотя бы одна температура выше 30');
+  }
+  
+  when (test.sensors.temp1 > 25.0 || test.sensors.temp2 > 25.0) && test.sensors.humidity < 60 {
+    do notify.telegram('Жарко, но не влажно');
+  }
+}
+
+// Диапазоны значений
+automation 'Value ranges' {
+  when test.sensors.temp1 in 20.0..25.0 {
+    do notify.telegram('Температура в комфортном диапазоне');
+  }
+  
+  when test.sensors.humidity in 40.0..60.0 {
+    do notify.telegram('Влажность в норме');
+  }
+}
+
+// Диапазоны времени
+automation 'Time ranges' {
+  when now().time in 09:00..17:00 {
+    do notify.telegram('Рабочее время');
+  }
+  
+  when now().time in 22:00..06:00 {
+    do notify.telegram('Ночное время');
+  }
+}
+
+// Комбинации с for duration
+automation 'Duration conditions' {
+  when test.sensors.temp1 > 25.0 for 10m {
+    do notify.telegram('Жарко уже 10 минут');
+  }
+  
+  when test.sensors.temp1 in 20.0..24.0 for 30m {
+    do notify.telegram('Комфортная температура 30 минут');
+  }
+}
+
+// Сложные комбинации
+automation 'Complex expressions' {
+  when all {
+    test.sensors.temp1 > 20.0 && test.sensors.temp1 < 26.0;
+    test.sensors.humidity >= 40.0 && test.sensors.humidity <= 60.0;
+    now().time in 08:00..22:00;
+  } for 15m {
+    do notify.telegram('Идеальные условия поддерживаются 15 минут');
+  }
+}
