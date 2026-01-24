@@ -6,24 +6,20 @@ namespace HassLanguage.Parser;
 public static partial class SpracheParser
 {
   // Entity declarations
+  // Format: binary_sensor motion = binary_sensor.kitchen_motion
   private static Parser<EntityDeclaration> EntityDeclaration =>
     EntityType.Then(type =>
       Identifier.Then(alias =>
-        Token("{")
+        Token("=")
           .Then(_ =>
-            EntityProperty
-              .Many()
-              .Then(props =>
-                Token("}")
-                  .Return(
-                    new EntityDeclaration
-                    {
-                      Type = type,
-                      Alias = alias,
-                      Properties = props.ToDictionary(p => p.Key, p => p.Value),
-                    }
-                  )
-              )
+            Expression.Select(idExpr =>
+              new EntityDeclaration
+              {
+                Type = type,
+                Alias = alias,
+                Properties = new Dictionary<string, Expression> { { "id", idExpr } },
+              }
+            )
           )
       )
     );

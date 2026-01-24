@@ -79,7 +79,7 @@ public class AreasTests
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
-        light main { id: 'light.kitchen_main'; }
+        light main = 'light.kitchen_main'
       ];
     }
   }
@@ -103,18 +103,18 @@ public class AreasTests
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
-        light main { id: 'light.kitchen_main'; }
+        light main = 'light.kitchen_main'
       ];
     }
     device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
-        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; }
+        binary_sensor motion = 'binary_sensor.kitchen_motion',
+        sensor temp = 'sensor.kitchen_temp'
       ];
     }
     device 'Climate' climate {
       entities: [
-        climate ac { id: 'climate.kitchen_ac'; }
+        climate ac = 'climate.kitchen_ac'
       ];
     }
   }
@@ -181,7 +181,7 @@ public class AreasTests
   area 'Kitchen' kitchen kitchen_type {
     device 'Light' light {
       entities: [
-        light main { id: 'light.kitchen_main'; }
+        light main = 'light.kitchen_main'
       ];
     }
   }
@@ -224,22 +224,22 @@ public class AreasTests
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
-        light ceiling { id: 'light.kitchen_ceiling'; }, 
-        light counter { id: 'light.kitchen_counter'; }
+        light ceiling = 'light.kitchen_ceiling', 
+        light counter = 'light.kitchen_counter'
       ];
     }
     device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
-        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; },
-        sensor humidity { id: 'sensor.kitchen_humidity'; unit: '%'; }
+        binary_sensor motion = 'binary_sensor.kitchen_motion',
+        sensor temp = 'sensor.kitchen_temp',
+        sensor humidity = 'sensor.kitchen_humidity'
       ];
     }
   }
   area 'Living Room' living {
     device 'Climate' climate {
       entities: [
-        climate ac { id: 'climate.living_ac'; }
+        climate ac = 'climate.living_ac'
       ];
     }
   }
@@ -311,7 +311,7 @@ public class AreasTests
     device 'Light' light {
       entities: [
         // Comment before entity
-        light main { id: 'light.kitchen_main'; }
+        light main = 'light.kitchen_main'
       ];
     }
   }
@@ -375,9 +375,9 @@ public class AreasTests
   area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
-        binary_sensor door { id: 'binary_sensor.kitchen_door'; },
-        sensor temp { id: 'sensor.kitchen_temp'; unit: '°C'; }
+        binary_sensor motion = 'binary_sensor.kitchen_motion',
+        binary_sensor door = 'binary_sensor.kitchen_door',
+        sensor temp = 'sensor.kitchen_temp'
       ];
     }
   }
@@ -402,5 +402,37 @@ public class AreasTests
     entityAliases.Should().Contain("motion");
     entityAliases.Should().Contain("door");
     entityAliases.Should().Contain("temp");
+  }
+
+  [Fact]
+  public void ParseArea_ShouldParseEntityWithSimplifiedSyntaxWithEquals()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"home 'TestHome' test {
+  area 'Kitchen' kitchen {
+    device 'Sensors' sensors {
+      entities: [
+        binary_sensor motion = 'binary_sensor.kitchen_motion',
+        sensor temp = 'sensor.kitchen_temp'
+      ];
+    }
+  }
+}"
+    );
+
+    // Assert
+    var area = result.Homes[0].Areas[0];
+    area.Devices.Should().HaveCount(1);
+    var device = area.Devices[0];
+    device.Entities.Should().HaveCount(2);
+
+    var motion = device.Entities.First(e => e.Alias == "motion");
+    motion.Type.Should().Be("binary_sensor");
+    motion.Properties.Should().ContainKey("id");
+
+    var temp = device.Entities.First(e => e.Alias == "temp");
+    temp.Type.Should().Be("sensor");
+    temp.Properties.Should().ContainKey("id");
   }
 }

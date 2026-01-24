@@ -19,7 +19,7 @@ home 'TestHome' {
   area 'TestRoom' test {
     device 'TestDevice' test {
       entities: [
-        binary_sensor test_sensor { id: 'binary_sensor.test'; }
+        binary_sensor test_sensor = 'binary_sensor.test'
       ];
     }
   }
@@ -54,15 +54,15 @@ home 'MyFlat' {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
-        light ceiling { id: 'light.kitchen_ceiling'; },
-        light counter { id: 'light.kitchen_counter'; }
+        light ceiling = 'light.kitchen_ceiling',
+        light counter = 'light.kitchen_counter'
       ];
     }
 
     device 'Sensors' sensors {
       entities: [
-        binary_sensor motion { id: 'binary_sensor.kitchen_motion'; },
-        sensor temp { id: 'sensor.kitchen_temperature'; unit: '°C'; }
+        binary_sensor motion = 'binary_sensor.kitchen_motion',
+        sensor temp = 'sensor.kitchen_temperature'; unit: '°C'
       ];
     }
   }
@@ -70,14 +70,14 @@ home 'MyFlat' {
   area 'Living Room' living {
     device 'Climate' climate {
       entities: [
-        climate ac { id: 'climate.living_ac'; }
+        climate ac = 'climate.living_ac'
       ];
     }
 
     device 'Sensors' sensors {
       entities: [
-        sensor temp { id: 'sensor.living_temperature'; unit: '°C'; },
-        sensor humidity { id: 'sensor.living_humidity'; unit: '%'; }
+        sensor temp = 'sensor.living_temperature'; unit: '°C',
+        sensor humidity = 'sensor.living_humidity'; unit: '%'
       ];
     }
   }
@@ -242,8 +242,8 @@ home 'Complex' complex {
   area 'Area1' area1 {
     device 'Device1' device1 {
       entities: [
-        light main { id: 'light.main'; },
-        sensor temp { id: 'sensor.temp'; unit: '°C'; }
+        light main = 'light.main',
+        sensor temp = 'sensor.temp'; unit: '°C'
       ];
     }
   }
@@ -251,7 +251,7 @@ home 'Complex' complex {
   area 'Area2' area2 {
     device 'Device2' device2 {
       entities: [
-        switch sw { id: 'switch.sw'; }
+        switch sw = 'switch.sw'
       ];
     }
   }
@@ -293,13 +293,13 @@ home 'MyHome' {
   area 'Living Room' living {
     device 'Light' light {
       entities: [
-        light chandelier { id: 'light.living_chandelier'; }
+        light chandelier = 'light.living_chandelier'
       ];
     }
 
     device 'Voice' voice {
       entities: [
-        sensor command { id: 'sensor.voice_command'; }
+        sensor command = 'sensor.voice_command'
       ];
     }
   }

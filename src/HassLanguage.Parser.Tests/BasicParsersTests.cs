@@ -302,7 +302,7 @@ home 'MyHome' {
     device 'Light' light {
       entities: [
         // Comment before entity
-        light chandelier { id: 'light.chandelier'; }
+        light chandelier = 'light.chandelier'
         // Comment after entity
       ];
     }
@@ -407,7 +407,7 @@ home 'My Home' {
   area ""Living Room"" living {
     device 'Light Device' light {
       entities: [
-        light main { id: 'light.main'; }
+        light main = 'light.main'
       ];
     }
   }

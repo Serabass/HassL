@@ -120,7 +120,7 @@ public class DeclarationsTests
   area 'TestArea' area {
     device 'TestDevice' device {
       entities: [
-        light main { id: 'light.main'; }
+        light main = 'light.main'
       ];
     }
   }
@@ -145,8 +145,8 @@ public class DeclarationsTests
             area 'TestArea' area { 
                 device 'TestDevice' device { 
                     entities: [
-                        light main { id: 'light.main'; },
-                        sensor temp { id: 'sensor.temp'; unit: '°C'; }
+                        light main = 'light.main',
+                        sensor temp = 'sensor.temp'
                     ]; 
                 } 
             } 
@@ -170,12 +170,7 @@ public class DeclarationsTests
   area 'TestArea' area {
     device 'TestDevice' device {
       entities: [
-        sensor temp {
-          id: 'sensor.temp';
-          unit: '°C';
-          min: 0;
-          max: 100;
-        }
+        sensor temp = 'sensor.temp'
       ];
     }
   }
@@ -185,11 +180,8 @@ public class DeclarationsTests
     // Assert
     result.Homes.Should().HaveCount(1);
     var entity = result.Homes[0].Areas[0].Devices[0].Entities[0];
-    entity.Properties.Should().HaveCount(4);
+    entity.Properties.Should().HaveCount(1);
     entity.Properties.Should().ContainKey("id");
-    entity.Properties.Should().ContainKey("unit");
-    entity.Properties.Should().ContainKey("min");
-    entity.Properties.Should().ContainKey("max");
   }
 
   [Fact]
