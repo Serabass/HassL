@@ -221,4 +221,70 @@ public class DeclarationsTests
     result.Automations.Should().HaveCount(1);
     result.Automations[0].WhenClauses.Should().HaveCount(2);
   }
+
+  [Fact]
+  public void ParseHomeDeclaration_ShouldParseWithoutDisplayName()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"home MyFlat {
+}"
+    );
+
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].DisplayName.Should().BeEmpty();
+    result.Homes[0].Alias.Should().Be("MyFlat");
+  }
+
+  [Fact]
+  public void ParseHomeDeclaration_ShouldParseWithDisplayName()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"home ""Моя хата"" MyFlat {
+}"
+    );
+
+    // Assert
+    result.Homes.Should().HaveCount(1);
+    result.Homes[0].DisplayName.Should().Be("Моя хата");
+    result.Homes[0].Alias.Should().Be("MyFlat");
+  }
+
+  [Fact]
+  public void ParseAutomationDeclaration_ShouldParseWithoutDisplayName()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation MyAutomation {
+  when test.value == 5 {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    result.Automations[0].DisplayName.Should().BeEmpty();
+    result.Automations[0].WhenClauses.Should().HaveCount(1);
+  }
+
+  [Fact]
+  public void ParseAutomationDeclaration_ShouldParseWithDisplayName()
+  {
+    // Act
+    var result = HassLanguageParser.Parse(
+      @"automation ""Моя автоматизация"" {
+  when test.value == 5 {
+    do test();
+  }
+}"
+    );
+
+    // Assert
+    result.Automations.Should().HaveCount(1);
+    result.Automations[0].DisplayName.Should().Be("Моя автоматизация");
+    result.Automations[0].WhenClauses.Should().HaveCount(1);
+  }
 }

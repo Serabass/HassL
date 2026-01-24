@@ -88,13 +88,25 @@ public static partial class SpracheParser
       );
 
   // Automation declaration
+  // Format: automation [displayName] { ... }
+  // Examples:
+  //   automation MyAutomation { ... }
+  //   automation "Моя автоматизация" { ... }
   private static Parser<AutomationDeclaration> AutomationDeclaration =>
     DecoratorList
       .Optional()
       .Then(decorators =>
         Token("automation")
           .Then(_ =>
-            StringLiteral.Then(displayName =>
+            (
+              StringLiteral
+              .Or(
+                // If StringLiteral fails, try to parse empty string (no display name)
+                // This works because StringLiteral requires quotes, so if there are no quotes,
+                // it will fail and we'll use empty string instead
+                Sprache.Parse.Return(string.Empty)
+              )
+            ).Then(displayName =>
               Token("{")
                 .Then(_ =>
                   WhenClause

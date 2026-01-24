@@ -132,42 +132,48 @@ public static partial class SpracheParser
       );
 
   // Home declaration
+  // Format: home [displayName] alias { ... }
+  // Examples:
+  //   home MyFlat { ... }
+  //   home "Моя хата" MyFlat { ... }
   private static Parser<HomeDeclaration> HomeDeclaration =>
     DecoratorList
       .Optional()
       .Then(decorators =>
         Token("home")
           .Then(_ =>
-            StringLiteral.Then(displayName =>
-              (
-                Identifier.Or(SkipWhitespace.Many().Then(_ => Sprache.Parse.Return(string.Empty)))
-              ).Then(alias =>
-                Token("{")
-                  .Then(_ =>
-                    Settings
-                      .Optional()
-                      .Then(settings =>
-                        AreaDeclaration
-                          .Many()
-                          .Then(areas =>
-                            Token("}")
-                              .Return(
-                                new HomeDeclaration
-                                {
-                                  DisplayName = displayName,
-                                  Alias = alias,
-                                  Decorators = decorators.IsDefined
-                                    ? decorators.Get()
-                                    : new List<Decorator>(),
-                                  Settings = settings.IsDefined ? settings.Get() : null,
-                                  Areas = areas.ToList(),
-                                }
-                              )
-                          )
-                      )
-                  )
+            StringLiteral
+              .Optional()
+              .Then(displayNameOpt =>
+                Identifier.Then(alias =>
+                  Token("{")
+                    .Then(_ =>
+                      Settings
+                        .Optional()
+                        .Then(settings =>
+                          AreaDeclaration
+                            .Many()
+                            .Then(areas =>
+                              Token("}")
+                                .Return(
+                                  new HomeDeclaration
+                                  {
+                                    DisplayName = displayNameOpt.IsDefined
+                                      ? displayNameOpt.Get()
+                                      : string.Empty,
+                                    Alias = alias,
+                                    Decorators = decorators.IsDefined
+                                      ? decorators.Get()
+                                      : new List<Decorator>(),
+                                    Settings = settings.IsDefined ? settings.Get() : null,
+                                    Areas = areas.ToList(),
+                                  }
+                                )
+                            )
+                        )
+                    )
+                )
               )
-            )
           )
       );
 }
