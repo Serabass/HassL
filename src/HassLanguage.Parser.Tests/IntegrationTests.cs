@@ -27,7 +27,7 @@ home 'TestHome' {
 
 automation 'Simple test' {
   when test.test.test_sensor == 'on' {
-    do notify.telegram('Sensor activated!');
+    call notify.telegram('Sensor activated!');
   }
 }";
 
@@ -85,15 +85,15 @@ home 'MyFlat' {
 
 automation 'Kitchen motion light' {
   when sensors.motion == 'on' {
-    do light.turn_on(light.ceiling, { brightness: 70 });
+    call light.turn_on(light.ceiling, { brightness: 70 });
     wait sensors.motion == 'off' for 40s timeout 10m;
-    do light.turn_off(light.ceiling);
+    call light.turn_off(light.ceiling);
   }
 }
 
 automation 'AC auto cool' {
   when living.climate.temp > 25.0 for 30m {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
@@ -102,7 +102,7 @@ automation 'Extreme conditions alert' {
     living.sensors.temp > 28.0;
     living.sensors.humidity > 70;
   } {
-    do notify.telegram('Alert!');
+    call notify.telegram('Alert!');
   }
 }";
 
@@ -149,7 +149,7 @@ automation 'Bathroom light' {
   @edge(rising)
   @debounce(2s)
   when bathroom.sensors.motion == 'on' {
-    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    call light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }";
 
@@ -188,15 +188,15 @@ home 'Home2' home2 { }
     var input =
       @"
 automation 'Auto1' {
-  when test.value == 1 { do test1(); }
+  when test.value == 1 { call test1(); }
 }
 
 automation 'Auto2' {
-  when test.value == 2 { do test2(); }
+  when test.value == 2 { call test2(); }
 }
 
 automation 'Auto3' {
-  when test.value == 3 { do test3(); }
+  when test.value == 3 { call test3(); }
 }
 ";
 
@@ -262,9 +262,9 @@ automation 'Complex Auto' {
     area1.device1.temp > 25.0;
     area2.device2.sw == 'on';
   } for 5m {
-    do notify.telegram('Complex condition met');
+    call notify.telegram('Complex condition met');
     wait area1.device1.temp < 20.0 for 10m timeout 1h;
-    do notify.telegram('Temperature dropped');
+    call notify.telegram('Temperature dropped');
   }
 }";
 
@@ -307,7 +307,7 @@ home 'MyHome' {
 
 automation 'Update light to rainbow' {
   when voice.command == 'обнови свет' {
-    do light.turn_on(light.chandelier, { brightness: 100, effect: 'rainbow' });
+    call light.turn_on(light.chandelier, { brightness: 100, effect: 'rainbow' });
   }
 }";
 
@@ -345,7 +345,7 @@ automation 'Update light to rainbow' {
 
     // Check action
     automation.WhenClauses[0].Actions.Statements.Should().HaveCount(1);
-    var action = automation.WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = automation.WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Target.Should().Be("light");
     action.FunctionCall.Name.Should().Be("turn_on");

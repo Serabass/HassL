@@ -2,7 +2,7 @@ namespace HassLanguage.Core.Ast;
 
 public abstract class ActionStatement : IAstNode { }
 
-public class DoAction : ActionStatement
+public class CallAction : ActionStatement
 {
   public FunctionCall FunctionCall { get; set; } = null!;
 }

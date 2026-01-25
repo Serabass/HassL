@@ -36,15 +36,15 @@ home ""MyFlat"" {
 
 automation ""Kitchen motion light"" {
   when sensors.motion == ""on"" {
-    do light.turn_on(light.ceiling, { brightness: 70 });
+    call light.turn_on(light.ceiling, { brightness: 70 });
     wait sensors.motion == ""off"" for 40s timeout 10m;
-    do light.turn_off(light.ceiling);
+    call light.turn_off(light.ceiling);
   }
 }
 
 automation ""AC auto cool"" {
   when living.climate.temp > 25.0 for 30m {
-    do climate.set_mode(living.climate.ac, ""cool"");
+    call climate.set_mode(living.climate.ac, ""cool"");
   }
 }
 ";

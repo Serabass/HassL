@@ -48,7 +48,7 @@ automation 'All conditions must be true' {
     living.sensors.window == 'closed';
     now().time in 09:00..22:00;
   } {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
@@ -59,7 +59,7 @@ automation 'Any condition triggers' {
     living.sensors.humidity > 70;
     living.sensors.window == 'open';
   } {
-    do notify.telegram('Внимание! Проблема в гостиной');
+    call notify.telegram('Внимание! Проблема в гостиной');
   }
 }
 
@@ -70,7 +70,7 @@ automation 'All conditions for duration' {
     living.sensors.humidity in 40.0..60.0;
     living.sensors.window == 'closed';
   } {
-    do notify.telegram('Идеальные условия поддерживаются 20 минут');
+    call notify.telegram('Идеальные условия поддерживаются 20 минут');
   }
 }
 
@@ -81,7 +81,7 @@ automation 'Any condition for duration' {
     bedroom.sensors.door == 'open';
     bedroom.sensors.motion == 'on';
   } {
-    do notify.telegram('В спальне что-то не так уже 15 минут');
+    call notify.telegram('В спальне что-то не так уже 15 минут');
   }
 }
 
@@ -91,7 +91,7 @@ automation 'Complex nested logic' {
     (living.sensors.motion == 'on' || living.sensors.window == 'open');
     living.sensors.temp > 22.0;
   } {
-    do light.turn_on(living.light.main, { brightness: 60 });
+    call light.turn_on(living.light.main, { brightness: 60 });
   }
 }
 
@@ -102,7 +102,7 @@ automation 'Implicit all condition' {
     bedroom.sensors.door == 'closed';
     now().time in 20:00..23:00;
   } {
-    do light.turn_on(bedroom.light.main, { brightness: 40 });
+    call light.turn_on(bedroom.light.main, { brightness: 40 });
   }
 }
 
@@ -112,6 +112,6 @@ automation 'All with logical operators' {
     living.sensors.temp > 25.0 && living.sensors.window == 'closed';
     living.sensors.humidity < 60 || living.sensors.motion == 'on';
   } {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }

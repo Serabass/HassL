@@ -21,7 +21,7 @@ home 'RangeHome' {
 // Диапазон значений температуры
 automation 'Comfortable temperature' {
   when living.sensors.temp in 20.0..24.0 for 15m {
-    do climate.set_mode(living.climate.ac, 'auto');
+    call climate.set_mode(living.climate.ac, 'auto');
   }
 }
 
@@ -31,7 +31,7 @@ automation 'Daytime cooling' {
     living.sensors.temp > 26.0;
     now().time in 09:00..22:00;
   } {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
@@ -41,7 +41,7 @@ automation 'Night heating' {
     living.sensors.temp < 18.0;
     now().time in 22:00..08:00;
   } {
-    do climate.set_mode(living.climate.ac, 'heat');
+    call climate.set_mode(living.climate.ac, 'heat');
   }
 }
 
@@ -52,14 +52,14 @@ automation 'Optimal conditions' {
     living.sensors.humidity in 40.0..60.0;
     living.sensors.co2 in 400.0..800.0;
   } {
-    do notify.telegram('Идеальные условия в гостиной!');
+    call notify.telegram('Идеальные условия в гостиной!');
   }
 }
 
 // Диапазон с границами включительно
 automation 'High CO2 warning' {
   when living.sensors.co2 >= 1000.0 && living.sensors.co2 <= 1500.0 {
-    do notify.telegram('Повышенный уровень CO2, рекомендуется проветрить');
+    call notify.telegram('Повышенный уровень CO2, рекомендуется проветрить');
   }
 }
 
@@ -69,6 +69,6 @@ automation 'Evening comfort' {
     now().time in 18:00..23:00;
     living.sensors.temp in 22.0..24.0;
   } {
-    do climate.set_mode(living.climate.ac, 'auto');
+    call climate.set_mode(living.climate.ac, 'auto');
   }
 }

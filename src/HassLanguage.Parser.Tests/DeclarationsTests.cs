@@ -191,7 +191,7 @@ public class DeclarationsTests
     var result = HassLanguageParser.Parse(
       @"automation 'TestAutomation' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -209,10 +209,10 @@ public class DeclarationsTests
     var result = HassLanguageParser.Parse(
       @"automation ""TestAutomation"" {
   when test.value == 5 {
-    do test1();
+    call test1();
   }
   when test.value == 10 {
-    do test2();
+    call test2();
   }
 }"
     );
@@ -259,7 +259,7 @@ public class DeclarationsTests
     var result = HassLanguageParser.Parse(
       @"automation MyAutomation {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -277,7 +277,7 @@ public class DeclarationsTests
     var result = HassLanguageParser.Parse(
       @"automation ""Моя автоматизация"" {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );

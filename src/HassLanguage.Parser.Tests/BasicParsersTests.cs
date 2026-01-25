@@ -48,7 +48,7 @@ public class BasicParsersTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when {input} == {expected} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -67,7 +67,7 @@ public class BasicParsersTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when {input} > 0.0 {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -85,7 +85,7 @@ public class BasicParsersTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when {input} == {expected.ToString().ToLower()} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -205,7 +205,7 @@ home 'Test' test {
       @"
 automation 'Test' {
   when test.value == 5 {
-    do test.func(42);
+    call test.func(42);
   }
 }
 ";
@@ -215,7 +215,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
   }
@@ -228,7 +228,7 @@ automation 'Test' {
       @"
 automation 'Test' {
   when test.value == 5 {
-    do test.func({
+    call test.func({
       brightness: 100,
       effect: 'rainbow'
     });
@@ -241,7 +241,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -261,7 +261,7 @@ automation 'Test' {
       @"
 automation 'Test' {
   when test.value == 5 {
-    do test.func({
+    call test.func({
       rgb_color: [255, 0, 0]
     });
   }
@@ -273,7 +273,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -312,7 +312,7 @@ home 'MyHome' {
 // Comment before automation
 automation 'Test' {
   when living.light.chandelier == 'on' {
-    do light.turn_on(living.light.chandelier);
+    call light.turn_on(living.light.chandelier);
   }
 }
 ";
@@ -384,7 +384,7 @@ home 'Test' test {
       @"
 automation 'Test Automation' {
   when test.value == 'on' {
-    do notify.telegram('Message with single quotes');
+    call notify.telegram('Message with single quotes');
   }
 }
 ";
@@ -435,7 +435,7 @@ home 'My Home' {
       @"
 automation 'Test' {
   when test.value == 'on' {
-    do test.func('string with single quotes');
+    call test.func('string with single quotes');
   }
 }
 ";
@@ -445,7 +445,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var arg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;
@@ -461,7 +461,7 @@ automation 'Test' {
       @"
 automation 'Test' {
   when test.value == 5 {
-    do test.func({
+    call test.func({
       name: 'test name',
       effect: 'rainbow'
     });
@@ -474,7 +474,7 @@ automation 'Test' {
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as Core.Ast.CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var firstArg = action.FunctionCall.Arguments[0] as Core.Ast.LiteralExpression;

@@ -14,7 +14,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode('restart') automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -34,7 +34,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode(restart) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -59,7 +59,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@cooldown(10s) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -80,7 +80,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@retry(3) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -100,7 +100,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test('arg1', 10s, 5) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -118,7 +118,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode(restart) @cooldown(10s) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -137,7 +137,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   @edge(rising) when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -206,7 +206,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test1(5s) @test2(10m) @test3(2h) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -238,7 +238,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@retry(999) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -257,7 +257,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@retry(0) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -276,7 +276,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode('') automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -295,7 +295,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode('very long string with spaces and special chars !@#$') automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -314,7 +314,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   @edge(rising) @debounce(2s) when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -387,7 +387,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode(restart) @cooldown(10s) @retry(3) automation 'Test' {
   @edge(rising) @debounce(2s) when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -405,7 +405,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test('string', identifier, 10s, 42) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -433,7 +433,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode('test with ""double quotes""') automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -452,7 +452,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test_mode(restart_mode) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -472,7 +472,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@mode(""restart"") automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -491,7 +491,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test('a', 'b', 'c', 'd', 'e') automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -508,7 +508,7 @@ public class DecoratorsTests
     var result = HassLanguageParser.Parse(
       @"@test(  'value'  ,  10s  ,  42  ) automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -527,7 +527,7 @@ public class DecoratorsTests
 @cooldown(10s)
 automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -548,11 +548,11 @@ automation 'Test' {
   @edge(rising)
   @debounce(2s)
   when test.value == 5 {
-    do test();
+    call test();
   }
   @edge(falling)
   when test.value == 10 {
-    do test2();
+    call test2();
   }
 }"
     );

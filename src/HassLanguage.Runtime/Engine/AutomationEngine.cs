@@ -150,8 +150,8 @@ public class AutomationEngine
   {
     switch (action)
     {
-      case DoAction doAction:
-        ExecuteFunctionCall(doAction.FunctionCall);
+      case CallAction callAction:
+        ExecuteFunctionCall(callAction.FunctionCall);
         break;
       case WaitAction waitAction:
         // TODO: Register wait condition (non-blocking)

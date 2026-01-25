@@ -36,14 +36,14 @@ home 'DecoratorHome' {
 @mode(restart)
 automation 'Restart mode automation' {
   when bathroom.sensors.motion == 'on' {
-    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    call light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }
 
 @mode(parallel(3))
 automation 'Parallel mode automation' {
   when kitchen.sensors.motion == 'on' {
-    do light.turn_on(kitchen.light.main, { brightness: 80 });
+    call light.turn_on(kitchen.light.main, { brightness: 80 });
   }
 }
 
@@ -51,7 +51,7 @@ automation 'Parallel mode automation' {
 @cooldown(10s)
 automation 'Cooldown automation' {
   when bathroom.sensors.door == 'open' {
-    do light.turn_on(bathroom.light.main, { brightness: 90 });
+    call light.turn_on(bathroom.light.main, { brightness: 90 });
   }
 }
 
@@ -60,7 +60,7 @@ automation 'Cooldown automation' {
 @cooldown(5s)
 automation 'Multiple automation decorators' {
   when kitchen.sensors.temp > 25.0 {
-    do notify.telegram('Жарко на кухне!');
+    call notify.telegram('Жарко на кухне!');
   }
 }
 
@@ -70,7 +70,7 @@ automation 'When decorators' {
   @debounce(2s)
   @max_age(1m)
   when bathroom.sensors.motion == 'on' {
-    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    call light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }
 
@@ -85,6 +85,6 @@ automation 'Full decorator example' {
     kitchen.sensors.motion == 'on';
     kitchen.sensors.temp > 20.0;
   } {
-    do light.turn_on(kitchen.light.main, { brightness: 70 });
+    call light.turn_on(kitchen.light.main, { brightness: 70 });
   }
 }

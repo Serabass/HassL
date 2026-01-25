@@ -7,10 +7,10 @@ public static partial class SpracheParser
 {
   // Action statements
   private static Parser<ActionStatement> ActionStatement =>
-    Token("do")
+    Token("call")
       .Then(_ =>
         FunctionCall.Then(call =>
-          Token(";").Return(new DoAction { FunctionCall = call } as ActionStatement)
+          Token(";").Return(new CallAction { FunctionCall = call } as ActionStatement)
         )
       )
       .Or(ParseWaitAction());

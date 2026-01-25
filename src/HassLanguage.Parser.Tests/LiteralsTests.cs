@@ -204,7 +204,7 @@ public class LiteralsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(42, 3.14, 'string', true, 30s);
+    call test.func(42, 3.14, 'string', true, 30s);
   }
 }"
     );
@@ -212,7 +212,7 @@ public class LiteralsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(5);
 
@@ -324,7 +324,7 @@ public class LiteralsTests
   public void ParsePrimitivesInRangeExpression_ShouldParseCorrectly()
   {
     // Act
-    var result = HassLanguageParser.Parse("automation 'Test' { when 15 in 10..20 { do test(); } }");
+    var result = HassLanguageParser.Parse("automation 'Test' { when 15 in 10..20 { call test(); } }");
 
     // Assert
     result.Automations.Should().HaveCount(1);
@@ -346,7 +346,7 @@ public class LiteralsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when 42 > 10 || 3.14 < 10.0 {
-    do test.func({ value: 100, enabled: true }, 'test', 5m);
+    call test.func({ value: 100, enabled: true }, 'test', 5m);
   }
 }"
     );
@@ -359,7 +359,7 @@ public class LiteralsTests
     binExpr.Should().NotBeNull();
     binExpr!.Operator.Should().Be(BinaryOperator.Or);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
   }
@@ -512,7 +512,7 @@ public class LiteralsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 });
+    call light.turn_on(light.chandelier, { rgb_color: [255, 128, 0], brightness: 100 });
   }
 }"
     );
@@ -520,7 +520,7 @@ public class LiteralsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 

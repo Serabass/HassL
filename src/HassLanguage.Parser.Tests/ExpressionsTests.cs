@@ -20,7 +20,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when test.value {op} 5 {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -41,7 +41,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value > 5 && test.value < 10 {
-    do test();
+    call test();
   }
 }"
     );
@@ -62,7 +62,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value > 5 || test.value < 0 {
-    do test();
+    call test();
   }
 }"
     );
@@ -83,7 +83,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when (test.value > 5) {
-    do test();
+    call test();
   }
 }"
     );
@@ -103,7 +103,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.device.entity {
-    do test();
+    call test();
   }
 }"
     );
@@ -124,7 +124,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.func(1, 2) {
-    do test();
+    call test();
   }
 }"
     );
@@ -147,7 +147,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when time in 08:00..18:00 {
-    do test();
+    call test();
   }
 }"
     );
@@ -173,7 +173,7 @@ public class ExpressionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when temp in 20..25 {
-    do test();
+    call test();
   }
 }"
     );

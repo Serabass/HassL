@@ -23,7 +23,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when test.value == 5 for {input} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -52,7 +52,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when time in {input}..18:00 {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -76,7 +76,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when 2024-01-15T10:30:45 == 2024-01-15T10:30:45 {
-    do test();
+    call test();
   }
 }"
     );
@@ -95,7 +95,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func({ brightness: 70; color: 'red'; });
+    call test.func({ brightness: 70; color: 'red'; });
   }
 }"
     );
@@ -103,7 +103,7 @@ public class SpecialTypesTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var expr = action.FunctionCall.Arguments[0] as LiteralExpression;
@@ -122,7 +122,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func({ a: 1, b: 2, c: 3 });
+    call test.func({ a: 1, b: 2, c: 3 });
   }
 }"
     );
@@ -130,7 +130,7 @@ public class SpecialTypesTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;
     var objLiteral = expr!.Literal as ObjectLiteral;
@@ -145,7 +145,7 @@ public class SpecialTypesTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func({ });
+    call test.func({ });
   }
 }"
     );
@@ -153,7 +153,7 @@ public class SpecialTypesTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     var expr = action!.FunctionCall.Arguments[0] as LiteralExpression;
     var objLiteral = expr!.Literal as ObjectLiteral;

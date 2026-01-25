@@ -23,39 +23,39 @@ home 'TimeBasedHome' {
 // Утреннее пробуждение - постепенное включение света
 automation 'Morning wake up' {
   when now().time in 06:30..07:00 {
-    do light.set_brightness(bedroom.light.main, 10);
+    call light.set_brightness(bedroom.light.main, 10);
     wait 5m;
-    do light.set_brightness(bedroom.light.main, 30);
+    call light.set_brightness(bedroom.light.main, 30);
     wait 5m;
-    do light.set_brightness(bedroom.light.main, 60);
+    call light.set_brightness(bedroom.light.main, 60);
     wait 5m;
-    do light.set_brightness(bedroom.light.main, 100);
+    call light.set_brightness(bedroom.light.main, 100);
   }
 }
 
 // Вечерний режим - мягкое освещение
 automation 'Evening mood' {
   when now().time in 18:00..20:00 {
-    do light.turn_on(living.light.accent, { brightness: 40, color_temp: 300 });
-    do light.turn_on(living.light.main, { brightness: 50, color_temp: 350 });
+    call light.turn_on(living.light.accent, { brightness: 40, color_temp: 300 });
+    call light.turn_on(living.light.main, { brightness: 50, color_temp: 350 });
   }
 }
 
 // Ночной режим - только ночник
 automation 'Night mode' {
   when now().time in 23:00..06:00 {
-    do light.turn_off(bedroom.light.main);
-    do light.set_brightness(bedroom.light.nightstand, 5);
+    call light.turn_off(bedroom.light.main);
+    call light.set_brightness(bedroom.light.nightstand, 5);
   }
 }
 
 // Автоматическое выключение всех светов в полночь
 automation 'Midnight lights off' {
   when now().time == 00:00 {
-    do light.turn_off(bedroom.light.main);
-    do light.turn_off(bedroom.light.nightstand);
-    do light.turn_off(living.light.main);
-    do light.turn_off(living.light.accent);
+    call light.turn_off(bedroom.light.main);
+    call light.turn_off(bedroom.light.nightstand);
+    call light.turn_off(living.light.main);
+    call light.turn_off(living.light.accent);
   }
 }
 
@@ -65,6 +65,6 @@ automation 'Weekend sleep in' {
     now().day_of_week in ['Saturday', 'Sunday'];
     now().time in 08:00..10:00;
   } {
-    do light.set_brightness(bedroom.light.nightstand, 20);
+    call light.set_brightness(bedroom.light.nightstand, 20);
   }
 }

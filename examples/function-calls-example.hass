@@ -28,63 +28,63 @@ home 'FunctionHome' {
 // Функция с одним аргументом
 automation 'Simple function call' {
   when now().time == 08:00 {
-    do light.turn_on(living.light.main);
+    call light.turn_on(living.light.main);
   }
 }
 
 // Функция с объектом параметров
 automation 'Function with object parameters' {
   when now().time == 20:00 {
-    do light.turn_on(living.light.main, { brightness: 80, color_temp: 400 });
+    call light.turn_on(living.light.main, { brightness: 80, color_temp: 400 });
   }
 }
 
 // Функция с несколькими параметрами
 automation 'Function with multiple parameters' {
   when now().time == 21:00 {
-    do climate.set_mode(living.climate.ac, 'heat');
-    do climate.set_temperature(living.climate.ac, 22.0);
+    call climate.set_mode(living.climate.ac, 'heat');
+    call climate.set_temperature(living.climate.ac, 22.0);
   }
 }
 
 // Функция без target (глобальная)
 automation 'Global function call' {
   when now().time == 12:00 {
-    do notify.telegram('Обеденное время!');
+    call notify.telegram('Обеденное время!');
   }
 }
 
 // Несколько вызовов функций подряд
 automation 'Multiple function calls' {
   when now().time == 18:00 {
-    do light.turn_on(living.light.main, { brightness: 60 });
-    do light.turn_on(living.light.accent, { brightness: 40 });
-    do light.turn_on(kitchen.light.main, { brightness: 50 });
-    do climate.set_mode(living.climate.ac, 'auto');
+    call light.turn_on(living.light.main, { brightness: 60 });
+    call light.turn_on(living.light.accent, { brightness: 40 });
+    call light.turn_on(kitchen.light.main, { brightness: 50 });
+    call climate.set_mode(living.climate.ac, 'auto');
   }
 }
 
 // Функция с параметрами из выражений
 automation 'Function with expression parameters' {
   when living.sensors.temp > 25.0 {
-    do climate.set_temperature(living.climate.ac, 22.0);
-    do notify.telegram('Температура слишком высокая, устанавливаю 22°C');
+    call climate.set_temperature(living.climate.ac, 22.0);
+    call notify.telegram('Температура слишком высокая, устанавливаю 22°C');
   }
 }
 
 // Функция set_brightness
 automation 'Set brightness function' {
   when now().time in 19:00..21:00 {
-    do light.set_brightness(living.light.main, 50);
-    do light.set_brightness(living.light.accent, 30);
+    call light.set_brightness(living.light.main, 50);
+    call light.set_brightness(living.light.accent, 30);
   }
 }
 
 // Функция turn_off
 automation 'Turn off function' {
   when now().time == 23:00 {
-    do light.turn_off(living.light.main);
-    do light.turn_off(living.light.accent);
-    do light.turn_off(kitchen.light.main);
+    call light.turn_off(living.light.main);
+    call light.turn_off(living.light.accent);
+    call light.turn_off(kitchen.light.main);
   }
 }

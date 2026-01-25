@@ -12,6 +12,6 @@ home 'Minimal' {
 
 automation 'Minimal automation' {
   when room.device.value > 10 {
-    do notify.telegram('Value is high');
+    call notify.telegram('Value is high');
   }
 }

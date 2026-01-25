@@ -74,9 +74,9 @@ home "MyFlat" {
 ```c
 automation "Kitchen motion light" {
   when sensors.motion == "on" {
-    do light.turn_on(light.ceiling, { brightness: 70 });
+    call light.turn_on(light.ceiling, { brightness: 70 });
     wait sensors.motion == "off" for 40s timeout 10m;
-    do light.turn_off(light.ceiling);
+    call light.turn_off(light.ceiling);
   }
 }
 ```
@@ -86,7 +86,7 @@ automation "Kitchen motion light" {
 ```c
 automation "AC auto cool" {
   when living.climate.temp > 25.0 for 30m {
-    do climate.set_mode(living.climate.ac, "cool");
+    call climate.set_mode(living.climate.ac, "cool");
   }
 }
 ```
@@ -101,7 +101,7 @@ automation "Smart AC" {
     now().time in 09:00..23:00;
     living.sensors.window == "closed";
   } {
-    do climate.set_mode(living.climate.ac, "cool");
+    call climate.set_mode(living.climate.ac, "cool");
   }
 }
 
@@ -111,7 +111,7 @@ automation "Alert" {
     living.sensors.temp > 28.0;
     living.sensors.humidity > 70;
   } {
-    do notify.telegram("Проветри!");
+    call notify.telegram("Проветри!");
   }
 }
 ```
@@ -137,7 +137,7 @@ automation "Bathroom light" {
   @debounce(2s)
   @max_age(5m)
   when bathroom.sensors.motion == "on" {
-    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    call light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }
 ```
@@ -147,7 +147,7 @@ automation "Bathroom light" {
 ### Парсер (Sprache)
 - ✅ Полный парсинг синтаксиса DSL
 - ✅ Поддержка home/area/device/entity иерархии
-- ✅ Поддержка automation/when/do/wait конструкций
+- ✅ Поддержка automation/when/call/wait конструкций
 - ✅ Декораторы для automation и when
 - ✅ Выражения с приоритетами операторов
 - ✅ Литералы: bool, int, float, string, Duration, TimeOfDay, DateTime

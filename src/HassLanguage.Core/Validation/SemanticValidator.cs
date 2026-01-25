@@ -190,8 +190,8 @@ public class SemanticValidator
   {
     switch (action)
     {
-      case DoAction doAction:
-        ValidateFunctionCall(doAction.FunctionCall);
+      case CallAction callAction:
+        ValidateFunctionCall(callAction.FunctionCall);
         break;
       case WaitAction waitAction:
         ValidateCondition(waitAction.Condition);

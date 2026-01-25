@@ -14,7 +14,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -34,7 +34,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 for 30m {
-    do test();
+    call test();
   }
 }"
     );
@@ -58,7 +58,7 @@ public class ConditionsTests
     test.value > 5;
     test.value < 10;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -79,7 +79,7 @@ public class ConditionsTests
   when all for 5m {
     test.value > 5;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -103,7 +103,7 @@ public class ConditionsTests
     test.value > 5;
     test.value < 0;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -124,7 +124,7 @@ public class ConditionsTests
   when any for 10s {
     test.value > 5;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -148,7 +148,7 @@ public class ConditionsTests
     test.value > 5;
     test.value < 10;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -179,7 +179,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       $@"automation 'Test' {{
   when test.value == 5 for {duration} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -210,7 +210,7 @@ public class ConditionsTests
   when all for {duration} {{
     test.value > 5;
   }} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -241,7 +241,7 @@ public class ConditionsTests
   when any for {duration} {{
     test.value > 5;
   }} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -272,7 +272,7 @@ public class ConditionsTests
   when for {duration} {{
     test.value > 5;
   }} {{
-    do test();
+    call test();
   }}
 }}"
     );
@@ -294,7 +294,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when sensor.temperature > 25 for 5m {
-    do test();
+    call test();
   }
 }"
     );
@@ -320,7 +320,7 @@ public class ConditionsTests
     humidity < 80;
     pressure > 1000;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -345,7 +345,7 @@ public class ConditionsTests
     door.open == true;
     window.open == true;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -367,7 +367,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -388,7 +388,7 @@ public class ConditionsTests
   when all {
     test.value > 5;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -409,7 +409,7 @@ public class ConditionsTests
   when any {
     test.value > 5;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -428,7 +428,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when temp > 20 && temp < 30 {
-    do test();
+    call test();
   }
 }"
     );
@@ -451,7 +451,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when door.open == true || window.open == true {
-    do test();
+    call test();
   }
 }"
     );
@@ -474,7 +474,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when temp > 20 && temp < 30 || humidity > 50 {
-    do test();
+    call test();
   }
 }"
     );
@@ -500,7 +500,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when door.open == true || window.open == true && time > 10 {
-    do test();
+    call test();
   }
 }"
     );
@@ -526,7 +526,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when (temp > 20 || temp < 10) && humidity < 80 {
-    do test();
+    call test();
   }
 }"
     );
@@ -554,7 +554,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when (temp > 20 && temp < 30) || (humidity > 50 && humidity < 80) {
-    do test();
+    call test();
   }
 }"
     );
@@ -589,7 +589,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when temp > 20 && temp < 30 for 5m {
-    do test();
+    call test();
   }
 }"
     );
@@ -613,7 +613,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when door.open == true || window.open == true for 10s {
-    do test();
+    call test();
   }
 }"
     );
@@ -637,7 +637,7 @@ public class ConditionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when (temp > 20 || temp < 10) && humidity < 80 for 1h {
-    do test();
+    call test();
   }
 }"
     );
@@ -665,7 +665,7 @@ public class ConditionsTests
     kitchen.sensors.lux < 120;
     kitchen.temp > 20;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -687,7 +687,7 @@ public class ConditionsTests
     living.climate.temp > 28.0;
     living.humidity > 70;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -713,7 +713,7 @@ public class ConditionsTests
     living.windows.main == closed;
     living.temp > 20;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -741,7 +741,7 @@ public class ConditionsTests
     };
     pressure > 1000;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -766,7 +766,7 @@ public class ConditionsTests
     };
     window == ""closed"";
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -794,7 +794,7 @@ public class ConditionsTests
     };
     motion == on;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -825,7 +825,7 @@ public class ConditionsTests
     };
     temp > 15;
   } {
-    do test();
+    call test();
   }
 }"
     );

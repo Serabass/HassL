@@ -5,16 +5,16 @@ using Xunit;
 
 namespace HassLanguage.Parser.Tests;
 
-public class DoActionTests
+public class CallActionTests
 {
   [Fact]
-  public void ParseDoAction_ShouldParseFunctionCall()
+  public void ParseCallAction_ShouldParseFunctionCall()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func();
+    call test.func();
   }
 }"
     );
@@ -23,20 +23,20 @@ public class DoActionTests
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     actionBlock.Statements.Should().HaveCount(1);
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("func");
     action.FunctionCall.Target.Should().Be("test");
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseFunctionCallWithoutTarget()
+  public void ParseCallAction_ShouldParseFunctionCallWithoutTarget()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do notify();
+    call notify();
   }
 }"
     );
@@ -44,20 +44,20 @@ public class DoActionTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("notify");
     action.FunctionCall.Target.Should().BeNull();
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseFunctionCallWithArguments()
+  public void ParseCallAction_ShouldParseFunctionCallWithArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(1, 'test', true);
+    call test.func(1, 'test', true);
   }
 }"
     );
@@ -65,26 +65,26 @@ public class DoActionTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithNoArguments()
+  public void ParseCallAction_ShouldParseWithNoArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on();
+    call light.turn_on();
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().BeEmpty();
     action.FunctionCall.Name.Should().Be("turn_on");
@@ -92,20 +92,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithNumericArguments()
+  public void ParseCallAction_ShouldParseWithNumericArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(42, 3.14);
+    call test.func(42, 3.14);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -124,20 +124,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithStringArguments()
+  public void ParseCallAction_ShouldParseWithStringArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do notify.telegram('Hello', 'World');
+    call notify.telegram('Hello', 'World');
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -151,20 +151,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithBooleanArguments()
+  public void ParseCallAction_ShouldParseWithBooleanArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(true, false);
+    call test.func(true, false);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -178,20 +178,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithReferenceArguments()
+  public void ParseCallAction_ShouldParseWithReferenceArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.area.device.entity);
+    call light.turn_on(home.area.device.entity);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -201,20 +201,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithObjectLiteralArgument()
+  public void ParseCallAction_ShouldParseWithObjectLiteralArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on({ brightness: 100, effect: 'rainbow' });
+    call light.turn_on({ brightness: 100, effect: 'rainbow' });
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -228,20 +228,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithArrayLiteralArgument()
+  public void ParseCallAction_ShouldParseWithArrayLiteralArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func([255, 128, 0]);
+    call test.func([255, 128, 0]);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -253,20 +253,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithNestedFunctionCallArgument()
+  public void ParseCallAction_ShouldParseWithNestedFunctionCallArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(test.other(42));
+    call test.func(test.other(42));
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -278,20 +278,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithMixedArgumentTypes()
+  public void ParseCallAction_ShouldParseWithMixedArgumentTypes()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(42, 'string', true, home.area.entity, { key: 'value' }, [1, 2, 3]);
+    call test.func(42, 'string', true, home.area.entity, { key: 'value' }, [1, 2, 3]);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(6);
 
@@ -326,20 +326,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithComplexTarget()
+  public void ParseCallAction_ShouldParseWithComplexTarget()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.ceiling.turn_on();
+    call light.ceiling.turn_on();
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     // Note: текущий парсер поддерживает только target.name, не target.subtarget.name
     // Но проверим, что парсится хотя бы target.name
@@ -347,20 +347,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithDurationArgument()
+  public void ParseCallAction_ShouldParseWithDurationArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(10s, 5m, 2h);
+    call test.func(10s, 5m, 2h);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
 
@@ -381,20 +381,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithMultipleObjectArguments()
+  public void ParseCallAction_ShouldParseWithMultipleObjectArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func({ a: 1 }, { b: 2 }, { c: 3 });
+    call test.func({ a: 1 }, { b: 2 }, { c: 3 });
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(3);
 
@@ -412,20 +412,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithNestedObjectInArgument()
+  public void ParseCallAction_ShouldParseWithNestedObjectInArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func({ config: { brightness: 100, color: 'red' } });
+    call test.func({ config: { brightness: 100, color: 'red' } });
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -441,20 +441,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithArrayOfStrings()
+  public void ParseCallAction_ShouldParseWithArrayOfStrings()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(['red', 'green', 'blue']);
+    call test.func(['red', 'green', 'blue']);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -468,20 +468,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithBinaryExpressionArguments()
+  public void ParseCallAction_ShouldParseWithBinaryExpressionArguments()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(test.value > 10, test.other < 20);
+    call test.func(test.value > 10, test.other < 20);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(2);
 
@@ -496,15 +496,15 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseMultipleDoActionsInSequence()
+  public void ParseCallAction_ShouldParseMultipleCallActionsInSequence()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func1();
-    do test.func2();
-    do test.func3();
+    call test.func1();
+    call test.func2();
+    call test.func3();
   }
 }"
     );
@@ -513,35 +513,35 @@ public class DoActionTests
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
     actionBlock.Statements.Should().HaveCount(3);
-    actionBlock.Statements[0].Should().BeOfType<DoAction>();
-    actionBlock.Statements[1].Should().BeOfType<DoAction>();
-    actionBlock.Statements[2].Should().BeOfType<DoAction>();
+    actionBlock.Statements[0].Should().BeOfType<CallAction>();
+    actionBlock.Statements[1].Should().BeOfType<CallAction>();
+    actionBlock.Statements[2].Should().BeOfType<CallAction>();
 
-    var action1 = actionBlock.Statements[0] as DoAction;
+    var action1 = actionBlock.Statements[0] as CallAction;
     action1!.FunctionCall.Name.Should().Be("func1");
 
-    var action2 = actionBlock.Statements[1] as DoAction;
+    var action2 = actionBlock.Statements[1] as CallAction;
     action2!.FunctionCall.Name.Should().Be("func2");
 
-    var action3 = actionBlock.Statements[2] as DoAction;
+    var action3 = actionBlock.Statements[2] as CallAction;
     action3!.FunctionCall.Name.Should().Be("func3");
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithParenExpressionArgument()
+  public void ParseCallAction_ShouldParseWithParenExpressionArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func((test.value > 10));
+    call test.func((test.value > 10));
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -553,20 +553,20 @@ public class DoActionTests
   }
 
   [Fact]
-  public void ParseDoAction_ShouldParseWithInRangeExpressionArgument()
+  public void ParseCallAction_ShouldParseWithInRangeExpressionArgument()
   {
     // Act
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(test.value in 10..20);
+    call test.func(test.value in 10..20);
   }
 }"
     );
 
     // Assert
     result.Automations.Should().HaveCount(1);
-    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as DoAction;
+    var action = result.Automations[0].WhenClauses[0].Actions.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
@@ -579,116 +579,116 @@ public class DoActionTests
   // Tests for standalone action parsing (without automation wrapper)
 
   [Fact]
-  public void ParseActionStatement_ShouldParseDoActionStandalone()
+  public void ParseActionStatement_ShouldParseCallActionStandalone()
   {
     // Act
-    var action = HassLanguageParser.ParseActionStatement("do test.func();");
+    var action = HassLanguageParser.ParseActionStatement("call test.func();");
 
     // Assert
-    action.Should().BeOfType<DoAction>();
-    var doAction = action as DoAction;
+    action.Should().BeOfType<CallAction>();
+    var doAction = action as CallAction;
     doAction!.FunctionCall.Name.Should().Be("func");
     doAction.FunctionCall.Target.Should().Be("test");
   }
 
   [Fact]
-  public void ParseActionStatement_ShouldParseDoActionWithoutTarget()
+  public void ParseActionStatement_ShouldParseCallActionWithoutTarget()
   {
     // Act
-    var action = HassLanguageParser.ParseActionStatement("do notify();");
+    var action = HassLanguageParser.ParseActionStatement("call notify();");
 
     // Assert
-    action.Should().BeOfType<DoAction>();
-    var doAction = action as DoAction;
+    action.Should().BeOfType<CallAction>();
+    var doAction = action as CallAction;
     doAction!.FunctionCall.Name.Should().Be("notify");
     doAction.FunctionCall.Target.Should().BeNull();
   }
 
   [Fact]
-  public void ParseActionStatement_ShouldParseDoActionWithArguments()
+  public void ParseActionStatement_ShouldParseCallActionWithArguments()
   {
     // Act
-    var action = HassLanguageParser.ParseActionStatement("do test.func(42, 'test', true);");
+    var action = HassLanguageParser.ParseActionStatement("call test.func(42, 'test', true);");
 
     // Assert
-    action.Should().BeOfType<DoAction>();
-    var doAction = action as DoAction;
+    action.Should().BeOfType<CallAction>();
+    var doAction = action as CallAction;
     doAction!.FunctionCall.Arguments.Should().HaveCount(3);
   }
 
   [Fact]
-  public void ParseActionBlock_ShouldParseSingleDoAction()
+  public void ParseActionBlock_ShouldParseSingleCallAction()
   {
     // Act
-    var block = HassLanguageParser.ParseActionBlock("{ do test.func(); }");
+    var block = HassLanguageParser.ParseActionBlock("{ call test.func(); }");
 
     // Assert
     block.Statements.Should().HaveCount(1);
-    block.Statements[0].Should().BeOfType<DoAction>();
-    var doAction = block.Statements[0] as DoAction;
+    block.Statements[0].Should().BeOfType<CallAction>();
+    var doAction = block.Statements[0] as CallAction;
     doAction!.FunctionCall.Name.Should().Be("func");
     doAction.FunctionCall.Target.Should().Be("test");
   }
 
   [Fact]
-  public void ParseActionBlock_ShouldParseMultipleDoActions()
+  public void ParseActionBlock_ShouldParseMultipleCallActions()
   {
     // Act
     var block = HassLanguageParser.ParseActionBlock(
-      "{ do test.func1(); do test.func2(); do test.func3(); }"
+      "{ call test.func1(); call test.func2(); call test.func3(); }"
     );
 
     // Assert
     block.Statements.Should().HaveCount(3);
-    block.Statements[0].Should().BeOfType<DoAction>();
-    block.Statements[1].Should().BeOfType<DoAction>();
-    block.Statements[2].Should().BeOfType<DoAction>();
+    block.Statements[0].Should().BeOfType<CallAction>();
+    block.Statements[1].Should().BeOfType<CallAction>();
+    block.Statements[2].Should().BeOfType<CallAction>();
 
-    var action1 = block.Statements[0] as DoAction;
+    var action1 = block.Statements[0] as CallAction;
     action1!.FunctionCall.Name.Should().Be("func1");
 
-    var action2 = block.Statements[1] as DoAction;
+    var action2 = block.Statements[1] as CallAction;
     action2!.FunctionCall.Name.Should().Be("func2");
 
-    var action3 = block.Statements[2] as DoAction;
+    var action3 = block.Statements[2] as CallAction;
     action3!.FunctionCall.Name.Should().Be("func3");
   }
 
   [Fact]
-  public void ParseActionBlock_ShouldParseDoActionsWithDifferentArguments()
+  public void ParseActionBlock_ShouldParseCallActionsWithDifferentArguments()
   {
     // Act
     var block = HassLanguageParser.ParseActionBlock(
-      "{ do light.turn_on(); do notify.telegram('Hello', 'World'); do test.func(42, true); }"
+      "{ call light.turn_on(); call notify.telegram('Hello', 'World'); call test.func(42, true); }"
     );
 
     // Assert
     block.Statements.Should().HaveCount(3);
 
-    var action1 = block.Statements[0] as DoAction;
+    var action1 = block.Statements[0] as CallAction;
     action1!.FunctionCall.Name.Should().Be("turn_on");
     action1.FunctionCall.Arguments.Should().BeEmpty();
 
-    var action2 = block.Statements[1] as DoAction;
+    var action2 = block.Statements[1] as CallAction;
     action2!.FunctionCall.Name.Should().Be("telegram");
     action2.FunctionCall.Arguments.Should().HaveCount(2);
 
-    var action3 = block.Statements[2] as DoAction;
+    var action3 = block.Statements[2] as CallAction;
     action3!.FunctionCall.Name.Should().Be("func");
     action3.FunctionCall.Arguments.Should().HaveCount(2);
   }
 
   [Fact]
-  public void ParseActionBlock_ShouldParseDoActionWithObjectLiteral()
+  public void ParseActionBlock_ShouldParseCallActionWithObjectLiteral()
   {
     // Act
     var block = HassLanguageParser.ParseActionBlock(
-      "{ do light.turn_on({ brightness: 100, effect: 'rainbow' }); }"
+      "{ call light.turn_on({ brightness: 100, effect: 'rainbow' }); }"
     );
 
     // Assert
     block.Statements.Should().HaveCount(1);
-    var action = block.Statements[0] as DoAction;
+    var action = block.Statements[0] as CallAction;
     action!.FunctionCall.Arguments.Should().HaveCount(1);
 
     var arg = action.FunctionCall.Arguments[0] as LiteralExpression;

@@ -19,7 +19,7 @@ home "TestHome" {
 
 automation "Simple test" {
   when test.test.test_sensor == "on" {
-    do notify.telegram("Sensor activated!");
+    call notify.telegram("Sensor activated!");
   }
 }
 ```
@@ -91,7 +91,7 @@ home "Name" alias {
 ```c
 automation "Name" {
   when условие {
-    do действие();
+    call действие();
     wait условие for время timeout время;
   }
 }

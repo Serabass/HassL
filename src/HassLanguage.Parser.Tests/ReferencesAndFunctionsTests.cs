@@ -14,7 +14,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test {
-    do test();
+    call test();
   }
 }"
     );
@@ -35,7 +35,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when home.area.device.entity {
-    do test();
+    call test();
   }
 }"
     );
@@ -56,7 +56,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do notify();
+    call notify();
   }
 }"
     );
@@ -64,7 +64,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("notify");
     action.FunctionCall.Target.Should().BeNull();
@@ -78,7 +78,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on();
+    call light.turn_on();
   }
 }"
     );
@@ -86,7 +86,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("turn_on");
     action.FunctionCall.Target.Should().Be("light");
@@ -99,7 +99,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do notify('message');
+    call notify('message');
   }
 }"
     );
@@ -107,7 +107,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
   }
@@ -119,7 +119,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(1, 'test', true, 3.14);
+    call test.func(1, 'test', true, 3.14);
   }
 }"
     );
@@ -127,7 +127,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(4);
   }
@@ -139,7 +139,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.area.device.entity);
+    call light.turn_on(home.area.device.entity);
   }
 }"
     );
@@ -147,7 +147,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var expr = action.FunctionCall.Arguments[0] as ReferenceExpression;
@@ -162,7 +162,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(test.other(1));
+    call test.func(test.other(1));
   }
 }"
     );
@@ -170,7 +170,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var expr = action.FunctionCall.Arguments[0] as FunctionCallExpression;
@@ -184,7 +184,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on({ brightness: 70 });
+    call light.turn_on({ brightness: 70 });
   }
 }"
     );
@@ -192,7 +192,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Arguments.Should().HaveCount(1);
     var expr = action.FunctionCall.Arguments[0] as LiteralExpression;
@@ -208,7 +208,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.func(1) == 5 {
-    do test();
+    call test();
   }
 }"
     );
@@ -233,7 +233,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.func(1) in 10..20 {
-    do test();
+    call test();
   }
 }"
     );
@@ -258,7 +258,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do test.func(sensor.temp);
+    call test.func(sensor.temp);
   }
 }"
     );
@@ -266,7 +266,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("func");
     action.FunctionCall.Target.Should().Be("test");
@@ -283,7 +283,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(home.area.device.entity, { brightness: 70 }, true);
+    call light.turn_on(home.area.device.entity, { brightness: 70 }, true);
   }
 }"
     );
@@ -291,7 +291,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("turn_on");
     action.FunctionCall.Target.Should().Be("light");
@@ -323,7 +323,7 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do http.telegram.post(format('/bot{0}/sendMessage', secret('TG_BOT_TOKEN')), json({ chat_id: secret('TG_CHAT_ID'), text: 'Hello' }));
+    call http.telegram.post(format('/bot{0}/sendMessage', secret('TG_BOT_TOKEN')), json({ chat_id: secret('TG_CHAT_ID'), text: 'Hello' }));
   }
 }"
     );
@@ -331,7 +331,7 @@ public class ReferencesAndFunctionsTests
     // Assert
     result.Automations.Should().HaveCount(1);
     var actionBlock = result.Automations[0].WhenClauses[0].Actions;
-    var action = actionBlock.Statements[0] as DoAction;
+    var action = actionBlock.Statements[0] as CallAction;
     action.Should().NotBeNull();
     action!.FunctionCall.Name.Should().Be("post");
     action.FunctionCall.Target.Should().Be("http.telegram");
@@ -368,7 +368,7 @@ public class ReferencesAndFunctionsTests
     test.func1(1) in 10..20;
     test.func2(sensor.temp) > 25.0;
   } {
-    do test();
+    call test();
   }
 }"
     );
@@ -405,9 +405,9 @@ public class ReferencesAndFunctionsTests
     var result = HassLanguageParser.Parse(
       @"automation 'Test' {
   when test.value == 5 {
-    do light.turn_on(light.ceiling, { brightness: 70 });
-    do notify.telegram('Light on');
-    do climate.set_mode(living.climate.ac, 'cool');
+    call light.turn_on(light.ceiling, { brightness: 70 });
+    call notify.telegram('Light on');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }"
     );
@@ -418,19 +418,19 @@ public class ReferencesAndFunctionsTests
     actionBlock.Statements.Should().HaveCount(3);
 
     // First action
-    var action1 = actionBlock.Statements[0] as DoAction;
+    var action1 = actionBlock.Statements[0] as CallAction;
     action1.Should().NotBeNull();
     action1!.FunctionCall.Name.Should().Be("turn_on");
     action1.FunctionCall.Target.Should().Be("light");
 
     // Second action
-    var action2 = actionBlock.Statements[1] as DoAction;
+    var action2 = actionBlock.Statements[1] as CallAction;
     action2.Should().NotBeNull();
     action2!.FunctionCall.Name.Should().Be("telegram");
     action2.FunctionCall.Target.Should().Be("notify");
 
     // Third action
-    var action3 = actionBlock.Statements[2] as DoAction;
+    var action3 = actionBlock.Statements[2] as CallAction;
     action3.Should().NotBeNull();
     action3!.FunctionCall.Name.Should().Be("set_mode");
     action3.FunctionCall.Target.Should().Be("climate");

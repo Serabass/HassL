@@ -36,16 +36,16 @@ home 'MyFlat' {
 // Автоматизация: включение света при движении
 automation 'Kitchen motion light' {
   when sensors.motion == 'on' {
-    do light.turn_on(light.ceiling, { brightness: 70 });
+    call light.turn_on(light.ceiling, { brightness: 70 });
     wait sensors.motion == 'off' for 40s timeout 10m;
-    do light.turn_off(light.ceiling);
+    call light.turn_off(light.ceiling);
   }
 }
 
 // Автоматизация: кондиционер при высокой температуре
 automation 'AC auto cool' {
   when living.climate.temp > 25.0 for 30m {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
@@ -55,7 +55,7 @@ automation 'Extreme conditions alert' {
     living.sensors.temp > 28.0;
     living.sensors.humidity > 70;
   } {
-    do notify.telegram('Проветри! Температура или влажность слишком высокие');
+    call notify.telegram('Проветри! Температура или влажность слишком высокие');
   }
 }
 
@@ -66,6 +66,6 @@ automation 'Bathroom light' {
   @edge(rising)
   @debounce(2s)
   when bathroom.sensors.motion == 'on' {
-    do light.turn_on(bathroom.light.main, { brightness: 100 });
+    call light.turn_on(bathroom.light.main, { brightness: 100 });
   }
 }

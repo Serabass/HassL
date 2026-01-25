@@ -1,5 +1,5 @@
-﻿using HassLanguage.Parser;
-var input = "automation "Test" { when test.value == 5 { do test.func(); } }";
+using HassLanguage.Parser;
+var input = "automation "Test" { when test.value == 5 { call test.func(); } }";
 try {
   var result = HassLanguageParser.Parse(input);
   Console.WriteLine("Automations count: {result.Automations.Count}");

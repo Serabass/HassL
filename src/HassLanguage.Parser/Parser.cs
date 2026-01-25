@@ -18,7 +18,7 @@ public class HassLanguageParser
   }
 
   /// <summary>
-  /// Parses a single action statement (e.g., "do test.func();")
+  /// Parses a single action statement (e.g., "call test.func();")
   /// </summary>
   public static ActionStatement ParseActionStatement(string input)
   {
@@ -33,7 +33,7 @@ public class HassLanguageParser
   }
 
   /// <summary>
-  /// Parses an action block (e.g., "{ do test.func1(); do test.func2(); }")
+  /// Parses an action block (e.g., "{ call test.func1(); call test.func2(); }")
   /// </summary>
   public static ActionBlock ParseActionBlock(string input)
   {

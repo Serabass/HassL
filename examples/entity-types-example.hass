@@ -69,14 +69,14 @@ home 'EntityTypesHome' {
 // Работа с binary_sensor
 automation 'Motion detection' {
   when living.sensors.motion == 'on' {
-    do light.turn_on(living.lights.main, { brightness: 70 });
+    call light.turn_on(living.lights.main, { brightness: 70 });
   }
 }
 
 // Работа с sensor (числовые значения)
 automation 'Temperature control' {
   when living.sensors.temperature > 26.0 for 10m {
-    do climate.set_mode(living.climate.ac, 'cool');
+    call climate.set_mode(living.climate.ac, 'cool');
   }
 }
 
@@ -86,8 +86,8 @@ automation 'Climate automation' {
     living.sensors.temperature < 18.0;
     now().time in 20:00..08:00;
   } {
-    do climate.set_mode(living.climate.heater, 'heat');
-    do climate.set_temperature(living.climate.heater, 22.0);
+    call climate.set_mode(living.climate.heater, 'heat');
+    call climate.set_temperature(living.climate.heater, 22.0);
   }
 }
 
@@ -97,18 +97,18 @@ automation 'Fan control' {
     living.sensors.temperature > 28.0;
     living.sensors.humidity > 70;
   } {
-    do switch.turn_on(living.switches.fan);
+    call switch.turn_on(living.switches.fan);
   }
 }
 
 // Работа с cover
 automation 'Blinds control' {
   when now().time == 08:00 {
-    do cover.open(living.covers.blinds);
+    call cover.open(living.covers.blinds);
   }
   
   when now().time == 20:00 {
-    do cover.close(living.covers.blinds);
+    call cover.close(living.covers.blinds);
   }
 }
 
@@ -119,8 +119,8 @@ automation 'Multi-entity automation' {
     living.sensors.lux < 100;
     living.sensors.window == 'closed';
   } {
-    do light.turn_on(living.lights.main, { brightness: 80 });
-    do cover.open(living.covers.curtains);
+    call light.turn_on(living.lights.main, { brightness: 80 });
+    call cover.open(living.covers.curtains);
   }
 }
 
@@ -130,7 +130,7 @@ automation 'Safety alert' {
     kitchen.sensors.smoke == 'on';
     kitchen.sensors.gas > 100;
   } {
-    do notify.telegram('ВНИМАНИЕ! Обнаружен дым или газ на кухне!');
-    do light.turn_on(kitchen.lights.main, { brightness: 100, color: 'red' });
+    call notify.telegram('ВНИМАНИЕ! Обнаружен дым или газ на кухне!');
+    call light.turn_on(kitchen.lights.main, { brightness: 100, color: 'red' });
   }
 }
