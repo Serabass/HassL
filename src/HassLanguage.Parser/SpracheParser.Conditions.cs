@@ -19,114 +19,21 @@ public static partial class SpracheParser
 
   private static Parser<Expression> ConditionItemImpl =>
     // Try to parse nested condition first (all { ... } or any { ... })
-    (
-      Token("all")
-        .Then(_ =>
-          ForDuration
-            .Optional()
-            .Then(forDur =>
-              Token("{")
-                .Then(_ =>
-                  ConditionItem
-                    .Many()
-                    .Then(conditions =>
-                      Token("}")
-                        .Then(_ =>
-                          Token(";")
-                            .Return(
-                              new FunctionCallExpression
-                              {
-                                FunctionCall = new FunctionCall
-                                {
-                                  Name = "all",
-                                  Arguments = conditions.ToList(),
-                                },
-                              } as Expression
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        .Or(
-          Token("any")
-            .Then(_ =>
-              ForDuration
-                .Optional()
-                .Then(forDur =>
-                  Token("{")
-                    .Then(_ =>
-                      ConditionItem
-                        .Many()
-                        .Then(conditions =>
-                          Token("}")
-                            .Then(_ =>
-                              Token(";")
-                                .Return(
-                                  new FunctionCallExpression
-                                  {
-                                    FunctionCall = new FunctionCall
-                                    {
-                                      Name = "any",
-                                      Arguments = conditions.ToList(),
-                                    },
-                                  } as Expression
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        .Or(Expression.Then(expr => Token(";").Return(expr)))
-    );
+    ParseAllAnyConditionItem("all")
+      .Or(ParseAllAnyConditionItem("any"))
+      .Or(Expression.Then(expr => Token(";").Return(expr)));
 
   // Condition expressions
   private static Parser<ConditionExpression> ConditionExpressionImpl =>
-    Token("all")
-      .Then(_ =>
-        ForDuration
-          .Optional()
-          .Then(forDur =>
-            Token("{")
-              .Then(_ =>
-                ConditionItem
-                  .Many()
-                  .Then(conditions =>
-                    Token("}")
-                      .Return(
-                        new AllCondition
-                        {
-                          Conditions = conditions.ToList(),
-                          ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                        } as ConditionExpression
-                      )
-                  )
-              )
-          )
+    ParseAllAnyConditionExpression(
+        "all",
+        (conditions, forDur) => new AllCondition { Conditions = conditions, ForDuration = forDur }
       )
       .Or(
-        Token("any")
-          .Then(_ =>
-            ForDuration
-              .Optional()
-              .Then(forDur =>
-                Token("{")
-                  .Then(_ =>
-                    ConditionItem
-                      .Many()
-                      .Then(conditions =>
-                        Token("}")
-                          .Return(
-                            new AnyCondition
-                            {
-                              Conditions = conditions.ToList(),
-                              ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                            } as ConditionExpression
-                          )
-                      )
-                  )
-              )
+        ParseAllAnyConditionExpression(
+            "any",
+            (conditions, forDur) =>
+              new AnyCondition { Conditions = conditions, ForDuration = forDur }
           )
           .Or(
             ForDuration
@@ -134,16 +41,19 @@ public static partial class SpracheParser
               .Then(forDur =>
                 Token("{")
                   .Then(_ =>
-                    (Expression.Then(expr => Token(";").Return(expr)).Many()).Then(conditions =>
-                      Token("}")
-                        .Return(
-                          new AllCondition
-                          {
-                            Conditions = conditions.ToList(),
-                            ForDuration = forDur.IsDefined ? forDur.Get() : null,
-                          } as ConditionExpression
-                        )
-                    )
+                    Expression
+                      .Then(expr => Token(";").Return(expr))
+                      .Many()
+                      .Then(conditions =>
+                        Token("}")
+                          .Return(
+                            new AllCondition
+                            {
+                              Conditions = conditions.ToList(),
+                              ForDuration = forDur.IsDefined ? forDur.Get() : null,
+                            }
+                          )
+                      )
                   )
               )
           )
@@ -157,7 +67,7 @@ public static partial class SpracheParser
                     {
                       Expression = expr,
                       ForDuration = forDurOpt.IsDefined ? forDurOpt.Get() : null,
-                    } as ConditionExpression
+                    }
                   )
                 )
             )
@@ -166,18 +76,56 @@ public static partial class SpracheParser
 
   private static Parser<Duration> ForDurationImpl => Token("for").Then(_ => Duration);
 
-  private static Parser<ConditionExpression> ParseSingleCondition() =>
-    Expression.Then(expr =>
-      ForDuration
-        .Optional()
-        .Then(forDurOpt =>
-          Sprache.Parse.Return(
-            new SingleCondition
-            {
-              Expression = expr,
-              ForDuration = forDurOpt.IsDefined ? forDurOpt.Get() : null,
-            } as ConditionExpression
+  // Helper method to parse all/any condition item (returns FunctionCallExpression)
+  private static Parser<Expression> ParseAllAnyConditionItem(string keyword) =>
+    Token(keyword)
+      .Then(_ =>
+        ForDuration
+          .Optional()
+          .Then(forDur =>
+            Token("{")
+              .Then(_ =>
+                ConditionItem
+                  .Many()
+                  .Then(conditions =>
+                    Token("}")
+                      .Then(_ =>
+                        Token(";")
+                          .Return(
+                            new FunctionCallExpression
+                            {
+                              FunctionCall = new FunctionCall
+                              {
+                                Name = keyword,
+                                Arguments = conditions.ToList(),
+                              },
+                            }
+                          )
+                      )
+                  )
+              )
           )
-        )
-    );
+      );
+
+  // Helper method to parse all/any condition expression (returns AllCondition/AnyCondition)
+  private static Parser<ConditionExpression> ParseAllAnyConditionExpression(
+    string keyword,
+    Func<List<Expression>, Duration?, ConditionExpression> factory
+  ) =>
+    Token(keyword)
+      .Then(_ =>
+        ForDuration
+          .Optional()
+          .Then(forDur =>
+            Token("{")
+              .Then(_ =>
+                ConditionItem
+                  .Many()
+                  .Then(conditions =>
+                    Token("}")
+                      .Return(factory(conditions.ToList(), forDur.IsDefined ? forDur.Get() : null))
+                  )
+              )
+          )
+      );
 }

@@ -7,12 +7,15 @@ public static partial class SpracheParser
 {
   // Whitespace and comments
   private static readonly Parser<char> WhitespaceChar = Sprache.Parse.WhiteSpace;
+
   private static readonly Parser<string> LineComment = Sprache
     .Parse.String("//")
     .Then(_ => Sprache.Parse.AnyChar.Except(Sprache.Parse.LineEnd).Many().Text());
+
   private static readonly Parser<string> BlockComment = Sprache
     .Parse.String("/*")
     .Then(_ => Sprache.Parse.AnyChar.Until(Sprache.Parse.String("*/")).Text());
+
   private static readonly Parser<object?> SkipWhitespace = Sprache
     .Parse.WhiteSpace.Select(_ => (object?)null)
     .Or(LineComment.Select(_ => (object?)null))

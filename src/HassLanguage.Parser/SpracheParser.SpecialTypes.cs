@@ -9,9 +9,9 @@ public static partial class SpracheParser
   private static readonly Parser<DurationUnit> DurationUnitParser = Token(
     Sprache
       .Parse.Char('s')
-      .Return(Core.Ast.DurationUnit.Seconds)
-      .Or(Sprache.Parse.Char('m').Return(Core.Ast.DurationUnit.Minutes))
-      .Or(Sprache.Parse.Char('h').Return(Core.Ast.DurationUnit.Hours))
+      .Return(DurationUnit.Seconds)
+      .Or(Sprache.Parse.Char('m').Return(DurationUnit.Minutes))
+      .Or(Sprache.Parse.Char('h').Return(DurationUnit.Hours))
   );
 
   private static readonly Parser<Duration> Duration = IntLiteral.Then(v =>
@@ -61,10 +61,8 @@ public static partial class SpracheParser
                           .Parse.Char(':')
                           .Then(_ => Sprache.Parse.Digit.Repeat(2).Text())
                           .Select(s =>
-                          {
-                            var dateStr = y + "-" + m + "-" + d + "T" + h + ":" + min + ":" + s;
-                            return DateTime.Parse(dateStr);
-                          })
+                            DateTime.Parse(y + "-" + m + "-" + d + "T" + h + ":" + min + ":" + s)
+                          )
                       )
                   )
               )
