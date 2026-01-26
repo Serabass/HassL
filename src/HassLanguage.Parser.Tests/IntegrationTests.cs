@@ -13,7 +13,7 @@ public class IntegrationTests
     // Arrange
     var input =
       @"
-home 'TestHome' {
+zone 'TestHome' {
   settings { }
 
   area 'TestRoom' test {
@@ -35,11 +35,11 @@ automation 'Simple test' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].DisplayName.Should().Be("TestHome");
-    result.Homes[0].Areas.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].DisplayName.Should().Be("TestHome");
+    result.Zones[0].Areas.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
     result.Automations.Should().HaveCount(1);
     result.Automations[0].DisplayName.Should().Be("Simple test");
   }
@@ -50,7 +50,7 @@ automation 'Simple test' {
     // Arrange
     var input =
       @"
-home 'MyFlat' {
+zone 'MyFlat' {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
@@ -110,8 +110,8 @@ automation 'Extreme conditions alert' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Areas.Should().HaveCount(2);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Areas.Should().HaveCount(2);
     result.Automations.Should().HaveCount(3);
 
     // Check first automation
@@ -168,17 +168,17 @@ automation 'Bathroom light' {
     // Arrange
     var input =
       @"
-home 'Home1' home1 { }
-home 'Home2' home2 { }
+zone 'Home1' home1 { }
+zone 'Home2' home2 { }
 ";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(2);
-    result.Homes[0].Alias.Should().Be("home1");
-    result.Homes[1].Alias.Should().Be("home2");
+    result.Zones.Should().HaveCount(2);
+    result.Zones[0].Alias.Should().Be("home1");
+    result.Zones[1].Alias.Should().Be("home2");
   }
 
   [Fact]
@@ -217,7 +217,7 @@ automation 'Auto3' {
     var result = HassLanguageParser.Parse("");
 
     // Assert
-    result.Homes.Should().BeEmpty();
+    result.Zones.Should().BeEmpty();
     result.Automations.Should().BeEmpty();
   }
 
@@ -225,7 +225,7 @@ automation 'Auto3' {
   public void Parse_ShouldThrowOnInvalidSyntax()
   {
     // Arrange
-    var input = "home 'Test' test { invalid syntax }";
+    var input = "zone 'Test' test { invalid syntax }";
 
     // Act & Assert
     var act = () => HassLanguageParser.Parse(input);
@@ -238,7 +238,7 @@ automation 'Auto3' {
     // Arrange
     var input =
       @"
-home 'Complex' complex {
+zone 'Complex' complex {
   area 'Area1' area1 {
     device 'Device1' device1 {
       entities: [
@@ -272,8 +272,8 @@ automation 'Complex Auto' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Areas.Should().HaveCount(2);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Areas.Should().HaveCount(2);
     result.Automations.Should().HaveCount(1);
     var automation = result.Automations[0];
     automation.WhenClauses.Should().HaveCount(1);
@@ -289,7 +289,7 @@ automation 'Complex Auto' {
     // Arrange
     var input =
       @"
-home 'MyHome' {
+zone 'MyHome' {
   area 'Living Room' living {
     device 'Light' light {
       entities: [
@@ -315,9 +315,9 @@ automation 'Update light to rainbow' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Areas.Should().HaveCount(1);
-    var area = result.Homes[0].Areas[0];
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Areas.Should().HaveCount(1);
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(2);
 
     // Check light device

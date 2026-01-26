@@ -1,6 +1,6 @@
 // Примеры различных выражений и операций
 
-home 'ExpressionHome' {
+zone 'ExpressionHome' {
   area 'Test' test {
     device 'Sensors' sensors {
       entities: [

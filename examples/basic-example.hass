@@ -1,6 +1,6 @@
 // Минимальный пример для начала работы
 
-home 'TestHome' {
+zone 'TestHome' {
   settings {
     events {
       mode: rabbitmq; // auto | websocket | rabbitmq

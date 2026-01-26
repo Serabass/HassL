@@ -7,7 +7,7 @@
 Минимальный пример с одной комнатой и простой автоматизацией:
 
 ```c
-home "TestHome" {
+zone "TestHome" {
   area "TestArea" test {
     device "TestDevice" test {
       entities: [
@@ -66,7 +66,7 @@ docker run --rm -v "${PWD}:/workspace" -w /workspace mcr.microsoft.com/dotnet/sd
 
 Все примеры следуют одной структуре:
 
-1. **Определение home** - корневой контейнер
+1. **Определение zone** - корневой контейнер
 2. **Определение areas** - зоны в доме
 3. **Определение devices** - устройства в комнатах
 4. **Определение entities** - конкретные сущности (лампы, датчики)
@@ -76,7 +76,7 @@ docker run --rm -v "${PWD}:/workspace" -w /workspace mcr.microsoft.com/dotnet/sd
 
 ### Иерархия
 ```
-home "Name" alias {
+zone "Name" alias {
   area "Name" alias {
     device "Name" alias {
       entities: [

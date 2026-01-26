@@ -1,6 +1,6 @@
 // Примеры использования диапазонов (in range)
 
-home 'RangeHome' {
+zone 'RangeHome' {
   area 'Living Room' living {
     device 'Sensors' sensors {
       entities: [

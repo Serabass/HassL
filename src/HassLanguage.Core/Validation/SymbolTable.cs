@@ -4,18 +4,18 @@ namespace HassLanguage.Core.Validation;
 
 public class SymbolTable
 {
-  private readonly Dictionary<string, HomeDeclaration> _homes = new();
+  private readonly Dictionary<string, ZoneDeclaration> _zones = new();
   private readonly Dictionary<string, AreaDeclaration> _areas = new();
   private readonly Dictionary<string, DeviceDeclaration> _devices = new();
   private readonly Dictionary<string, EntityDeclaration> _entities = new();
 
-  public bool AddHome(string alias, HomeDeclaration home)
+  public bool AddZone(string alias, ZoneDeclaration zone)
   {
-    if (_homes.ContainsKey(alias))
+    if (_zones.ContainsKey(alias))
     {
       return false;
     }
-    _homes[alias] = home;
+    _zones[alias] = zone;
     return true;
   }
 
@@ -75,7 +75,7 @@ public class SymbolTable
 
   public void Clear()
   {
-    _homes.Clear();
+    _zones.Clear();
     _areas.Clear();
     _devices.Clear();
     _entities.Clear();

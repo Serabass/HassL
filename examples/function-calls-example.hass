@@ -1,6 +1,6 @@
 // Примеры различных вызовов функций
 
-home 'FunctionHome' {
+zone 'FunctionHome' {
   area 'Living Room' living {
     device 'Light' light {
       entities: [

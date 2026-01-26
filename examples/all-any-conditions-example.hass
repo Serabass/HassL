@@ -1,6 +1,6 @@
 // Примеры использования all и any условий
 
-home 'ConditionHome' {
+zone 'ConditionHome' {
   area 'Living Room' living {
     device 'Sensors' sensors {
       entities: [

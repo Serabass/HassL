@@ -1,6 +1,6 @@
 // Более сложный пример с комбинированными условиями
 
-home 'SmartHome' {
+zone 'SmartHome' {
   area 'Bedroom' bedroom {
     device 'Light' light {
       entities: [

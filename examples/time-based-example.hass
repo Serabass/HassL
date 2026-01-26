@@ -1,6 +1,6 @@
 // Примеры автоматизаций, основанных на времени
 
-home 'TimeBasedHome' {
+zone 'TimeBasedHome' {
   area 'Bedroom' bedroom {
     device 'Light' light {
       entities: [

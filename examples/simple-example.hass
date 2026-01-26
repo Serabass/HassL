@@ -1,6 +1,6 @@
 // Простой пример автоматизации умного дома
 
-home 'MyFlat' {
+zone 'MyFlat' {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [

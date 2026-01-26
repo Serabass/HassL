@@ -1,6 +1,6 @@
 // Минимальный пример - самая простая структура
 
-home 'Minimal' {
+zone 'Minimal' {
   area 'Room' room {
     device 'Device' device {
       entities: [

@@ -1,6 +1,6 @@
 // Примеры использования wait с таймаутами
 
-home 'WaitHome' {
+zone 'WaitHome' {
   area 'Hallway' hallway {
     device 'Sensors' sensors {
       entities: [

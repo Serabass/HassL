@@ -1,6 +1,6 @@
 // Примеры использования логических операторов в условиях
 
-home 'LogicalHome' {
+zone 'LogicalHome' {
   area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [

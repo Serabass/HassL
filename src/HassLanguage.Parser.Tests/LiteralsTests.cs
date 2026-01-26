@@ -324,7 +324,9 @@ public class LiteralsTests
   public void ParsePrimitivesInRangeExpression_ShouldParseCorrectly()
   {
     // Act
-    var result = HassLanguageParser.Parse("automation 'Test' { when 15 in 10..20 { call test(); } }");
+    var result = HassLanguageParser.Parse(
+      "automation 'Test' { when 15 in 10..20 { call test(); } }"
+    );
 
     // Assert
     result.Automations.Should().HaveCount(1);
@@ -337,6 +339,21 @@ public class LiteralsTests
     var numericLiteral = leftExpr!.Literal as NumericLiteral;
     numericLiteral.Should().NotBeNull();
     numericLiteral!.Value.Should().Be(15);
+    inRangeExpr.Range.Should().BeOfType<ValueRangeExpression>();
+    var valueRange = inRangeExpr.Range as ValueRangeExpression;
+    valueRange.Should().NotBeNull();
+    valueRange!.Start.Should().BeOfType<LiteralExpression>();
+    valueRange!.End.Should().BeOfType<LiteralExpression>();
+    var startLiteral = valueRange!.Start as LiteralExpression;
+    startLiteral.Should().NotBeNull();
+    var startNumeric = startLiteral!.Literal as NumericLiteral;
+    startNumeric.Should().NotBeNull();
+    startNumeric!.Value.Should().Be(10);
+    var endLiteral = valueRange!.End as LiteralExpression;
+    endLiteral.Should().NotBeNull();
+    var endNumeric = endLiteral!.Literal as NumericLiteral;
+    endNumeric.Should().NotBeNull();
+    endNumeric!.Value.Should().Be(20);
   }
 
   [Fact]

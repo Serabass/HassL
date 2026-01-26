@@ -8,7 +8,7 @@
 
 ### ✅ ANTLR4 грамматика
 - Lexer и Parser правила для всего синтаксиса DSL
-- Поддержка home/area/device/entity иерархии
+- Поддержка zone/area/device/entity иерархии
 - Поддержка automation/when/call/wait конструкций
 - Декораторы для automation и when
 - Выражения с приоритетами операторов

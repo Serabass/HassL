@@ -10,9 +10,9 @@ public static partial class SpracheParser
     SkipWhitespace
       .Many()
       .Then(_ =>
-        HomeDeclaration
+        ZoneDeclaration
           .Many()
-          .Then(homes =>
+          .Then(zones =>
             AutomationDeclaration
               .Many()
               .Then(automations =>
@@ -20,7 +20,7 @@ public static partial class SpracheParser
                   .Many()
                   .Then(_ =>
                     Sprache.Parse.Return(
-                      new Program { Homes = homes.ToList(), Automations = automations.ToList() }
+                      new Program { Zones = zones.ToList(), Automations = automations.ToList() }
                     )
                   )
               )

@@ -1,6 +1,6 @@
 namespace HassLanguage.Core.Ast;
 
-public class HomeDeclaration : IAstNode
+public class ZoneDeclaration : IAstNode
 {
   public string DisplayName { get; set; } = string.Empty;
   public string Alias { get; set; } = string.Empty;

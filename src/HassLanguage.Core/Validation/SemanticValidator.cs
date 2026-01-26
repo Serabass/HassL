@@ -13,9 +13,9 @@ public class SemanticValidator
     _symbols.Clear();
 
     // Build symbol table
-    foreach (var home in program.Homes)
+    foreach (var zone in program.Zones)
     {
-      ValidateHome(home);
+      ValidateZone(zone);
     }
 
     // Validate automations
@@ -27,30 +27,30 @@ public class SemanticValidator
     return new ValidationResult { IsValid = _errors.Count == 0, Errors = _errors };
   }
 
-  private void ValidateHome(HomeDeclaration home)
+  private void ValidateZone(ZoneDeclaration zone)
   {
-    // Check home alias uniqueness
-    if (!_symbols.AddHome(home.Alias, home))
+    // Check zone alias uniqueness
+    if (!_symbols.AddZone(zone.Alias, zone))
     {
-      _errors.Add(new ValidationError($"Home alias '{home.Alias}' is already defined", home));
+      _errors.Add(new ValidationError($"Zone alias '{zone.Alias}' is already defined", zone));
       return;
     }
 
-    foreach (var area in home.Areas)
+    foreach (var area in zone.Areas)
     {
-      ValidateArea(home.Alias, area);
+      ValidateArea(zone.Alias, area);
     }
   }
 
-  private void ValidateArea(string homeAlias, AreaDeclaration area)
+  private void ValidateArea(string zoneAlias, AreaDeclaration area)
   {
-    var fullPath = $"{homeAlias}.{area.Alias}";
+    var fullPath = $"{zoneAlias}.{area.Alias}";
 
     if (!_symbols.AddArea(fullPath, area))
     {
       _errors.Add(
         new ValidationError(
-          $"Area alias '{area.Alias}' is already defined in home '{homeAlias}'",
+          $"Area alias '{area.Alias}' is already defined in zone '{zoneAlias}'",
           area
         )
       );

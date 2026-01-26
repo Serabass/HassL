@@ -14,11 +14,11 @@ public class BasicParsersTests
   public void ParseIdentifier_ShouldParseValidIdentifiers(string input, string expected)
   {
     // Act
-    var result = HassLanguageParser.Parse($"home 'Test' {expected} {{ }}");
+    var result = HassLanguageParser.Parse($"zone 'Test' {expected} {{ }}");
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be(expected);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be(expected);
   }
 
   [Theory]
@@ -31,11 +31,11 @@ public class BasicParsersTests
   public void ParseStringLiteral_ShouldParseValidStrings(string input, string expected)
   {
     // Act
-    var result = HassLanguageParser.Parse($"home {input} test {{ }}");
+    var result = HassLanguageParser.Parse($"zone {input} test {{ }}");
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].DisplayName.Should().Be(expected);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].DisplayName.Should().Be(expected);
   }
 
   [Theory]
@@ -101,7 +101,7 @@ public class BasicParsersTests
     var input =
       @"
 // This is a comment
-home 'Test' test {
+zone 'Test' test {
   // Another comment
 }
 ";
@@ -110,8 +110,8 @@ home 'Test' test {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
@@ -121,7 +121,7 @@ home 'Test' test {
     var input =
       @"
 /* This is a block comment */
-home 'Test' test {
+zone 'Test' test {
   /* Another block comment */
 }
 ";
@@ -130,50 +130,50 @@ home 'Test' test {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
   public void Parse_ShouldHandleWhitespace()
   {
     // Arrange
-    var input = "home   'Test'   test   {   }";
+    var input = "zone   'Test'   test   {   }";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
   public void Parse_ShouldIgnoreLineCommentAtEndOfLine()
   {
     // Arrange
-    var input = "home 'Test' test { } // comment at end";
+    var input = "zone 'Test' test { } // comment at end";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
   public void Parse_ShouldIgnoreLineCommentBetweenTokens()
   {
     // Arrange
-    var input = "home // comment\n'Test' test { }";
+    var input = "zone // comment\n'Test' test { }";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].DisplayName.Should().Be("Test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].DisplayName.Should().Be("Test");
   }
 
   [Fact]
@@ -185,7 +185,7 @@ home 'Test' test {
 /* This is a
    multi-line
    block comment */
-home 'Test' test {
+zone 'Test' test {
 }
 ";
 
@@ -193,8 +193,8 @@ home 'Test' test {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
@@ -294,8 +294,8 @@ automation 'Test' {
     // Arrange
     var input =
       @"
-// Comment before home
-home 'MyHome' {
+// Comment before zone
+zone 'MyHome' {
   // Comment before area
   area ""Living Room"" living {
     // Comment before device
@@ -321,10 +321,10 @@ automation 'Test' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Areas.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Areas.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
     result.Automations.Should().HaveCount(1);
   }
 
@@ -332,28 +332,28 @@ automation 'Test' {
   public void Parse_ShouldIgnoreEmptyLineComment()
   {
     // Arrange
-    var input = "home 'Test' test { } //";
+    var input = "zone 'Test' test { } //";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
   public void Parse_ShouldIgnoreEmptyBlockComment()
   {
     // Arrange
-    var input = "home 'Test' test { } /**/";
+    var input = "zone 'Test' test { } /**/";
 
     // Act
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
@@ -363,7 +363,7 @@ automation 'Test' {
     var input =
       @"
 // Comment with special chars: !@#$%^&*()_+-=[]{}|;:'"",.<>?
-home 'Test' test {
+zone 'Test' test {
   /* Block comment with 'quotes' and 'apostrophes' */
 }
 ";
@@ -372,8 +372,8 @@ home 'Test' test {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Alias.Should().Be("test");
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Alias.Should().Be("test");
   }
 
   [Fact]
@@ -403,7 +403,7 @@ automation 'Test Automation' {
     // Arrange
     var input =
       @"
-home 'My Home' {
+zone 'My Home' {
   area ""Living Room"" living {
     device 'Light Device' light {
       entities: [
@@ -418,13 +418,13 @@ home 'My Home' {
     var result = HassLanguageParser.Parse(input);
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].DisplayName.Should().Be("My Home");
-    result.Homes[0].Areas.Should().HaveCount(1);
-    result.Homes[0].Areas[0].DisplayName.Should().Be("Living Room");
-    result.Homes[0].Areas[0].Devices.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Devices[0].DisplayName.Should().Be("Light Device");
-    result.Homes[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].DisplayName.Should().Be("My Home");
+    result.Zones[0].Areas.Should().HaveCount(1);
+    result.Zones[0].Areas[0].DisplayName.Should().Be("Living Room");
+    result.Zones[0].Areas[0].Devices.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Devices[0].DisplayName.Should().Be("Light Device");
+    result.Zones[0].Areas[0].Devices[0].Entities.Should().HaveCount(1);
   }
 
   [Fact]

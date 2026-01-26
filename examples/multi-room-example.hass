@@ -1,6 +1,6 @@
 // Пример с несколькими комнатами и сложными связями между ними
 
-home 'MultiRoomHome' {
+zone 'MultiRoomHome' {
   area 'Entrance' entrance {
     device 'Sensors' sensors {
       entities: [

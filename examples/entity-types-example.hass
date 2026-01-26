@@ -1,6 +1,6 @@
 // Примеры различных типов сущностей Home Assistant
 
-home 'EntityTypesHome' {
+zone 'EntityTypesHome' {
   area 'Living Room' living {
     device 'Lights' lights {
       entities: [

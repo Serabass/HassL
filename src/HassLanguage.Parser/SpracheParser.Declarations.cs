@@ -131,16 +131,16 @@ public static partial class SpracheParser
           )
       );
 
-  // Home declaration
-  // Format: home [displayName] alias { ... }
+  // Zone declaration
+  // Format: zone [displayName] alias { ... }
   // Examples:
-  //   home MyFlat { ... }
-  //   home "Моя хата" MyFlat { ... }
-  private static Parser<HomeDeclaration> HomeDeclaration =>
+  //   zone MyFlat { ... }
+  //   zone "Моя хата" MyFlat { ... }
+  private static Parser<ZoneDeclaration> ZoneDeclaration =>
     DecoratorList
       .Optional()
       .Then(decorators =>
-        Token("home")
+        Token("zone")
           .Then(_ =>
             StringLiteral
               .Optional()
@@ -156,7 +156,7 @@ public static partial class SpracheParser
                             .Then(areas =>
                               Token("}")
                                 .Return(
-                                  new HomeDeclaration
+                                  new ZoneDeclaration
                                   {
                                     DisplayName = displayNameOpt.IsDefined
                                       ? displayNameOpt.Get()

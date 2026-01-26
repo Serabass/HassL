@@ -13,16 +13,16 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
   }
 }"
     );
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    result.Homes[0].Areas.Should().HaveCount(1);
-    var area = result.Homes[0].Areas[0];
+    result.Zones.Should().HaveCount(1);
+    result.Zones[0].Areas.Should().HaveCount(1);
+    var area = result.Zones[0].Areas[0];
     area.DisplayName.Should().Be("Kitchen");
     area.Alias.Should().Be("kitchen");
     area.Type.Should().BeNull();
@@ -35,14 +35,14 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen kitchen_type {
   }
 }"
     );
 
     // Assert
-    result.Homes[0].Areas[0].Type.Should().Be("kitchen_type");
+    result.Zones[0].Areas[0].Type.Should().Be("kitchen_type");
   }
 
   [Fact]
@@ -50,7 +50,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
   }
   area 'Living Room' living {
@@ -61,13 +61,13 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(3);
-    result.Homes[0].Areas[0].Alias.Should().Be("kitchen");
-    result.Homes[0].Areas[1].Alias.Should().Be("living");
-    result.Homes[0].Areas[2].Alias.Should().Be("bedroom");
-    result.Homes[0].Areas[0].DisplayName.Should().Be("Kitchen");
-    result.Homes[0].Areas[1].DisplayName.Should().Be("Living Room");
-    result.Homes[0].Areas[2].DisplayName.Should().Be("Bedroom");
+    result.Zones[0].Areas.Should().HaveCount(3);
+    result.Zones[0].Areas[0].Alias.Should().Be("kitchen");
+    result.Zones[0].Areas[1].Alias.Should().Be("living");
+    result.Zones[0].Areas[2].Alias.Should().Be("bedroom");
+    result.Zones[0].Areas[0].DisplayName.Should().Be("Kitchen");
+    result.Zones[0].Areas[1].DisplayName.Should().Be("Living Room");
+    result.Zones[0].Areas[2].DisplayName.Should().Be("Bedroom");
   }
 
   [Fact]
@@ -75,7 +75,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
@@ -87,7 +87,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(1);
     area.Devices[0].DisplayName.Should().Be("Light");
     area.Devices[0].Alias.Should().Be("light");
@@ -99,7 +99,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
@@ -122,7 +122,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(3);
     area.Devices[0].Alias.Should().Be("light");
     area.Devices[1].Alias.Should().Be("sensors");
@@ -134,7 +134,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   @priority(high)
   @enabled(true)
   area 'Kitchen' kitchen {
@@ -143,7 +143,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Decorators.Should().HaveCount(2);
     area.Decorators[0].Name.Should().Be("priority");
     area.Decorators[1].Name.Should().Be("enabled");
@@ -154,7 +154,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   @priority(high)
   @enabled(true)
   @mode('restart')
@@ -164,7 +164,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Decorators.Should().HaveCount(3);
     area.Decorators[0].Name.Should().Be("priority");
     area.Decorators[1].Name.Should().Be("enabled");
@@ -176,7 +176,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   @priority(high)
   area 'Kitchen' kitchen kitchen_type {
     device 'Light' light {
@@ -189,7 +189,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Type.Should().Be("kitchen_type");
     area.Decorators.Should().HaveCount(1);
     area.Decorators[0].Name.Should().Be("priority");
@@ -201,7 +201,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area ""Kitchen"" kitchen {
   }
   area 'Living Room' living {
@@ -210,9 +210,9 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(2);
-    result.Homes[0].Areas[0].DisplayName.Should().Be("Kitchen");
-    result.Homes[0].Areas[1].DisplayName.Should().Be("Living Room");
+    result.Zones[0].Areas.Should().HaveCount(2);
+    result.Zones[0].Areas[0].DisplayName.Should().Be("Kitchen");
+    result.Zones[0].Areas[1].DisplayName.Should().Be("Living Room");
   }
 
   [Fact]
@@ -220,7 +220,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Light' light {
       entities: [
@@ -247,15 +247,15 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(2);
+    result.Zones[0].Areas.Should().HaveCount(2);
 
-    var kitchen = result.Homes[0].Areas[0];
+    var kitchen = result.Zones[0].Areas[0];
     kitchen.Alias.Should().Be("kitchen");
     kitchen.Devices.Should().HaveCount(2);
     kitchen.Devices[0].Entities.Should().HaveCount(2);
     kitchen.Devices[1].Entities.Should().HaveCount(3);
 
-    var living = result.Homes[0].Areas[1];
+    var living = result.Zones[0].Areas[1];
     living.Alias.Should().Be("living");
     living.Devices.Should().HaveCount(1);
     living.Devices[0].Entities.Should().HaveCount(1);
@@ -266,7 +266,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Light' light {
     }
@@ -275,7 +275,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(1);
     area.Devices[0].Entities.Should().BeEmpty();
   }
@@ -285,7 +285,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen & Dining' kitchen_dining {
   }
   area 'Living Room (Main)' living_main {
@@ -294,9 +294,9 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(2);
-    result.Homes[0].Areas[0].DisplayName.Should().Be("Kitchen & Dining");
-    result.Homes[0].Areas[1].DisplayName.Should().Be("Living Room (Main)");
+    result.Zones[0].Areas.Should().HaveCount(2);
+    result.Zones[0].Areas[0].DisplayName.Should().Be("Kitchen & Dining");
+    result.Zones[0].Areas[1].DisplayName.Should().Be("Living Room (Main)");
   }
 
   [Fact]
@@ -304,7 +304,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   // Comment before area
   area 'Kitchen' kitchen {
     // Comment inside area
@@ -319,7 +319,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Alias.Should().Be("kitchen");
     area.Devices.Should().HaveCount(1);
     area.Devices[0].Entities.Should().HaveCount(1);
@@ -330,15 +330,15 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' {
+      @"zone 'TestHome' {
   area 'Kitchen' kitchen {
   }
 }"
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(1);
-    result.Homes[0].Areas[0].Alias.Should().Be("kitchen");
+    result.Zones[0].Areas.Should().HaveCount(1);
+    result.Zones[0].Areas[0].Alias.Should().Be("kitchen");
   }
 
   [Fact]
@@ -346,7 +346,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen 1' kitchen1 kitchen {
   }
   area 'Kitchen 2' kitchen2 kitchen {
@@ -359,11 +359,11 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes[0].Areas.Should().HaveCount(4);
-    result.Homes[0].Areas[0].Type.Should().Be("kitchen");
-    result.Homes[0].Areas[1].Type.Should().Be("kitchen");
-    result.Homes[0].Areas[2].Type.Should().Be("bedroom");
-    result.Homes[0].Areas[3].Type.Should().Be("bedroom");
+    result.Zones[0].Areas.Should().HaveCount(4);
+    result.Zones[0].Areas[0].Type.Should().Be("kitchen");
+    result.Zones[0].Areas[1].Type.Should().Be("kitchen");
+    result.Zones[0].Areas[2].Type.Should().Be("bedroom");
+    result.Zones[0].Areas[3].Type.Should().Be("bedroom");
   }
 
   [Fact]
@@ -371,7 +371,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
@@ -385,8 +385,8 @@ public class AreasTests
     );
 
     // Assert
-    result.Homes.Should().HaveCount(1);
-    var area = result.Homes[0].Areas[0];
+    result.Zones.Should().HaveCount(1);
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(1);
     var device = area.Devices[0];
 
@@ -409,7 +409,7 @@ public class AreasTests
   {
     // Act
     var result = HassLanguageParser.Parse(
-      @"home 'TestHome' test {
+      @"zone 'TestHome' test {
   area 'Kitchen' kitchen {
     device 'Sensors' sensors {
       entities: [
@@ -422,7 +422,7 @@ public class AreasTests
     );
 
     // Assert
-    var area = result.Homes[0].Areas[0];
+    var area = result.Zones[0].Areas[0];
     area.Devices.Should().HaveCount(1);
     var device = area.Devices[0];
     device.Entities.Should().HaveCount(2);

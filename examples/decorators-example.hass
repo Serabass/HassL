@@ -1,6 +1,6 @@
 // Примеры использования декораторов
 
-home 'DecoratorHome' {
+zone 'DecoratorHome' {
   area 'Bathroom' bathroom {
     device 'Sensors' sensors {
       entities: [

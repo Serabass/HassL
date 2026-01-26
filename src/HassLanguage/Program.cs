@@ -16,7 +16,7 @@ else
   // Встроенный пример
   exampleCode =
     @"
-home ""MyFlat"" {
+zone ""MyFlat"" {
   area ""Kitchen"" kitchen {
     device ""Light"" light {
       entities: [
